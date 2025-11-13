@@ -10,6 +10,9 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "NB Dance Award - Élection de la Superstar",
   description: "NB Dance Award 2024 - Votez pour votre danseur préféré parmi les meilleurs talents de danse africaine. Coupé Décalé, Mbolé et plus encore.",
+      verification: {
+       google: "T9gNRa6AunqtE10YM_eXms2E8edTX7KAe-jAoRORYbc",  // ← Paste the content value here
+     },
   keywords: "NB Dance Award, danse africaine, vote danse, coupé décalé, mbolé, danseur camerounais, concours danse afrique, superstar danse",
   authors: [{ name: "GET" }],
   creator: "GET",
@@ -40,8 +43,6 @@ export const metadata: Metadata = {
     description: "Votez pour votre danseur préféré - NB Dance Award 2024",
     images: ["/logo.png"],
   },
-
-
 }
 export default function RootLayout({
   children,
