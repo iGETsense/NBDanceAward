@@ -1,7 +1,7 @@
 export default function sitemap() {
   return [
     {
-      url: 'https://nb-dance-award.vercel.app,
+      url: 'https://nb-dance-award.vercel.app',  // ✅ Added closing quote
       lastModified: new Date(),
     },
     {
