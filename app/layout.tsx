@@ -11,6 +11,19 @@ export const metadata: Metadata = {
   description: "NB Dance Award 2024 - Votez pour votre danseur préféré",
   generator: "v0.app",
 }
+export const metadata = {
+  title: 'NB Dance Award - Célébrons la Danse Africaine',
+  description: 'Plateforme de vote moderne pour célébrer les talents de danse en Afrique. Votez pour le meilleur danseur, danseuse, groupe de danse et plus.',
+  keywords: 'danse africaine, vote danse, coupé décalé, mbolé, danseur africain, concours danse',
+  openGraph: {
+    title: 'NB Dance Award',
+    description: 'Célébrons les talents de danse en Afrique',
+    url: 'https://nb-dance-award.vercel.app',
+    siteName: 'NB Dance Award',
+    locale: 'fr_FR',
+    type: 'website',
+  },
+}
 
 export default function RootLayout({
   children,
