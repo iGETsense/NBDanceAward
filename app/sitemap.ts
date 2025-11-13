@@ -1,20 +1,42 @@
-export default function sitemap() {
+import { MetadataRoute } from 'next'
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://nb-dance-award.vercel.app'
+  
+  // Date actuelle pour lastModified
+  const currentDate = new Date()
+
   return [
+    // Page d'accueil - La plus importante
     {
-      url: 'https://nb-dance-award.vercel.app',  // ✅ Added closing quote
-      lastModified: new Date(),
+      url: baseUrl,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 1.0,
     },
+    
+    // Page des candidats - Très importante (profils des danseurs)
     {
-      url: 'https://nb-dance-award.vercel.app/candidats',
-      lastModified: new Date(),
+      url: `${baseUrl}/candidats`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
     },
+    
+    // Page de classement - Change fréquemment avec les votes
     {
-      url: 'https://nb-dance-award.vercel.app/classement',
-      lastModified: new Date(),
+      url: `${baseUrl}/classement`,
+      lastModified: currentDate,
+      changeFrequency: 'hourly',
+      priority: 0.9,
     },
+    
+    // Page des règles - Change rarement
     {
-      url: 'https://nb-dance-award.vercel.app/regles',
-      lastModified: new Date(),
+      url: `${baseUrl}/regles`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.6,
     },
   ]
 }
