@@ -33,7 +33,7 @@ const allCandidates = [
   {
     name: "Beb's velina",
     title: "Talented Dancer",
-    image: "/dancers/Beb's vélina.jpeg",
+    image: "/dancers/Beb’s vélina.jpeg",
     votes: 1956,
     badge: null,
     percentage: 48,
@@ -69,7 +69,7 @@ const allCandidates = [
   {
     name: "O'konor Céleste",
     title: "Rising Star",
-    image: "/dancers/O'konor Celeste.jpeg",
+    image: "/dancers/O’konor Celeste.jpeg",
     votes: 1298,
     badge: null,
     percentage: 32,
@@ -524,7 +524,7 @@ const allCandidates = [
   {
     name: "Echantillon 1er",
     title: "First Sample",
-    image: "/dancers/echantillon-1er.jpg",
+    image: "/dancers/Échantillon 1er.jpeg",
     votes: 1234,
     badge: null,
     percentage: 30,
@@ -739,7 +739,7 @@ const allCandidates = [
   {
     name: "Beb's velina",
     title: "Elegant Dancer",
-    image: "/dancers/Beb's vélina.jpeg",
+    image: "/dancers/Beb’s vélina.jpeg",
     votes: 2978,
     badge: 3,
     percentage: 73,
@@ -757,7 +757,7 @@ const allCandidates = [
   {
     name: "O'konor Céleste",
     title: "Celestial Star",
-    image: "/dancers/O'konor Celeste.jpeg",
+    image: "/dancers/O’konor Celeste.jpeg",
     votes: 2545,
     badge: null,
     percentage: 62,
@@ -813,7 +813,7 @@ const allCandidates = [
   {
     name: "O'konor Celeste et Katia_eg",
     title: "Celeste & Katia",
-    image: "/dancers/O'konor Celeste.jpeg",
+    image: "/dancers/O’konor Celeste.jpeg",
     votes: 1178,
     badge: null,
     percentage: 29,

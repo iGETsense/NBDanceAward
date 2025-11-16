@@ -1,0 +1,5 @@
+<svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="100" fill="#FF1744"/>
+  <text x="100" y="45" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white">TRACE</text>
+  <text x="100" y="70" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">TV</text>
+</svg>

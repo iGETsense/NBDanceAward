@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import PartnersCarousel from "@/components/PartnersCarousel"
 
 const candidates = [
   // Meilleur artiste danseur - masculin
@@ -812,7 +813,7 @@ const candidates = [
   {
     name: "Beb's velina",
     title: "Elegant Dancer",
-    image: "/dancers/Beb's vélina.jpeg",
+    image: "/dancers/Beb’s vélina.jpeg",
     votes: 2978,
     badge: 3,
     percentage: 73,
@@ -1158,6 +1159,22 @@ export default function NBDanceAwardPage() {
           </div>
         </section>
 
+        {/* Partners Carousel */}
+        <PartnersCarousel
+          partners={[
+            { name: "LOGOGGG", logo: "/partners/LOGOGGG.png" },
+            { name: "WhatsApp Image 1", logo: "/partners/WhatsApp Image 2025-10-07 à 17.22.43_94d52ea3.jpg" },
+            { name: "WhatsApp Image 2", logo: "/partners/WhatsApp Image 2025-11-10 à 07.19.11_8ab8bff9.jpg" },
+            { name: "WhatsApp Image 3", logo: "/partners/WhatsApp Image 2025-11-13 à 22.31.35_9f132a8b.jpg" },
+            { name: "NB", logo: "/partners/nb.png" },
+            { name: "Partenaire Officiel", logo: "/partners/partenaire officiel.jpg" },
+            { name: "Photo Partner", logo: "/partners/photo_2025-08-18_12-32-07.png" },
+          ]}
+          autoPlay={true}
+          autoPlayInterval={4000}
+          showControls={true}
+        />
+
         <div className="py-12 md:py-16">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="mb-8 md:mb-12 text-3xl md:text-4xl font-bold text-center">Catégories Principales</h2>
@@ -1172,101 +1189,6 @@ export default function NBDanceAwardPage() {
 
               return (
                 <section key={category} id={category.toLowerCase().replace(/\s+/g, "-")} className="mb-12 md:mb-16">
-                  <div className="mb-6 md:mb-8">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{category}</h3>
-                    <div className="h-1 w-20 bg-yellow-500 rounded-full"></div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 lg:grid-cols-5">
-                    {visibleCandidates.map((candidate, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleCandidateClick(candidate)}
-                        className="flex flex-col items-center cursor-pointer hover:opacity-80 transition-opacity"
-                      >
-                        <div className="relative mb-3 md:mb-4">
-                          <div className="relative h-24 w-24 md:h-28 md:w-28 overflow-hidden rounded-full border-[3px] md:border-4 border-yellow-500 md:ring-4 md:ring-yellow-500/20">
-                            <Image
-                              src={candidate.image || "/placeholder.svg"}
-                              alt={candidate.name}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                          {candidate.badge && (
-                            <div className="absolute -top-1 -right-1 md:-bottom-1 md:-right-1 md:top-auto flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-full bg-pink-500 text-xs font-bold">
-                              {candidate.badge}
-                            </div>
-                          )}
-                        </div>
-
-                        <h3 className="mb-1 text-center text-sm md:text-base font-semibold">{candidate.name}</h3>
-                        <span className="mb-2 md:mb-3 text-[10px] md:text-xs text-yellow-500 font-medium">
-                          {candidate.title}
-                        </span>
-
-                        <div className="w-full max-w-[100px] md:max-w-none">
-                          <div className="mb-1.5 md:mb-2 h-1 md:h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
-                            <div
-                              className="h-full bg-yellow-500 transition-all duration-300"
-                              style={{ width: `${candidate.percentage}%` }}
-                            />
-                          </div>
-
-                          <div className="flex justify-between text-[10px] md:text-xs text-zinc-400">
-                            <span className="font-semibold text-white">{candidate.votes.toLocaleString()}</span>
-                            <span>{candidate.percentage}%</span>
-                          </div>
-                          <p className="text-[9px] md:text-[10px] text-zinc-500 text-center mt-0.5 md:mt-1">votes</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-
-                  {showButton && (
-                    <div className="flex justify-center mt-6 md:mt-8">
-                      <button
-                        onClick={() => toggleCategory(category)}
-                        className="flex items-center gap-2 px-6 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-full transition-colors text-sm md:text-base font-medium"
-                      >
-                        {isExpanded ? (
-                          <>
-                            <span>Voir Moins</span>
-                            <ChevronUp className="h-4 w-4" />
-                          </>
-                        ) : (
-                          <>
-                            <span>Voir Plus ({categoryCandidates.length - getInitialVisibleCount()} autres)</span>
-                            <ChevronDown className="h-4 w-4" />
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  )}
-                </section>
-              )
-            })}
-          </div>
-        </div>
-
-        <div className="py-12 md:py-16 bg-zinc-900/30">
-          <div className="container mx-auto px-4 md:px-6">
-            <h2 className="mb-8 md:mb-12 text-3xl md:text-4xl font-bold text-center">Prix Honorifiques</h2>
-
-            {honoraryPrizes.map((category: string) => {
-              const categoryCandidates = getCandidatesByCategory(category)
-              const visibleCandidates = getVisibleCandidates(category)
-              const isExpanded = expandedCategories.has(category)
-              const showButton = shouldShowButton(category)
-
-              if (categoryCandidates.length === 0) return null
-
-              return (
-                <section
-                  key={category}
-                  id={category.toLowerCase().replace(/\s+/g, "-")}
-                  className="mb-12 md:mb-16 last:mb-0"
-                >
                   <div className="mb-6 md:mb-8">
                     <h3 className="text-2xl md:text-3xl font-bold mb-2">{category}</h3>
                     <div className="h-1 w-20 bg-yellow-500 rounded-full"></div>

@@ -1,0 +1,5 @@
+<svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="100" fill="#0055A4"/>
+  <text x="100" y="40" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">CANAL+</text>
+  <text x="100" y="65" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">Afrique</text>
+</svg>
