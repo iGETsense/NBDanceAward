@@ -13,25 +13,25 @@ export const metadata: Metadata = {
       verification: {
        google: "T9gNRa6AunqtE10YM_eXms2E8edTX7KAe-jAoRORYbc",  // ← Paste the content value here
      },
-  keywords: "NB Dance Award,nb dance award, danse africaine, vote danse, coupé décalé, mbolé, danseur camerounais, concours danse afrique, superstar danse",
+  keywords: "NB Dance Awards,nb dance awards, danse africaine, vote danse, coupé décalé, mbolé, danseur camerounais, concours danse afrique, superstar danse",
   authors: [{ name: "GET" }],
   creator: "GET",
-  publisher: "NB Dance Award",
+  publisher: "NB Dance Awards",
   
   // Open Graph (for Facebook, WhatsApp, etc.)
   openGraph: {
     type: "website",
     locale: "fr_FR",
     url: "https://nb-dance-award.vercel.app",
-    title: "NB Dance Award - Élection de la Superstar",
-    description: "Votez pour votre danseur préféré - NB Dance Award 2024",
-    siteName: "NB Dance Award",
+    title: "NB Dance Awards - Élection de la Superstar",
+    description: "Votez pour votre danseur préféré - NB Dance Awards ",
+    siteName: "NB Dance Awards",
     images: [
       {
         url: "/logo.png", // Make sure this exists in your public folder
         width: 1200,
         height: 630,
-        alt: "NB Dance Award Logo",
+        alt: "NB Dance Awards Logo",
       },
     ],
   },
