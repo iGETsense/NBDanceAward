@@ -1109,6 +1109,7 @@ export default function CandidatsPage() {
                         alt={candidate.name}
                         fill
                         className="object-cover"
+                        loading="lazy"
                       />
                     </div>
                     {candidate.badge && (
@@ -1289,20 +1290,21 @@ export default function CandidatsPage() {
       <Dialog open={isVotingModalOpen} onOpenChange={setIsVotingModalOpen}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-[#0a0a0a] border-zinc-800 p-0">
           <div className="grid md:grid-cols-2 gap-0">
+            {/* Left Side - Your Vote */}
             <div className="p-4 md:p-6 border-r border-zinc-800">
-              <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Votre Vote</h2>
+              <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-white">Votre Vote</h2>
 
               {selectedCandidate && (
                 <>
                   <div className="flex flex-col items-center mb-6">
                     <div className="relative mb-3">
-                      <div className="relative h-32 w-32 md:h-40 md:w-40 overflow-hidden rounded-full border-4 md:border-[6px] border-yellow-500 bg-gradient-to-br from-purple-500 to-pink-500 p-1 md:p-2">
-                        <div className="relative h-full w-full overflow-hidden rounded-full">
+                      <div className="relative h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 overflow-hidden rounded-full border-4 md:border-[6px] border-yellow-500 bg-gradient-to-br from-purple-500 to-pink-500 p-1 md:p-2 flex items-center justify-center">
+                        <div className="relative h-full w-full overflow-hidden rounded-full flex items-center justify-center">
                           <Image
                             src={selectedCandidate.image || "/placeholder.svg"}
                             alt={selectedCandidate.name}
                             fill
-                            className="object-cover"
+                            className="object-contain"
                           />
                         </div>
                       </div>
@@ -1311,31 +1313,31 @@ export default function CandidatsPage() {
                       </div>
                     </div>
 
-                    <h3 className="text-lg md:text-xl font-bold mb-1">{selectedCandidate.name}</h3>
-                    <p className="text-zinc-400 text-xs md:text-sm">{selectedCandidate.title}</p>
+                    <h3 className="text-lg md:text-xl font-bold mb-1 text-white">{selectedCandidate.name}</h3>
+                    <p className="text-white text-xs md:text-sm">{selectedCandidate.title}</p>
                   </div>
 
                   <div className="mb-6">
-                    <h3 className="text-base md:text-lg font-semibold mb-3">Nombre de Votes</h3>
+                    <h3 className="text-base md:text-lg font-semibold mb-3 text-white">Nombre de Votes</h3>
                     <div className="flex items-center justify-center gap-4 md:gap-6 mb-4">
                       <button
                         onClick={decrementVotes}
-                        className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border-2 border-zinc-700 hover:border-yellow-500 transition-colors"
+                        className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border-2 border-zinc-700 hover:border-yellow-500 transition-colors text-white"
                       >
-                        <Minus className="h-4 w-4 md:h-5 md:w-5" />
+                        <Minus className="h-4 w-4 md:h-5 md:w-5 text-white" />
                       </button>
-                      <div className="text-3xl md:text-4xl font-bold w-16 md:w-20 text-center">{voteCount}</div>
+                      <div className="text-3xl md:text-4xl font-bold w-16 md:w-20 text-center text-white">{voteCount}</div>
                       <button
                         onClick={incrementVotes}
-                        className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border-2 border-zinc-700 hover:border-yellow-500 transition-colors"
+                        className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border-2 border-zinc-700 hover:border-yellow-500 transition-colors text-white"
                       >
-                        <Plus className="h-4 w-4 md:h-5 md:w-5" />
+                        <Plus className="h-4 w-4 md:h-5 md:w-5 text-white" />
                       </button>
                     </div>
 
                     <div className="text-center space-y-0.5">
-                      <p className="text-xs md:text-sm font-semibold">1 Vote = 105 XAF.</p>
-                      <p className="text-xs md:text-sm text-zinc-400">Minimum 5 votes.</p>
+                      <p className="text-xs md:text-sm font-semibold text-white">1 Vote = 105 XAF.</p>
+                      <p className="text-xs md:text-sm text-white">Minimum 5 votes.</p>
                     </div>
                   </div>
 
@@ -1346,9 +1348,11 @@ export default function CandidatsPage() {
               )}
             </div>
 
+            {/* Right Side - Secure Payment */}
             <div className="p-4 md:p-6 bg-zinc-900/50">
-              <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Paiement Sécurisé</h2>
+              <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-white">Paiement Sécurisé</h2>
 
+              {/* Payment Methods */}
               <div className="grid grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-6">
                 <button
                   onClick={() => setSelectedPaymentMethod("mobile")}
@@ -1361,7 +1365,7 @@ export default function CandidatsPage() {
                   <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-orange-500">
                     <Smartphone className="h-5 w-5 md:h-6 md:w-6 text-white" />
                   </div>
-                  <span className="text-[10px] md:text-xs text-center font-medium leading-tight">Mobile Money</span>
+                  <span className="text-[10px] md:text-xs text-center font-medium leading-tight text-white">Mobile Money</span>
                 </button>
 
                 <button
@@ -1375,7 +1379,7 @@ export default function CandidatsPage() {
                   <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-orange-500">
                     <span className="text-lg md:text-xl font-bold text-white">OM</span>
                   </div>
-                  <span className="text-[10px] md:text-xs text-center font-medium leading-tight">Orange Money</span>
+                  <span className="text-[10px] md:text-xs text-center font-medium leading-tight text-white">Orange Money</span>
                 </button>
 
                 <button
@@ -1389,10 +1393,11 @@ export default function CandidatsPage() {
                   <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-orange-500">
                     <CreditCard className="h-5 w-5 md:h-6 md:w-6 text-white" />
                   </div>
-                  <span className="text-[10px] md:text-xs text-center font-medium leading-tight">Virement / Carte</span>
+                  <span className="text-[10px] md:text-xs text-center font-medium leading-tight text-white">Virement / Carte</span>
                 </button>
               </div>
 
+              {/* Selected Payment Method Display */}
               <div className="mb-4 md:mb-6 rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 p-3 text-center text-sm md:text-base font-semibold">
                 {selectedPaymentMethod === "mobile"
                   ? "Mobile Money"
@@ -1401,14 +1406,15 @@ export default function CandidatsPage() {
                     : "Virement Bancaire / Carte"}
               </div>
 
+              {/* Provider Selection */}
               <div className="mb-4 md:mb-6">
-                <label className="mb-1.5 md:mb-2 block text-xs md:text-sm font-medium">
+                <label className="mb-1.5 md:mb-2 block text-xs md:text-sm font-medium text-white">
                   Sélectionnez le Fournisseur
                 </label>
                 <select
                   value={selectedProvider}
                   onChange={(e) => setSelectedProvider(e.target.value)}
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white focus:border-yellow-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white focus:border-yellow-500 focus:outline-none [&_option]:bg-zinc-900 [&_option]:text-white"
                 >
                   {selectedPaymentMethod === "mobile" && (
                     <>
@@ -1432,14 +1438,16 @@ export default function CandidatsPage() {
                 </select>
               </div>
 
+              {/* Total Votes */}
               <div className="mb-4 md:mb-6">
-                <div className="rounded-lg bg-zinc-800 px-3 py-2 md:px-4 md:py-3 text-center text-xs md:text-sm font-medium">
+                <div className="rounded-lg bg-zinc-800 px-3 py-2 md:px-4 md:py-3 text-center text-xs md:text-sm font-medium text-white">
                   Total Votes: {voteCount}
                 </div>
               </div>
 
+              {/* Phone Number */}
               <div className="mb-6 md:mb-8">
-                <label className="mb-1.5 md:mb-2 block text-sm font-medium">Numéro de Téléphone</label>
+                <label className="mb-1.5 md:mb-2 block text-xs md:text-sm font-medium text-white">Numéro de Téléphone</label>
                 <div className="relative">
                   <div className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 md:gap-2">
                     <span className="text-lg md:text-xl">🇨🇲</span>
@@ -1454,6 +1462,7 @@ export default function CandidatsPage() {
                 </div>
               </div>
 
+              {/* Security Badges */}
               <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs text-zinc-400">
                 <div className="flex items-center gap-1.5 md:gap-2">
                   <Shield className="h-3 w-3 md:h-4 md:w-4 text-blue-400" />

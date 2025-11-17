@@ -96,7 +96,7 @@ export default function ClassementPage() {
     {
       name: "Beb's velina",
       title: "Talented Dancer",
-      image: "/dancers/Beb's vélina.jpeg",
+      image: "/dancers/Beb’s vélina.jpeg",
       votes: 1956,
       totalVotes: 45000,
       percentage: 48,
@@ -602,86 +602,7 @@ export default function ClassementPage() {
                                 alt={candidate.name}
                                 fill
                                 className="object-cover"
-                              />
-                            </div>
-                          </div>
-
-                          {/* Candidate Info and Progress */}
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-base md:text-lg font-bold mb-1 truncate">{candidate.name}</h3>
-                            <p className="text-xs md:text-sm text-zinc-400 mb-2">{candidate.title}</p>
-
-                            <div className="flex items-center justify-between gap-4 mb-2">
-                              <span className="text-xs md:text-sm text-zinc-400">
-                                {formatVotes(candidate.votes)} VOTES
-                              </span>
-                              <span className="text-xs md:text-sm font-semibold text-yellow-500">
-                                {candidate.percentage}%
-                              </span>
-                            </div>
-
-                            {/* Progress Bar */}
-                            <div className="h-2 md:h-2.5 w-full bg-zinc-800 rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full transition-all duration-500"
-                                style={{ width: `${candidate.percentage}%` }}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* Honorary Prizes Rankings */}
-        <section className="py-12 md:py-16 bg-zinc-900/30">
-          <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">PRIX HONORIFIQUES</h2>
-
-            <div className="space-y-12 md:space-y-16">
-              {honoraryPrizes.map((category) => {
-                const categoryCandidates = getCandidatesByCategory(category)
-
-                if (categoryCandidates.length === 0) return null
-
-                return (
-                  <div key={category} className="space-y-6">
-                    <div className="mb-6">
-                      <h3 className="text-2xl md:text-3xl font-bold mb-2">{category}</h3>
-                      <div className="h-1 w-20 bg-yellow-500 rounded-full"></div>
-                    </div>
-
-                    <div className="space-y-4">
-                      {categoryCandidates.map((candidate, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center gap-4 md:gap-6 bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 md:p-6 hover:bg-zinc-900/70 transition-all duration-300"
-                        >
-                          {/* Rank Number */}
-                          <div className="relative flex-shrink-0">
-                            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full border-3 border-yellow-500 bg-zinc-900 flex items-center justify-center">
-                              <span className="text-xl md:text-2xl font-bold text-yellow-500">{index + 1}</span>
-                            </div>
-                            {index === 0 && (
-                              <div className="absolute -top-2 -right-2 bg-yellow-500 rounded-full p-1.5">
-                                <Crown className="h-4 w-4 md:h-5 md:w-5 text-black" fill="currentColor" />
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Profile Image */}
-                          <div className="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0">
-                            <div className="absolute inset-0 rounded-full border-3 border-yellow-500 overflow-hidden">
-                              <Image
-                                src={candidate.image || "/placeholder.svg"}
-                                alt={candidate.name}
-                                fill
-                                className="object-cover"
+                                loading="lazy"
                               />
                             </div>
                           </div>
