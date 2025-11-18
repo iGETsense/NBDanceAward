@@ -1,0 +1,248 @@
+{
+  "candidates": {
+    "etienne-kampos": {
+      "id": "etienne-kampos",
+      "name": "Étienne kampos",
+      "title": "Male Dance King",
+      "image": "/dancers/Etienne kampos.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    "de-flow": {
+      "id": "de-flow",
+      "name": "De Flow",
+      "title": "Flow Master",
+      "image": "/dancers/De Flow.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    "pascal-metaphore": {
+      "id": "pascal-metaphore",
+      "name": "Pascal métaphore",
+      "title": "Poetic Dancer",
+      "image": "/dancers/PASCAL métaphore.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    "el-fally-du-237": {
+      "id": "el-fally-du-237",
+      "name": "El Fally du 237",
+      "title": "Cameroon Star",
+      "image": "/dancers/El fally du 237.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    "escram-shuwingum": {
+      "id": "escram-shuwingum",
+      "name": "Escram shuwingum",
+      "title": "Smooth Performer",
+      "image": "/dancers/ESCRAM.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    "petit-tchakap": {
+      "id": "petit-tchakap",
+      "name": "Petit tchakap",
+      "title": "Small but Mighty",
+      "image": "/dancers/petit tchakap.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    "3-peace": {
+      "id": "3-peace",
+      "name": "3 peace",
+      "title": "Peace Trio",
+      "image": "/dancers/3 peace.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    "jkaxel": {
+      "id": "jkaxel",
+      "name": "Jkaxel",
+      "title": "Urban Legend",
+      "image": "/dancers/JKAXEL.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    "maguy-merine": {
+      "id": "maguy-merine",
+      "name": "Maguy merine",
+      "title": "Dance Star",
+      "image": "/dancers/MAGUY MERINE.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "kendi": {
+      "id": "kendi",
+      "name": "Kendi",
+      "title": "Dance Performer",
+      "image": "/dancers/KENDI.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "bebs-velina": {
+      "id": "bebs-velina",
+      "name": "Beb's velina",
+      "title": "Talented Dancer",
+      "image": "/dancers/Beb's vélina.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "katia-eg": {
+      "id": "katia-eg",
+      "name": "Katia eg",
+      "title": "Professional Artist",
+      "image": "/dancers/Katia EG.png",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "stella-officielle3": {
+      "id": "stella-officielle3",
+      "name": "Stella officielle3",
+      "title": "Star Performer",
+      "image": "/dancers/Stella Officielle3.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "nounours": {
+      "id": "nounours",
+      "name": "Nounours",
+      "title": "Dynamic Dancer",
+      "image": "/dancers/Nounours.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "okonor-celeste": {
+      "id": "okonor-celeste",
+      "name": "O'konor Céleste",
+      "title": "Rising Star",
+      "image": "/dancers/O'konor Celeste.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "afu-dance-academie": {
+      "id": "afu-dance-academie",
+      "name": "AFU Dance académie",
+      "title": "Professional Group",
+      "image": "/dancers/AFU DANCE ACADEMY STUDIO.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur groupe de danse"
+    },
+    "etat-nwar-dance": {
+      "id": "etat-nwar-dance",
+      "name": "Etat NWAR dance",
+      "title": "Dance Collective",
+      "image": "/dancers/ÉTAT NWAR DANCE SCHOOL.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur groupe de danse"
+    },
+    "team-escram": {
+      "id": "team-escram",
+      "name": "Team Escram",
+      "title": "Dance Crew",
+      "image": "/dancers/TEAM ESCRAM.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur groupe de danse"
+    },
+    "mbole-dancing": {
+      "id": "mbole-dancing",
+      "name": "Mbolé Dancing",
+      "title": "Cultural Group",
+      "image": "/dancers/Mbole Dancing.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur groupe de danse"
+    },
+    "deboy-maguy": {
+      "id": "deboy-maguy",
+      "name": "Déboy le monstre et Maguy merine",
+      "title": "Monster & Queen",
+      "image": "/dancers/DEBOY LE MONSTRE.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo"
+    },
+    "4peace-rachel": {
+      "id": "4peace-rachel",
+      "name": "4 peace et Rachel élégance",
+      "title": "Peace & Elegance",
+      "image": "/dancers/4 peace.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo"
+    },
+    "chica-kendi": {
+      "id": "chica-kendi",
+      "name": "Chica bassa et kendi",
+      "title": "Chica & Kendi",
+      "image": "/dancers/CHICA BASSA.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo"
+    }
+  },
+  "votes": {},
+  "users": {}
+}

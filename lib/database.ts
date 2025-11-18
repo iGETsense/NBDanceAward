@@ -1,5 +1,6 @@
 import { database } from './firebase'
 import { ref, set, update, get, onValue, increment } from 'firebase/database'
+import { calculatePercentages, updateCandidatePercentage } from './percentageCalculator'
 
 // ============ CANDIDATES ============
 
@@ -20,7 +21,10 @@ export function subscribeToCandidates(callback: (data: any) => void) {
   const candidatesRef = ref(database, 'candidates')
   const unsubscribe = onValue(candidatesRef, (snapshot) => {
     if (snapshot.exists()) {
-      callback(snapshot.val())
+      const candidatesObj = snapshot.val()
+      const candidatesArray = Object.values(candidatesObj)
+      const withPercentages = calculatePercentages(candidatesArray)
+      callback(withPercentages)
     }
   })
   return unsubscribe
@@ -165,8 +169,10 @@ export function subscribeToLeaderboard(callback: (data: any) => void, limit: num
   const candidatesRef = ref(database, 'candidates')
   const unsubscribe = onValue(candidatesRef, (snapshot) => {
     if (snapshot.exists()) {
-      const candidates = snapshot.val()
-      const sorted = Object.values(candidates)
+      const candidatesObj = snapshot.val()
+      const candidatesArray = Object.values(candidatesObj)
+      const withPercentages = calculatePercentages(candidatesArray)
+      const sorted = withPercentages
         .sort((a: any, b: any) => (b.votes || 0) - (a.votes || 0))
         .slice(0, limit)
       callback(sorted)
