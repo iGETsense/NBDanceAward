@@ -1300,7 +1300,7 @@ export default function NBDanceAwardPage() {
                   <Award className="h-10 w-10 text-yellow-500 md:h-12 md:w-12" />
                 </div>
                 <div className="mb-2 text-sm font-bold text-yellow-500">GQ</div>
-                <h3 className="text-sm font-semibold md:text-base">3. tnellas Dantre Metas</h3>
+                <h3 className="text-sm font-semibold md:text-base">3. Regarder LA Progression De Votre Danceur Favourie</h3>
               </div>
             </div>
           </div>
