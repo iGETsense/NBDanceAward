@@ -27,6 +27,7 @@ const PartnersCarousel: React.FC<PartnersCarouselProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(autoPlay)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   const itemsPerView = 3
   // Create an infinite loop by duplicating partners
@@ -105,7 +106,16 @@ const PartnersCarousel: React.FC<PartnersCarouselProps> = ({
                     width: `${100 / itemsPerView}%`,
                   }}
                 >
-                  <div className="group relative flex h-16 sm:h-20 md:h-24 lg:h-28 items-center justify-center overflow-hidden transition-all duration-300 hover:scale-110">
+                  <div
+                    className="group relative flex h-16 sm:h-20 md:h-24 lg:h-28 items-center justify-center overflow-hidden transition-all duration-300"
+                    style={{
+                      transform: hoveredIndex === index ? "scale(1.1)" : "scale(1)",
+                    }}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    onTouchStart={() => setHoveredIndex(index)}
+                    onTouchEnd={() => setHoveredIndex(null)}
+                  >
                     {partner.url ? (
                       <a
                         href={partner.url}
@@ -116,7 +126,10 @@ const PartnersCarousel: React.FC<PartnersCarouselProps> = ({
                         <img
                           src={partner.logo}
                           alt={partner.name}
-                          className="max-h-full max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                          className="max-h-full max-w-full object-contain transition-all duration-300"
+                          style={{
+                            filter: hoveredIndex === index ? "grayscale(0%)" : "grayscale(100%)",
+                          }}
                         />
                       </a>
                     ) : (
@@ -124,7 +137,10 @@ const PartnersCarousel: React.FC<PartnersCarouselProps> = ({
                         <img
                           src={partner.logo}
                           alt={partner.name}
-                          className="max-h-full max-w-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                          className="max-h-full max-w-full object-contain transition-all duration-300"
+                          style={{
+                            filter: hoveredIndex === index ? "grayscale(0%)" : "grayscale(100%)",
+                          }}
                         />
                       </div>
                     )}
