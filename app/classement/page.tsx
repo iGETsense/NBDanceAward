@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Crown, Menu } from 'lucide-react'
+import { Crown, Menu, Shield } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { Input } from "@/components/ui/input"
 
@@ -332,6 +333,9 @@ export default function ClassementPage() {
 
   const [showBanner, setShowBanner] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authMode, setAuthMode] = useState<"login" | "register">("login")
 
   useEffect(() => {
     const handleScroll = () => {
