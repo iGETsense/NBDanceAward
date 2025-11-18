@@ -3,30 +3,14 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Menu, Crown, Shield } from "lucide-react"
+import { Crown, Menu } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { useCandidates } from "@/hooks/useFirebaseData"
 import { Input } from "@/components/ui/input"
 
-export default function ClassementPage() {
-  const [showBanner, setShowBanner] = useState(true)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [showAuthModal, setShowAuthModal] = useState(false)
-  const [authMode, setAuthMode] = useState<"login" | "register">("login")
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowBanner(window.scrollY === 0)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  // All candidates sorted by votes (descending)
-  const rankedCandidates = [
+// Static candidates for fallback
+const staticRankedCandidates = [
     // Meilleur artiste danseur - masculin
     {
       name: "Étienne kampos",
@@ -326,21 +310,40 @@ export default function ClassementPage() {
       percentage: 36,
       category: "Meilleur Performance web",
     },
-  ]
+]
 
-  const mainCategories = [
-    "Meilleur artiste danseur - masculin",
-    "Meilleure artiste danseuse féminine",
-    "Meilleur groupe de danse",
-    "Meilleur collaboration duo",
-    "Meilleur artiste Chorégraphe",
-    "Meilleur Performance web",
-  ]
+const mainCategories = [
+  "Meilleur artiste danseur - masculin",
+  "Meilleure artiste danseuse féminine",
+  "Meilleur groupe de danse",
+  "Meilleur collaboration duo",
+  "Meilleur artiste Chorégraphe",
+  "Meilleur Performance web",
+]
 
-  const honoraryPrizes = ["Best inspiration pour la jeunesse", "Best soutien pour la jeunesse", "Prix d'encouragements"]
+const honoraryPrizes = ["Best inspiration pour la jeunesse", "Best soutien pour la jeunesse", "Prix d'encouragements"]
+
+export default function ClassementPage() {
+  // Firebase hook
+  const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
+  
+  // Use Firebase candidates if available, otherwise use static
+  const rankedCandidates = firebaseCandidates.length > 0 ? firebaseCandidates : staticRankedCandidates
+
+  const [showBanner, setShowBanner] = useState(true)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBanner(window.scrollY === 0)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const getCandidatesByCategory = (category: string) => {
-    return rankedCandidates.filter((c) => c.category === category).sort((a, b) => b.votes - a.votes)
+    return rankedCandidates.filter((c: any) => c.category === category).sort((a: any, b: any) => b.votes - a.votes)
   }
 
   const formatVotes = (votes: number) => {

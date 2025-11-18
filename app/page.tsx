@@ -9,8 +9,9 @@ import Image from "next/image"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import PartnersCarousel from "@/components/PartnersCarousel"
+import { useCandidates, useLeaderboard } from "@/hooks/useFirebaseData"
 
-const candidates = [
+const staticCandidates = [
   // Meilleur artiste danseur - masculin
   {
     name: "Étienne kampos",
@@ -864,9 +865,16 @@ const honoraryPrizes = [
 ]
 
 export default function NBDanceAwardPage() {
+  // Firebase hooks
+  const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
+  const { leaderboard } = useLeaderboard(10)
+  
+  // Use Firebase candidates if available, otherwise use static
+  const candidates = firebaseCandidates.length > 0 ? firebaseCandidates : staticCandidates
+
   const [showBanner, setShowBanner] = useState(true)
   const [isVotingModalOpen, setIsVotingModalOpen] = useState(false)
-  const [selectedCandidate, setSelectedCandidate] = useState<(typeof candidates)[0] | null>(null)
+  const [selectedCandidate, setSelectedCandidate] = useState<any | null>(null)
   const [voteCount, setVoteCount] = useState(5)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"mobile" | "orange">("mobile")
   const [selectedProvider, setSelectedProvider] = useState("mtn-momo-cameroon")

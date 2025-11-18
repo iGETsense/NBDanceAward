@@ -1,16 +1,16 @@
 "use client"
 
-import { Search, Menu, Minus, Plus, Lock, Shield, CheckCircle2, User, Mail } from 'lucide-react'
+import { Search, Menu, Lock, Shield, User, Mail, Minus, Plus, ChevronDown } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
-import Link from "next/link"
 import { useState, useEffect } from "react"
-import { Smartphone, CreditCard } from 'lucide-react'
+import Link from "next/link"
+import { useCandidates } from "@/hooks/useFirebaseData"
 
-const allCandidates = [
+const staticAllCandidates = [
   // 1- Meilleure artiste danseuse féminine
   {
     name: "Maguy merine",
@@ -857,10 +857,16 @@ const categories = [
 ]
 
 export default function CandidatsPage() {
+  // Firebase hook
+  const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
+  
+  // Use Firebase candidates if available, otherwise use static
+  const allCandidates = firebaseCandidates.length > 0 ? firebaseCandidates : staticAllCandidates
+
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories")
   const [isVotingModalOpen, setIsVotingModalOpen] = useState(false)
-  const [selectedCandidate, setSelectedCandidate] = useState<(typeof allCandidates)[0] | null>(null)
+  const [selectedCandidate, setSelectedCandidate] = useState<any | null>(null)
   const [voteCount, setVoteCount] = useState(5)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"mobile" | "orange">("mobile")
   const [selectedProvider, setSelectedProvider] = useState("mtn-momo-cameroon")
