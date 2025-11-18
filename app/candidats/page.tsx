@@ -862,7 +862,7 @@ export default function CandidatsPage() {
   const [isVotingModalOpen, setIsVotingModalOpen] = useState(false)
   const [selectedCandidate, setSelectedCandidate] = useState<(typeof allCandidates)[0] | null>(null)
   const [voteCount, setVoteCount] = useState(5)
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"mobile" | "orange" | "bank">("mobile")
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"mobile" | "orange">("mobile")
   const [selectedProvider, setSelectedProvider] = useState("mtn-momo-cameroon")
   const [showBanner, setShowBanner] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -888,8 +888,6 @@ export default function CandidatsPage() {
       setSelectedProvider("mtn-momo-cameroon")
     } else if (selectedPaymentMethod === "orange") {
       setSelectedProvider("orange-money-cameroon")
-    } else if (selectedPaymentMethod === "bank") {
-      setSelectedProvider("bank-transfer-cameroon")
     }
   }, [selectedPaymentMethod])
 
@@ -1353,7 +1351,7 @@ export default function CandidatsPage() {
               <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-white">Paiement Sécurisé</h2>
 
               {/* Payment Methods */}
-              <div className="grid grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-6">
+              <div className="grid grid-cols-2 gap-2 md:gap-3 mb-4 md:mb-6">
                 <button
                   onClick={() => setSelectedPaymentMethod("mobile")}
                   className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-lg border-2 transition-all ${
@@ -1381,29 +1379,13 @@ export default function CandidatsPage() {
                   </div>
                   <span className="text-[10px] md:text-xs text-center font-medium leading-tight text-white">Orange Money</span>
                 </button>
-
-                <button
-                  onClick={() => setSelectedPaymentMethod("bank")}
-                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-lg border-2 transition-all ${
-                    selectedPaymentMethod === "bank"
-                      ? "border-yellow-500 bg-yellow-500/10"
-                      : "border-zinc-700 hover:border-zinc-600"
-                  }`}
-                >
-                  <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-orange-500">
-                    <CreditCard className="h-5 w-5 md:h-6 md:w-6 text-white" />
-                  </div>
-                  <span className="text-[10px] md:text-xs text-center font-medium leading-tight text-white">Virement / Carte</span>
-                </button>
               </div>
 
               {/* Selected Payment Method Display */}
               <div className="mb-4 md:mb-6 rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 p-3 text-center text-sm md:text-base font-semibold">
                 {selectedPaymentMethod === "mobile"
                   ? "Mobile Money"
-                  : selectedPaymentMethod === "orange"
-                    ? "Orange Money"
-                    : "Virement Bancaire / Carte"}
+                  : "Orange Money"}
               </div>
 
               {/* Provider Selection */}
@@ -1426,13 +1408,6 @@ export default function CandidatsPage() {
                   {selectedPaymentMethod === "orange" && (
                     <>
                       <option value="orange-money-cameroon">Orange Money (Cameroun)</option>
-                    </>
-                  )}
-                  {selectedPaymentMethod === "bank" && (
-                    <>
-                      <option value="bank-transfer-cameroon">Virement Bancaire (Cameroun)</option>
-                      <option value="visa-mastercard-cameroon">Visa / Mastercard (Cameroun)</option>
-                      <option value="express-union-cameroon">Express Union (Cameroun)</option>
                     </>
                   )}
                 </select>

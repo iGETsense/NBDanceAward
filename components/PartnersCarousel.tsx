@@ -88,7 +88,7 @@ const PartnersCarousel: React.FC<PartnersCarouselProps> = ({
         </h2>
 
         {/* Carousel Container */}
-        <div className="relative px-4 sm:px-6 md:px-8 lg:px-12">
+        <div className="relative">
           {/* Carousel Track */}
           <div className="overflow-hidden">
             <div
@@ -100,12 +100,12 @@ const PartnersCarousel: React.FC<PartnersCarouselProps> = ({
               {extendedPartners.map((partner, index) => (
                 <div
                   key={`${partner.name}-${index}`}
-                  className="w-full flex-shrink-0 px-1.5 sm:px-2 md:px-3"
+                  className="w-full flex-shrink-0 px-2 sm:px-3 md:px-4"
                   style={{
                     width: `${100 / itemsPerView}%`,
                   }}
                 >
-                  <div className="group relative flex h-24 sm:h-32 md:h-40 lg:h-48 items-center justify-center overflow-hidden rounded-full border border-zinc-600 bg-gradient-to-br from-white/8 to-white/3 p-3 sm:p-4 md:p-6 lg:p-8 transition-all duration-300 hover:border-yellow-400 hover:from-white/15 hover:to-white/8 hover:shadow-lg hover:shadow-yellow-500/30 backdrop-blur-sm">
+                  <div className="group relative flex h-16 sm:h-20 md:h-24 lg:h-28 items-center justify-center overflow-hidden transition-all duration-300 hover:scale-110">
                     {partner.url ? (
                       <a
                         href={partner.url}
