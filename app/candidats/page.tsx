@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, Menu, Lock, Shield, User, Mail, Minus, Plus, ChevronDown } from 'lucide-react'
+import { Search, Menu, Lock, Shield, User, Mail, Minus, Plus, ChevronDown, Smartphone, CheckCircle2 } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
