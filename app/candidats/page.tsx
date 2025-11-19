@@ -859,11 +859,12 @@ const categories = [
 ]
 
 export default function CandidatsPage() {
-  // Firebase hook
-  const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
+  // Firebase hook (disabled for now due to CSP issues)
+  // const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
   
-  // Use Firebase candidates if available, otherwise use static
-  const allCandidates = firebaseCandidates.length > 0 ? firebaseCandidates : oldStaticCandidates
+  // Use static candidates as primary source
+  const allCandidates = oldStaticCandidates
+  const candidatesLoading = false
 
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories")
