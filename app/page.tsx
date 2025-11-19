@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
+import ImageWithFallback from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import PartnersCarousel from "@/components/PartnersCarousel"
@@ -1149,12 +1150,12 @@ export default function NBDanceAwardPage() {
         {/* Hero Section */}
         <section className="relative overflow-hidden">
           <div className="relative h-[400px] md:h-[500px]">
-            <Image src="/banner-dancers.jpg" alt="Dancers performing on stage" fill className="object-cover" priority />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent" />
+            <Image src="/banner-dancers.jpg" alt="Dancers performing on stage" fill className="object-cover animate-fade-in-up" priority />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent animate-fade-in-down" />
 
             <div className="container relative mx-auto flex h-full flex-col justify-end px-4 pb-8 md:px-6 md:pb-12">
-              <div className="max-w-2xl">
-                <h1 className="mb-4 text-3xl font-bold leading-tight text-balance md:mb-6 md:text-5xl lg:text-6xl">
+              <div className="max-w-2xl animate-fade-in-left" style={{ animationDelay: "0.2s" }}>
+                <h1 className="mb-4 text-3xl font-bold leading-tight text-balance md:mb-6 md:text-5xl lg:text-6xl animate-fade-in-left" style={{ animationDelay: "0.3s" }}>
                   Célébrons les étoiles de la danse au Cameroun
                   <br />
                   1ère édition
@@ -1163,13 +1164,14 @@ export default function NBDanceAwardPage() {
                 <Link href="/candidats">
                   <Button
                     size="lg"
-                    className="mb-2 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold px-6 py-5 text-sm md:px-8 md:py-6 md:text-base rounded-md uppercase"
+                    className="mb-2 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold px-6 py-5 text-sm md:px-8 md:py-6 md:text-base rounded-md uppercase animate-pop-in hover-scale transition-smooth"
+                    style={{ animationDelay: "0.4s" }}
                   >
                     VOTEZ MAINTENANT!
                   </Button>
                 </Link>
 
-                <p className="text-xs text-zinc-300 md:text-sm">Les votes sont payants</p>
+                <p className="text-xs text-zinc-300 md:text-sm animate-fade-in-left" style={{ animationDelay: "0.5s" }}>Les votes sont payants</p>
               </div>
             </div>
           </div>
@@ -1220,12 +1222,12 @@ export default function NBDanceAwardPage() {
                       >
                         <div className="relative mb-3 md:mb-4">
                           <div className="relative h-24 w-24 md:h-28 md:w-28 overflow-hidden rounded-full border-[3px] md:border-4 border-yellow-500 md:ring-4 md:ring-yellow-500/20 hover-glow transition-smooth">
-                            <Image
+                            <ImageWithFallback
                               src={candidate.image || "/placeholder.svg"}
                               alt={candidate.name}
                               fill
-                              className="object-cover"
-                              loading="lazy"
+                              objectFit="cover"
+                              placeholder="blur"
                             />
                           </div>
                           {candidate.badge && (
