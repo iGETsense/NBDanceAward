@@ -10,9 +10,6 @@ import ImageWithFallback from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useCandidates } from "@/hooks/useFirebaseData"
-import { allCandidatesData } from "@/lib/candidatesData"
-
-const staticAllCandidates = allCandidatesData
 
 // Keep old data for reference (commented out)
 const oldStaticCandidates = [
@@ -866,7 +863,7 @@ export default function CandidatsPage() {
   const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
   
   // Use Firebase candidates if available, otherwise use static
-  const allCandidates = firebaseCandidates.length > 0 ? firebaseCandidates : staticAllCandidates
+  const allCandidates = firebaseCandidates.length > 0 ? firebaseCandidates : oldStaticCandidates
 
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories")
