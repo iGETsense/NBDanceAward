@@ -593,11 +593,12 @@ export default function ClassementPage() {
                       <div className="h-1 w-20 bg-yellow-500 rounded-full"></div>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-4 animate-stagger">
                       {categoryCandidates.map((candidate, index) => (
                         <div
                           key={index}
-                          className="flex items-center gap-4 md:gap-6 bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 md:p-6 hover:bg-zinc-900/70 transition-all duration-300"
+                          className="flex items-center gap-4 md:gap-6 bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 md:p-6 hover:bg-zinc-900/70 transition-all duration-300 animate-fade-in-left hover-lift"
+                          style={{ animationDelay: `${index * 0.1}s` }}
                         >
                           {/* Rank Number */}
                           <div className="relative flex-shrink-0">
