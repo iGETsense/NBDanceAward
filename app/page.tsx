@@ -1185,6 +1185,7 @@ export default function NBDanceAwardPage() {
             { name: "WhatsApp Image 2", logo: "/partners/WhatsApp Image 2025-11-10 à 07.19.11_8ab8bff9.jpg" },
             { name: "WhatsApp Image 3", logo: "/partners/WhatsApp Image 2025-11-13 à 22.31.35_9f132a8b.jpg" },
             { name: "NB", logo: "/partners/nb.png" },
+            { name: "IGS", logo: "/partners/igs.png" },
             { name: "Partenaire Officiel", logo: "/partners/partenaire officiel.jpg" },
             { name: "Photo Partner", logo: "/partners/photo_2025-08-18_12-32-07.png" },
           ]}
