@@ -8,7 +8,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self' https://*.firebasedatabase.app; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://vercel.live https://www.googletagmanager.com https://www.google-analytics.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.firebasedatabase.app wss://*.firebasedatabase.app https://*.googleapis.com https://vercel.live https://www.google-analytics.com https://www.googletagmanager.com; frame-src https://*.firebasedatabase.app 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+          "value": "default-src 'self' https: wss:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https:; img-src 'self' data: https:; connect-src 'self' https: wss:; frame-src https: 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         }
       ]
     }
