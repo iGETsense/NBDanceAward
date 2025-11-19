@@ -381,7 +381,7 @@ export default function ClassementPage() {
         <div className="container mx-auto flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
           <Link href="/" className="flex items-center gap-2 md:gap-3">
             <div className="relative h-10 w-10 md:h-12 md:w-12">
-              <Image src="/logo.png" alt="NB Dance Award" fill className="object-contain" />
+              <Image src="/logo.png" alt="NB Dance Award" fill className="object-contain" quality={90} sizes="(max-width: 768px) 40px, 48px" />
             </div>
             <div className="flex flex-col md:flex-row md:items-center md:gap-1">
               <span className="text-xs font-bold leading-tight text-white md:hidden">
@@ -407,7 +407,7 @@ export default function ClassementPage() {
               <div className="flex flex-col h-full">
                 <div className="p-6 border-b border-zinc-800">
                   <div className="relative h-16 w-16 mx-auto mb-3">
-                    <Image src="/logo.png" alt="NB Dance Award" fill className="object-contain" />
+                    <Image src="/logo.png" alt="NB Dance Award" fill className="object-contain" quality={90} sizes="64px" />
                   </div>
                   <h2 className="text-center text-lg font-bold text-yellow-500">NB DANCE AWARDS</h2>
                 </div>
@@ -621,6 +621,8 @@ export default function ClassementPage() {
                                 fill
                                 className="object-cover"
                                 loading="lazy"
+                                quality={80}
+                                sizes="(max-width: 768px) 64px, 80px"
                               />
                             </div>
                           </div>

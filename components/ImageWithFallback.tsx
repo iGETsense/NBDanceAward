@@ -60,8 +60,9 @@ export default function ImageWithFallback({
 
   const imageProps = {
     alt,
-    className: `${className} ${isLoading ? "animate-pulse" : ""}`,
+    className,
     priority,
+    loading: priority ? undefined : ("lazy" as const),
     onLoadingComplete: handleLoadingComplete,
     onError: handleError,
     placeholder: placeholder as "blur" | "empty",
@@ -74,11 +75,12 @@ export default function ImageWithFallback({
         <Image
           src={imageSrc}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           style={{
             objectFit,
             objectPosition,
           }}
+          quality={85}
           {...imageProps}
         />
         {hasError && (
@@ -102,6 +104,7 @@ export default function ImageWithFallback({
           objectFit,
           objectPosition,
         }}
+        quality={85}
         {...imageProps}
       />
       {hasError && (

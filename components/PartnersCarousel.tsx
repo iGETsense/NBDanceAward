@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -121,26 +122,34 @@ const PartnersCarousel: React.FC<PartnersCarouselProps> = ({
                         href={partner.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex h-full w-full items-center justify-center"
+                        className="flex h-full w-full items-center justify-center relative"
                       >
-                        <img
+                        <Image
                           src={partner.logo}
                           alt={partner.name}
-                          className="max-h-full max-w-full object-contain transition-all duration-300"
+                          fill
+                          className="object-contain transition-all duration-300"
                           style={{
                             filter: hoveredIndex === index ? "grayscale(0%)" : "grayscale(100%)",
                           }}
+                          loading="lazy"
+                          quality={80}
+                          sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, (max-width: 1024px) 96px, 112px"
                         />
                       </a>
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center">
-                        <img
+                      <div className="flex h-full w-full items-center justify-center relative">
+                        <Image
                           src={partner.logo}
                           alt={partner.name}
-                          className="max-h-full max-w-full object-contain transition-all duration-300"
+                          fill
+                          className="object-contain transition-all duration-300"
                           style={{
                             filter: hoveredIndex === index ? "grayscale(0%)" : "grayscale(100%)",
                           }}
+                          loading="lazy"
+                          quality={80}
+                          sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, (max-width: 1024px) 96px, 112px"
                         />
                       </div>
                     )}
