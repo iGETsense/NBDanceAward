@@ -930,7 +930,7 @@ export default function CandidatsPage() {
           showBanner ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         }`}
       >
-        NB COMPANY PRESENTE
+        NB DANCE AWARDS
       </div>
 
       <header
@@ -946,11 +946,11 @@ export default function CandidatsPage() {
               <span className="text-xs font-bold leading-tight text-white md:hidden">
                 NB DANCE
                 <br />
-                AWARD
+                AWARDS
               </span>
               <div className="hidden md:flex items-center gap-1 text-xl font-bold">
                 <span className="text-white">NB</span>
-                <span className="text-yellow-500">Award</span>
+                <span className="text-yellow-500">Dance Awards</span>
               </div>
             </div>
           </Link>
@@ -970,7 +970,7 @@ export default function CandidatsPage() {
                   <SheetTitle className="text-left">
                     <div className="flex flex-col">
                       <span className="text-sm font-bold text-white">NB DANCE</span>
-                      <span className="text-sm font-bold text-white">AWARD</span>
+                      <span className="text-sm font-bold text-white">AWARDS</span>
                     </div>
                   </SheetTitle>
                 </div>

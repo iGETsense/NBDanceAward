@@ -369,7 +369,7 @@ export default function ClassementPage() {
           showBanner ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        NB COMPANY PRESENTE
+        NB DANCE AWARDS
       </div>
 
       {/* Header */}
@@ -387,9 +387,12 @@ export default function ClassementPage() {
               <span className="text-xs font-bold leading-tight text-white md:hidden">
                 NB DANCE
                 <br />
-                AWARD
+                AWARDS
               </span>
-              <span className="hidden text-2xl font-bold text-white md:block">NB Dance Award</span>
+              <div className="hidden md:flex items-center gap-1 text-xl font-bold">
+                <span className="text-white">NB</span>
+                <span className="text-yellow-500">Dance Awards</span>
+              </div>
             </div>
           </Link>
 
@@ -406,7 +409,7 @@ export default function ClassementPage() {
                   <div className="relative h-16 w-16 mx-auto mb-3">
                     <Image src="/logo.png" alt="NB Dance Award" fill className="object-contain" />
                   </div>
-                  <h2 className="text-center text-lg font-bold text-yellow-500">NB DANCE AWARD</h2>
+                  <h2 className="text-center text-lg font-bold text-yellow-500">NB DANCE AWARDS</h2>
                 </div>
 
                 <nav className="flex-1 p-4 space-y-2">
