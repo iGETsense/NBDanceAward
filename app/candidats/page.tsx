@@ -571,7 +571,7 @@ const oldStaticCandidates = [
     votes: 1834,
     badge: 1,
     percentage: 45,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
   {
     name: "Nounours traditionnel",
@@ -580,7 +580,7 @@ const oldStaticCandidates = [
     votes: 1689,
     badge: null,
     percentage: 41,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
   {
     name: "Arcadien fureur",
@@ -589,7 +589,7 @@ const oldStaticCandidates = [
     votes: 1567,
     badge: null,
     percentage: 38,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
   {
     name: "Kibong adoube",
@@ -598,7 +598,7 @@ const oldStaticCandidates = [
     votes: 1445,
     badge: null,
     percentage: 35,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
 
   // 10-meilleurs danseur de l'année
@@ -852,7 +852,7 @@ const categories = [
   "Meilleur collaboration duo",
   "Meilleur artiste Chorégraphe",
   "Meilleur Performance web",
-  "Meilleure artiste danseur au rythme folklorique",
+  "Meilleur artiste danseur au rythme folklorique",
   "Meilleur artiste danseur afro coupé décalé",
   "Meilleur artiste danseur mbolé",
   "Meilleure artiste danseuse mbolé",

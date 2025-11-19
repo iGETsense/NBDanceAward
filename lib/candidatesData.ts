@@ -430,7 +430,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
   {
     name: "Nounours traditionnel",
@@ -439,7 +439,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
   {
     name: "Arcadien fureur",
@@ -448,7 +448,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
   {
     name: "Kibong adoube",
@@ -457,7 +457,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
   {
     name: "Goldy lastar",

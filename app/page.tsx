@@ -421,7 +421,7 @@ const staticCandidates = [
     category: "Meilleur Performance web",
   },
 
-  // Meilleure artiste danseur au rythme folklorique
+  // Meilleur artiste danseur au rythme folklorique
   {
     name: "Ayi ventilateur",
     title: "Wind Master",
@@ -429,7 +429,7 @@ const staticCandidates = [
     votes: 1834,
     badge: 1,
     percentage: 45,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
   {
     name: "Nounours traditionnel",
@@ -438,7 +438,7 @@ const staticCandidates = [
     votes: 1689,
     badge: null,
     percentage: 41,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
   {
     name: "Arcadien fureur",
@@ -447,7 +447,7 @@ const staticCandidates = [
     votes: 1567,
     badge: null,
     percentage: 38,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
   {
     name: "Kibong adoube",
@@ -456,7 +456,7 @@ const staticCandidates = [
     votes: 1445,
     badge: null,
     percentage: 35,
-    category: "Meilleure artiste danseur au rythme folklorique",
+    category: "Meilleur artiste danseur au rythme folklorique",
   },
 
   // Meilleur artiste danseur afro coupé décalé
@@ -850,11 +850,11 @@ const mainCategories = [
   "Meilleur Groupe de danse",
   "Meilleur artiste danseur Afro Coupé décalé",
   "Meilleur artiste danseur masculin",
-  "meilleurs artiste danseurs mbolé",
-  "meilleur artiste danse au rythme folklorique",
-  "meilleurs danseur de l'année",
-  "Meilleurs artiste chorégraphes",
-  "meilleure artiste danseuse de l'année",
+  "Meilleur artiste danseur mbolé",
+  "Meilleur artiste danseur au rythme folklorique",
+  "Meilleur artiste danseur de l'année",
+  "Meilleur artiste Chorégraphe",
+  "Meilleure artiste danseuse de l'année",
   "Meilleur collaboration duo",
 ]
 
@@ -1294,7 +1294,7 @@ export default function NBDanceAwardPage() {
                   <Smartphone className="h-10 w-10 text-yellow-500 md:h-12 md:w-12" />
                 </div>
                 <div className="mb-2 text-sm font-bold text-yellow-500">GO</div>
-                <h3 className="text-sm font-semibold md:text-base">1. Choisissez en Votre Danseur</h3>
+                <h3 className="text-sm font-semibold md:text-base">1. Choisissez Votre Danseur</h3>
               </div>
 
               <div className="flex flex-col items-center text-center">

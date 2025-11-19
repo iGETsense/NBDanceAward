@@ -37,7 +37,7 @@ export default function ReglesPage() {
     "Meilleure collaboration duo/trio",
     "Meilleur Chorégraphe",
     "Performance la plus virale",
-    "Meilleur danse au rythme folklorique",
+    "Meilleur danseur au rythme folklorique",
     "Meilleur danseur coupé décalé",
     "Meilleur danseur mbolé",
     "Meilleure danseuse mbolé",
