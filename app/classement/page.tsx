@@ -332,12 +332,11 @@ const mainCategories = [
 const honoraryPrizes = ["Best inspiration pour la jeunesse", "Best soutien pour la jeunesse", "Prix d'encouragements"]
 
 export default function ClassementPage() {
-  // Firebase hook (disabled for now due to CSP issues)
-  // const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
+  // Firebase hook
+  const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
   
-  // Use static candidates as primary source
-  const rankedCandidates = staticRankedCandidates
-  const candidatesLoading = false
+  // Use Firebase candidates if available, otherwise use static
+  const rankedCandidates = firebaseCandidates.length > 0 ? firebaseCandidates : staticRankedCandidates
 
   const [showBanner, setShowBanner] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
