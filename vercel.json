@@ -1,5 +1,16 @@
 {
   "buildCommand": "pnpm run build",
   "installCommand": "pnpm install --no-frozen-lockfile",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self' https://*.firebasedatabase.app; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://vercel.live https://www.googletagmanager.com https://www.google-analytics.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.firebasedatabase.app wss://*.firebasedatabase.app https://*.googleapis.com https://vercel.live https://www.google-analytics.com https://www.googletagmanager.com; frame-src https://*.firebasedatabase.app 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        }
+      ]
+    }
+  ]
 }
