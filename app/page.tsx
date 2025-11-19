@@ -69,7 +69,7 @@ const staticCandidates = [
   },
   {
     name: "3 peace",
-    title: "Peace Trio",
+    title: "Trio Performer",
     image: "/dancers/3 peace.jpeg",
     votes: 987,
     badge: null,
