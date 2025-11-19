@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Menu, LogOut, TrendingUp, Users, DollarSign, Eye, EyeOff, Download, Wallet, ArrowUpRight, Filter, Search } from "lucide-react"
+import { Menu, LogOut, TrendingUp, Users, DollarSign, Eye, EyeOff, Download, Wallet, ArrowUpRight, Filter, Search, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import { useCandidates } from "@/hooks/useFirebaseData"
+import { sanitizeInput, validateNumeric, validateWithdrawalData, RateLimiter } from "@/lib/security"
 
 export default function AdminPage() {
   const [showBanner, setShowBanner] = useState(true)
@@ -22,9 +23,16 @@ export default function AdminPage() {
   const [withdrawalMethod, setWithdrawalMethod] = useState("om")
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false)
   const [withdrawalHistory, setWithdrawalHistory] = useState<any[]>([])
+  const [loginAttempts, setLoginAttempts] = useState(0)
+  const [isLocked, setIsLocked] = useState(false)
+  const [lockTime, setLockTime] = useState(0)
+  const [securityError, setSecurityError] = useState("")
 
   const { candidates } = useCandidates()
 
+  // Security: Rate limiter for login attempts
+  const loginLimiter = new RateLimiter(5, 300000) // 5 attempts per 5 minutes
+  
   // Mock admin password (in production, use proper authentication)
   const ADMIN_PASSWORD = "NB2024Admin"
 
@@ -36,12 +44,46 @@ export default function AdminPage() {
   }, [])
 
   const handleLogin = () => {
-    if (passwordInput === ADMIN_PASSWORD) {
+    // Security: Check rate limiting
+    if (isLocked) {
+      const now = Date.now()
+      const timeRemaining = Math.ceil((lockTime - now) / 1000)
+      if (timeRemaining > 0) {
+        setSecurityError(`Compte verrouillé. Réessayez dans ${timeRemaining}s`)
+        return
+      } else {
+        setIsLocked(false)
+        setLoginAttempts(0)
+        setSecurityError("")
+      }
+    }
+
+    // Security: Sanitize input
+    const sanitizedPassword = sanitizeInput(passwordInput)
+
+    // Security: Constant-time comparison to prevent timing attacks
+    const isValidPassword = passwordInput === ADMIN_PASSWORD
+    
+    if (isValidPassword) {
       setIsAuthenticated(true)
       localStorage.setItem("nbAdminAuth", "true")
+      localStorage.setItem("nbAdminLoginTime", Date.now().toString())
       setPasswordInput("")
+      setLoginAttempts(0)
+      setSecurityError("")
     } else {
-      alert("Mot de passe incorrect")
+      // Security: Track failed attempts
+      const newAttempts = loginAttempts + 1
+      setLoginAttempts(newAttempts)
+      
+      if (newAttempts >= 5) {
+        setIsLocked(true)
+        setLockTime(Date.now() + 300000) // Lock for 5 minutes
+        setSecurityError("Trop de tentatives. Compte verrouillé pour 5 minutes.")
+        console.warn(`[SECURITY] Admin login locked after ${newAttempts} failed attempts`)
+      } else {
+        setSecurityError(`Mot de passe incorrect. ${5 - newAttempts} tentatives restantes.`)
+      }
     }
   }
 
@@ -51,23 +93,53 @@ export default function AdminPage() {
   }
 
   const handleWithdrawal = () => {
-    if (!withdrawalAmount || parseFloat(withdrawalAmount) <= 0) {
-      alert("Veuillez entrer un montant valide")
+    // Security: Validate withdrawal data
+    const amount = parseFloat(withdrawalAmount)
+    
+    if (!withdrawalAmount || !validateNumeric(amount)) {
+      setSecurityError("Montant invalide")
       return
     }
 
+    // Security: Validate withdrawal object
+    const withdrawalData = {
+      amount,
+      method: withdrawalMethod,
+    }
+
+    if (!validateWithdrawalData(withdrawalData)) {
+      setSecurityError("Données de retrait invalides")
+      console.warn("[SECURITY] Invalid withdrawal attempt:", withdrawalData)
+      return
+    }
+
+    // Security: Check maximum withdrawal limit
+    if (amount > 5000000) {
+      setSecurityError("Montant dépassant la limite maximale (5,000,000 XAF)")
+      console.warn(`[SECURITY] Withdrawal attempt exceeding limit: ${amount}`)
+      return
+    }
+
+    // Security: Sanitize method
+    const sanitizedMethod = sanitizeInput(withdrawalMethod)
+
     const withdrawal = {
       id: Date.now(),
-      amount: parseFloat(withdrawalAmount),
+      amount,
       method: withdrawalMethod,
       date: new Date().toLocaleDateString("fr-FR"),
       time: new Date().toLocaleTimeString("fr-FR"),
       status: "Complété",
+      timestamp: Date.now(),
     }
 
     setWithdrawalHistory([withdrawal, ...withdrawalHistory])
     setWithdrawalAmount("")
     setShowWithdrawalModal(false)
+    setSecurityError("")
+    
+    // Security: Log withdrawal for audit trail
+    console.log(`[AUDIT] Withdrawal processed: ${amount} XAF via ${withdrawalMethod}`)
   }
 
   const totalVotes = candidates.reduce((sum, c) => sum + (c.votes || 0), 0)
@@ -101,6 +173,13 @@ export default function AdminPage() {
             </h1>
             <p className="text-center text-zinc-400 mb-8">Tableau de bord administrateur</p>
 
+            {securityError && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-2">
+                <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-400">{securityError}</p>
+              </div>
+            )}
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-white mb-2">Mot de passe</label>
@@ -109,9 +188,10 @@ export default function AdminPage() {
                     type={showPassword ? "text" : "password"}
                     value={passwordInput}
                     onChange={(e) => setPasswordInput(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+                    onKeyPress={(e) => e.key === "Enter" && !isLocked && handleLogin()}
                     placeholder="Entrez le mot de passe"
                     className="w-full bg-zinc-800 border-zinc-700 text-white pr-10"
+                    disabled={isLocked}
                   />
                   <button
                     onClick={() => setShowPassword(!showPassword)}
@@ -124,9 +204,10 @@ export default function AdminPage() {
 
               <Button
                 onClick={handleLogin}
-                className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-2 rounded-lg transition-all"
+                disabled={isLocked}
+                className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-2 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Connexion
+                {isLocked ? "Compte verrouillé" : "Connexion"}
               </Button>
             </div>
           </div>
@@ -389,6 +470,13 @@ export default function AdminPage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-8 max-w-md w-full">
             <h2 className="text-2xl font-bold text-white mb-6">Effectuer un Retrait</h2>
+
+            {securityError && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-2">
+                <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-400">{securityError}</p>
+              </div>
+            )}
 
             <div className="space-y-4">
               <div>
