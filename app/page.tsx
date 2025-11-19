@@ -984,11 +984,21 @@ export default function NBDanceAwardPage() {
     return 5 // 5 columns × 1 row
   }
 
+  const shuffleArray = (array: any[]) => {
+    const shuffled = [...array]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    return shuffled
+  }
+
   const getVisibleCandidates = (category: string) => {
     const categoryCandidates = getCandidatesByCategory(category)
+    const shuffled = shuffleArray(categoryCandidates)
     const isExpanded = expandedCategories.has(category)
     const initialCount = getInitialVisibleCount()
-    return isExpanded ? categoryCandidates : categoryCandidates.slice(0, initialCount)
+    return isExpanded ? shuffled : shuffled.slice(0, initialCount)
   }
 
   const shouldShowButton = (category: string) => {
