@@ -3,7 +3,6 @@
     "maguy-merine": {
       "id": "maguy-merine",
       "name": "Maguy merine",
-      "title": "Dance Star",
       "image": "/dancers/MAGUY MERINE.jpeg",
       "votes": 0,
       "quote": 5,
@@ -14,7 +13,6 @@
     "kendi": {
       "id": "kendi",
       "name": "Kendi",
-      "title": "Dance Performer",
       "image": "/dancers/KENDI.jpeg",
       "votes": 0,
       "quote": 5,
@@ -25,7 +23,6 @@
     "bebs-velina": {
       "id": "bebs-velina",
       "name": "Beb's velina",
-      "title": "Talented Dancer",
       "image": "/dancers/Beb's vélina.jpeg",
       "votes": 0,
       "quote": 5,
@@ -36,7 +33,6 @@
     "katia-eg": {
       "id": "katia-eg",
       "name": "Katia eg",
-      "title": "Professional Artist",
       "image": "/dancers/Katia EG.png",
       "votes": 0,
       "quote": 5,
@@ -47,7 +43,6 @@
     "stella-officielle3": {
       "id": "stella-officielle3",
       "name": "Stella officielle3",
-      "title": "Star Performer",
       "image": "/dancers/Stella Officielle3.jpeg",
       "votes": 0,
       "quote": 5,
@@ -58,7 +53,6 @@
     "nounours": {
       "id": "nounours",
       "name": "Nounours",
-      "title": "Dynamic Dancer",
       "image": "/dancers/Nounours.jpeg",
       "votes": 0,
       "quote": 5,
@@ -69,7 +63,6 @@
     "okonor-celeste": {
       "id": "okonor-celeste",
       "name": "O'konor Céleste",
-      "title": "Rising Star",
       "image": "/dancers/O'konor Celeste.jpeg",
       "votes": 0,
       "quote": 5,
@@ -80,7 +73,6 @@
     "nelly-dora": {
       "id": "nelly-dora",
       "name": "Nelly Dora",
-      "title": "Online Artist",
       "image": "/dancers/NELLY DORA.jpeg",
       "votes": 0,
       "quote": 5,
@@ -91,7 +83,6 @@
     "chica-bassa": {
       "id": "chica-bassa",
       "name": "Chica bassa",
-      "title": "Viral Artist",
       "image": "/dancers/CHICA BASSA.jpeg",
       "votes": 0,
       "quote": 5,
@@ -102,7 +93,6 @@
     "lmn-ponce-off": {
       "id": "lmn-ponce-off",
       "name": "LMN ponce Off",
-      "title": "Performer",
       "image": "/dancers/LMN ponce Off.jpeg",
       "votes": 0,
       "quote": 5,
@@ -113,7 +103,6 @@
     "influence-femi": {
       "id": "influence-femi",
       "name": "Influence Femi",
-      "title": "Influencer",
       "image": "/dancers/Influence Femi.jpeg",
       "votes": 0,
       "quote": 5,
@@ -124,7 +113,6 @@
     "jessi-237": {
       "id": "jessi-237",
       "name": "Jessi 237",
-      "title": "Digital Star",
       "image": "/dancers/Jessi 237.jpeg",
       "votes": 0,
       "quote": 5,
@@ -135,7 +123,6 @@
     "maxime-la-vitesse": {
       "id": "maxime-la-vitesse",
       "name": "Maxime la vitesse",
-      "title": "Young Star",
       "image": "/dancers/Maxime la vitesse.jpg",
       "votes": 0,
       "quote": 5,
@@ -146,7 +133,6 @@
     "kloe-la-machine": {
       "id": "kloe-la-machine",
       "name": "Kloe la machine",
-      "title": "Young Performer",
       "image": "/dancers/Kloe la machine.JPG",
       "votes": 0,
       "quote": 5,
@@ -157,7 +143,6 @@
     "meldjess-peace": {
       "id": "meldjess-peace",
       "name": "Meldjess peace",
-      "title": "Young Artist",
       "image": "/dancers/Meldjess peace.jpeg",
       "votes": 0,
       "quote": 5,
@@ -168,7 +153,6 @@
     "jumeaux-de-la-capitale": {
       "id": "jumeaux-de-la-capitale",
       "name": "Jumeaux de la capitale",
-      "title": "Twin Stars",
       "image": "/dancers/JUMAUX DE LA CAPITALE.jpg",
       "votes": 0,
       "quote": 5,
@@ -179,7 +163,6 @@
     "deboy-le-monstre": {
       "id": "deboy-le-monstre",
       "name": "Déboy le monstre",
-      "title": "Viral Sensation",
       "image": "/dancers/DEBOY LE MONSTRE.jpeg",
       "votes": 0,
       "quote": 5,
@@ -190,7 +173,6 @@
     "el-fally-237": {
       "id": "el-fally-237",
       "name": "El fally 237",
-      "title": "Online Star",
       "image": "/dancers/El fally du 237.jpg",
       "votes": 0,
       "quote": 5,
@@ -201,7 +183,6 @@
     "jkaxel": {
       "id": "jkaxel",
       "name": "Jkaxel",
-      "title": "Internet Performer",
       "image": "/dancers/JKAXEL.jpg",
       "votes": 0,
       "quote": 5,
@@ -212,7 +193,6 @@
     "etienne-kampos": {
       "id": "etienne-kampos",
       "name": "Étienne kampos",
-      "title": "Web Performer",
       "image": "/dancers/Etienne kampos.jpg",
       "votes": 0,
       "quote": 5,
@@ -223,7 +203,6 @@
     "afu-dance-academie": {
       "id": "afu-dance-academie",
       "name": "AFU Dance académie",
-      "title": "Professional Group",
       "image": "/dancers/AFU DANCE ACADEMY STUDIO.jpeg",
       "votes": 0,
       "quote": 5,
@@ -234,7 +213,6 @@
     "etat-nwar-dance": {
       "id": "etat-nwar-dance",
       "name": "Etat NWAR dance",
-      "title": "Dance Collective",
       "image": "/dancers/ÉTAT NWAR DANCE SCHOOL.jpg",
       "votes": 0,
       "quote": 5,
@@ -245,7 +223,6 @@
     "team-escram": {
       "id": "team-escram",
       "name": "Team Escram",
-      "title": "Dance Crew",
       "image": "/dancers/TEAM ESCRAM.jpeg",
       "votes": 0,
       "quote": 5,
@@ -256,7 +233,6 @@
     "mbole-dancing": {
       "id": "mbole-dancing",
       "name": "Mbolé Dancing",
-      "title": "Cultural Group",
       "image": "/dancers/Mbole Dancing.jpeg",
       "votes": 0,
       "quote": 5,
@@ -267,7 +243,6 @@
     "ordinateur-baboue": {
       "id": "ordinateur-baboue",
       "name": "Ordinateur baboué",
-      "title": "Afro Coupé Artist",
       "image": "/dancers/ORDINATEUR baboué.jpeg",
       "votes": 0,
       "quote": 5,
@@ -278,7 +253,6 @@
     "shazam-le-vrai": {
       "id": "shazam-le-vrai",
       "name": "Shazam le vrai",
-      "title": "Afro Master",
       "image": "/dancers/SHAZAM.jpeg",
       "votes": 0,
       "quote": 5,
@@ -289,7 +263,6 @@
     "xender": {
       "id": "xender",
       "name": "Xender",
-      "title": "Afro Performer",
       "image": "/dancers/XENDER.jpeg",
       "votes": 0,
       "quote": 5,
@@ -300,7 +273,6 @@
     "bb-super-lelu": {
       "id": "bb-super-lelu",
       "name": "BB Super l'elu",
-      "title": "Afro Star",
       "image": "/dancers/Bb super lélu.jpeg",
       "votes": 0,
       "quote": 5,
@@ -311,7 +283,6 @@
     "vinny-magicien": {
       "id": "vinny-magicien",
       "name": "Vinny magicien",
-      "title": "Magic Dancer",
       "image": "/dancers/Vinny magicien.jpg",
       "votes": 0,
       "quote": 5,
@@ -322,7 +293,6 @@
     "smobar-le-balthazar": {
       "id": "smobar-le-balthazar",
       "name": "Smobar Le Balthazar",
-      "title": "Smooth Performer",
       "image": "/dancers/Smobar Le Balthazar.jpg",
       "votes": 0,
       "quote": 5,
@@ -333,7 +303,6 @@
     "authentik": {
       "id": "authentik",
       "name": "Authentik",
-      "title": "Authentic Artist",
       "image": "/dancers/Authentik.jpg",
       "votes": 0,
       "quote": 5,
@@ -344,7 +313,6 @@
     "pikan-pointu": {
       "id": "pikan-pointu",
       "name": "Pikan pointu",
-      "title": "Sharp Performer",
       "image": "/dancers/Pikan pointu.jpeg",
       "votes": 0,
       "quote": 5,
@@ -355,7 +323,6 @@
     "wenjel-avataro": {
       "id": "wenjel-avataro",
       "name": "Wenjel Avataro",
-      "title": "Avatar Dancer",
       "image": "/dancers/Wenjel Avataro.jpeg",
       "votes": 0,
       "quote": 5,
@@ -366,7 +333,6 @@
     "jesus-saotao": {
       "id": "jesus-saotao",
       "name": "Jesus saotao",
-      "title": "Spiritual Dancer",
       "image": "/dancers/JEZUS SAOTAO.jpeg",
       "votes": 0,
       "quote": 5,
@@ -377,7 +343,6 @@
     "etienne-kampos-male": {
       "id": "etienne-kampos-male",
       "name": "Étienne kampos",
-      "title": "Male Dance King",
       "image": "/dancers/Etienne kampos.jpg",
       "votes": 0,
       "quote": 5,
@@ -388,7 +353,6 @@
     "de-flow": {
       "id": "de-flow",
       "name": "De Flow",
-      "title": "Flow Master",
       "image": "/dancers/De Flow.jpeg",
       "votes": 0,
       "quote": 5,
@@ -399,7 +363,6 @@
     "pascal-metaphore": {
       "id": "pascal-metaphore",
       "name": "Pascal métaphore",
-      "title": "Poetic Dancer",
       "image": "/dancers/PASCAL métaphore.jpeg",
       "votes": 0,
       "quote": 5,
@@ -410,7 +373,6 @@
     "el-fally-du-237": {
       "id": "el-fally-du-237",
       "name": "El Fally du 237",
-      "title": "Cameroon Star",
       "image": "/dancers/El fally du 237.jpg",
       "votes": 0,
       "quote": 5,
@@ -421,7 +383,6 @@
     "escram-shuwingum": {
       "id": "escram-shuwingum",
       "name": "Escram shuwingum",
-      "title": "Smooth Performer",
       "image": "/dancers/ESCRAM.jpeg",
       "votes": 0,
       "quote": 5,
@@ -432,7 +393,6 @@
     "petit-tchakap": {
       "id": "petit-tchakap",
       "name": "Petit tchakap",
-      "title": "Small but Mighty",
       "image": "/dancers/petit tchakap.jpg",
       "votes": 0,
       "quote": 5,
@@ -443,7 +403,6 @@
     "3-peace": {
       "id": "3-peace",
       "name": "3 peace",
-      "title": "Trio Performer",
       "image": "/dancers/3 peace.jpeg",
       "votes": 0,
       "quote": 5,
@@ -454,7 +413,6 @@
     "jkaxel-male": {
       "id": "jkaxel-male",
       "name": "Jkaxel",
-      "title": "Urban Legend",
       "image": "/dancers/JKAXEL.jpg",
       "votes": 0,
       "quote": 5,
@@ -465,7 +423,6 @@
     "deboy-le-monstre-mbole": {
       "id": "deboy-le-monstre-mbole",
       "name": "Déboy le monstre",
-      "title": "Mbole Master",
       "image": "/dancers/DEBOY LE MONSTRE.jpeg",
       "votes": 0,
       "quote": 5,
@@ -476,7 +433,6 @@
     "tks-officiel": {
       "id": "tks-officiel",
       "name": "Tks officiel",
-      "title": "Official Performer",
       "image": "/dancers/TKS OFFICIEL.jpg",
       "votes": 0,
       "quote": 5,
@@ -487,7 +443,6 @@
     "4-peace": {
       "id": "4-peace",
       "name": "4 peace",
-      "title": "Peace Quartet",
       "image": "/dancers/4 peace.jpeg",
       "votes": 0,
       "quote": 5,
@@ -498,7 +453,6 @@
     "nyanga-boy": {
       "id": "nyanga-boy",
       "name": "Nyanga Boy",
-      "title": "Boy Performer",
       "image": "/dancers/Nyanga Boy.jpeg",
       "votes": 0,
       "quote": 5,
@@ -509,7 +463,6 @@
     "tresor-brown": {
       "id": "tresor-brown",
       "name": "Trésor brown",
-      "title": "Treasure Dancer",
       "image": "/dancers/Tresor Brown.jpeg",
       "votes": 0,
       "quote": 5,
@@ -520,7 +473,6 @@
     "ayi-ventilateur": {
       "id": "ayi-ventilateur",
       "name": "Ayi ventilateur",
-      "title": "Fan Dancer",
       "image": "/dancers/ayi ventilateur.png",
       "votes": 0,
       "quote": 5,
@@ -531,7 +483,6 @@
     "nounours-traditionnel": {
       "id": "nounours-traditionnel",
       "name": "Nounours traditionnel",
-      "title": "Traditional Dancer",
       "image": "/dancers/le nounours traditionnel.jpeg",
       "votes": 0,
       "quote": 5,
@@ -542,7 +493,6 @@
     "arcadien-fureur": {
       "id": "arcadien-fureur",
       "name": "Arcadien fureur",
-      "title": "Arcadian Choreographer",
       "image": "/dancers/Accadient Fureur.jpeg",
       "votes": 0,
       "quote": 5,
@@ -553,7 +503,6 @@
     "kibong-adoube": {
       "id": "kibong-adoube",
       "name": "Kibong adoube",
-      "title": "Traditional Master",
       "image": "/dancers/Kibong adoube.jpeg",
       "votes": 0,
       "quote": 5,
@@ -564,7 +513,6 @@
     "goldy-lastar": {
       "id": "goldy-lastar",
       "name": "Goldy lastar",
-      "title": "Golden Star",
       "image": "/dancers/GOLDY LA-STAR.jpeg",
       "votes": 0,
       "quote": 5,
@@ -575,7 +523,6 @@
     "garcon-determine": {
       "id": "garcon-determine",
       "name": "Garçon déterminé",
-      "title": "Determined Boy",
       "image": "/dancers/Garçon déterminé.jpg",
       "votes": 0,
       "quote": 5,
@@ -586,7 +533,6 @@
     "la-religion-noire": {
       "id": "la-religion-noire",
       "name": "La religion noire",
-      "title": "Black Religion",
       "image": "/dancers/religion  noir.JPG",
       "votes": 0,
       "quote": 5,
@@ -597,7 +543,6 @@
     "le-hempe": {
       "id": "le-hempe",
       "name": "Le Hempe",
-      "title": "Hemp Master",
       "image": "/dancers/le hempe.jpg",
       "votes": 0,
       "quote": 5,
@@ -608,7 +553,6 @@
     "deboy-et-maguy": {
       "id": "deboy-et-maguy",
       "name": "Déboy le monstre et Maguy merine",
-      "title": "Monster & Queen",
       "image": "/dancers/DEBOY LE MONSTRE.jpeg",
       "votes": 0,
       "quote": 5,
@@ -619,7 +563,6 @@
     "4peace-et-rachel": {
       "id": "4peace-et-rachel",
       "name": "4 peace et Rachel élégance",
-      "title": "Peace & Elegance",
       "image": "/dancers/4 peace.jpeg",
       "votes": 0,
       "quote": 5,
@@ -630,7 +573,6 @@
     "chica-et-kendi": {
       "id": "chica-et-kendi",
       "name": "Chica bassa et kendi",
-      "title": "Chica & Kendi",
       "image": "/dancers/CHICA BASSA.jpeg",
       "votes": 0,
       "quote": 5,
@@ -641,7 +583,6 @@
     "tks-et-tresor": {
       "id": "tks-et-tresor",
       "name": "Tks officiel et Trésor brown",
-      "title": "TKS & Treasure",
       "image": "/dancers/TKS OFFICIEL.jpg",
       "votes": 0,
       "quote": 5,
@@ -652,7 +593,6 @@
     "el-fally-et-davia": {
       "id": "el-fally-et-davia",
       "name": "El fally du 237 et davia off",
-      "title": "Fally & Davia",
       "image": "/dancers/El fally du 237.jpg",
       "votes": 0,
       "quote": 5,
@@ -663,7 +603,6 @@
     "okonor-et-katia": {
       "id": "okonor-et-katia",
       "name": "O'konor Celeste et Katia_eg",
-      "title": "Celeste & Katia",
       "image": "/dancers/O'konor Celeste.jpeg",
       "votes": 0,
       "quote": 5,
@@ -674,7 +613,6 @@
     "3peace-et-influence": {
       "id": "3peace-et-influence",
       "name": "3 peace et Influence femi",
-      "title": "3Peace & Influence",
       "image": "/dancers/3 peace.jpeg",
       "votes": 0,
       "quote": 5,

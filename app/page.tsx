@@ -1224,10 +1224,7 @@ export default function NBDanceAwardPage() {
                           )}
                         </div>
 
-                        <h3 className="mb-1 text-center text-sm md:text-base font-semibold">{candidate.name}</h3>
-                        <span className="mb-2 md:mb-3 text-[10px] md:text-xs text-yellow-500 font-medium">
-                          {candidate.title}
-                        </span>
+                        <h3 className="mb-2 md:mb-3 text-center text-sm md:text-base font-semibold">{candidate.name}</h3>
 
                         <div className="w-full max-w-[100px] md:max-w-none">
                           <div className="mb-1.5 md:mb-2 h-1 md:h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">

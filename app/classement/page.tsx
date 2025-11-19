@@ -616,8 +616,7 @@ export default function ClassementPage() {
 
                           {/* Candidate Info and Progress */}
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-base md:text-lg font-bold mb-1 truncate">{candidate.name}</h3>
-                            <p className="text-xs md:text-sm text-zinc-400 mb-2">{candidate.title}</p>
+                            <h3 className="text-base md:text-lg font-bold mb-2 truncate">{candidate.name}</h3>
 
                             <div className="flex items-center justify-between gap-4 mb-2">
                               <span className="text-xs md:text-sm text-zinc-400">
