@@ -3,7 +3,7 @@
     "maguy-merine": {
       "id": "maguy-merine",
       "name": "Maguy merine",
-      "image": "/dancers/MAGUY MERINE.jpeg",
+      "image": "/dancers/maguy-merine.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -13,7 +13,7 @@
     "kendi": {
       "id": "kendi",
       "name": "Kendi",
-      "image": "/dancers/KENDI.jpeg",
+      "image": "/dancers/kendi.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -23,7 +23,7 @@
     "bebs-velina": {
       "id": "bebs-velina",
       "name": "Beb's velina",
-      "image": "/dancers/Beb's vélina.jpeg",
+      "image": "/dancers/bebs-velina.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -33,7 +33,7 @@
     "katia-eg": {
       "id": "katia-eg",
       "name": "Katia eg",
-      "image": "/dancers/Katia EG.png",
+      "image": "/dancers/katia-eg.png",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -43,7 +43,7 @@
     "stella-officielle3": {
       "id": "stella-officielle3",
       "name": "Stella officielle3",
-      "image": "/dancers/Stella Officielle3.jpeg",
+      "image": "/dancers/stella-officielle3.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -53,7 +53,7 @@
     "nounours": {
       "id": "nounours",
       "name": "Nounours",
-      "image": "/dancers/Nounours.jpeg",
+      "image": "/dancers/nounours.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -63,7 +63,7 @@
     "okonor-celeste": {
       "id": "okonor-celeste",
       "name": "O'konor Céleste",
-      "image": "/dancers/O'konor Celeste.jpeg",
+      "image": "/dancers/okonor-celeste.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -73,7 +73,7 @@
     "nelly-dora": {
       "id": "nelly-dora",
       "name": "Nelly Dora",
-      "image": "/dancers/NELLY DORA.jpeg",
+      "image": "/dancers/nelly-dora.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -83,7 +83,7 @@
     "chica-bassa": {
       "id": "chica-bassa",
       "name": "Chica bassa",
-      "image": "/dancers/CHICA BASSA.jpeg",
+      "image": "/dancers/chica-bassa.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -93,7 +93,7 @@
     "lmn-ponce-off": {
       "id": "lmn-ponce-off",
       "name": "LMN ponce Off",
-      "image": "/dancers/LMN ponce Off.jpeg",
+      "image": "/dancers/lmn-ponce-off.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -103,7 +103,7 @@
     "influence-femi": {
       "id": "influence-femi",
       "name": "Influence Femi",
-      "image": "/dancers/Influence Femi.jpeg",
+      "image": "/dancers/influence-femi.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -113,7 +113,7 @@
     "jessi-237": {
       "id": "jessi-237",
       "name": "Jessi 237",
-      "image": "/dancers/Jessi 237.jpeg",
+      "image": "/dancers/jessi-237.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -123,7 +123,7 @@
     "maxime-la-vitesse": {
       "id": "maxime-la-vitesse",
       "name": "Maxime la vitesse",
-      "image": "/dancers/Maxime la vitesse.jpg",
+      "image": "/dancers/maxime-la-vitesse.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -133,7 +133,7 @@
     "kloe-la-machine": {
       "id": "kloe-la-machine",
       "name": "Kloe la machine",
-      "image": "/dancers/Kloe la machine.JPG",
+      "image": "/dancers/kloe-la-machine.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -143,7 +143,7 @@
     "meldjess-peace": {
       "id": "meldjess-peace",
       "name": "Meldjess peace",
-      "image": "/dancers/Meldjess peace.jpeg",
+      "image": "/dancers/meldjess-peace.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -153,7 +153,7 @@
     "jumeaux-de-la-capitale": {
       "id": "jumeaux-de-la-capitale",
       "name": "Jumeaux de la capitale",
-      "image": "/dancers/JUMAUX DE LA CAPITALE.jpg",
+      "image": "/dancers/jumeaux-capitale.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -163,7 +163,7 @@
     "deboy-le-monstre": {
       "id": "deboy-le-monstre",
       "name": "Déboy le monstre",
-      "image": "/dancers/DEBOY LE MONSTRE.jpeg",
+      "image": "/dancers/deboy-le-monstre.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -173,7 +173,7 @@
     "el-fally-237": {
       "id": "el-fally-237",
       "name": "El fally 237",
-      "image": "/dancers/El fally du 237.jpg",
+      "image": "/dancers/el-fally-du-237.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -183,7 +183,7 @@
     "jkaxel": {
       "id": "jkaxel",
       "name": "Jkaxel",
-      "image": "/dancers/JKAXEL.jpg",
+      "image": "/dancers/jkaxel.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -193,7 +193,7 @@
     "etienne-kampos": {
       "id": "etienne-kampos",
       "name": "Étienne kampos",
-      "image": "/dancers/Etienne kampos.jpg",
+      "image": "/dancers/etienne-kampos.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -203,7 +203,7 @@
     "afu-dance-academie": {
       "id": "afu-dance-academie",
       "name": "AFU Dance académie",
-      "image": "/dancers/AFU DANCE ACADEMY STUDIO.jpeg",
+      "image": "/dancers/afu-dance-academy.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -213,7 +213,7 @@
     "etat-nwar-dance": {
       "id": "etat-nwar-dance",
       "name": "Etat NWAR dance",
-      "image": "/dancers/ÉTAT NWAR DANCE SCHOOL.jpg",
+      "image": "/dancers/etat-nwar-dance.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -223,7 +223,7 @@
     "team-escram": {
       "id": "team-escram",
       "name": "Team Escram",
-      "image": "/dancers/TEAM ESCRAM.jpeg",
+      "image": "/dancers/team-escram.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -233,7 +233,7 @@
     "mbole-dancing": {
       "id": "mbole-dancing",
       "name": "Mbolé Dancing",
-      "image": "/dancers/Mbole Dancing.jpeg",
+      "image": "/dancers/mbole-dancing.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -243,7 +243,7 @@
     "ordinateur-baboue": {
       "id": "ordinateur-baboue",
       "name": "Ordinateur baboué",
-      "image": "/dancers/ORDINATEUR baboué.jpeg",
+      "image": "/dancers/ordinateur-baboue.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -253,7 +253,7 @@
     "shazam-le-vrai": {
       "id": "shazam-le-vrai",
       "name": "Shazam le vrai",
-      "image": "/dancers/SHAZAM.jpeg",
+      "image": "/dancers/shazam.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -263,7 +263,7 @@
     "xender": {
       "id": "xender",
       "name": "Xender",
-      "image": "/dancers/XENDER.jpeg",
+      "image": "/dancers/xender.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -273,7 +273,7 @@
     "bb-super-lelu": {
       "id": "bb-super-lelu",
       "name": "BB Super l'elu",
-      "image": "/dancers/Bb super lélu.jpeg",
+      "image": "/dancers/bb-super-lelu.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -283,7 +283,7 @@
     "vinny-magicien": {
       "id": "vinny-magicien",
       "name": "Vinny magicien",
-      "image": "/dancers/Vinny magicien.jpg",
+      "image": "/dancers/vinny-magicien.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -293,7 +293,7 @@
     "smobar-le-balthazar": {
       "id": "smobar-le-balthazar",
       "name": "Smobar Le Balthazar",
-      "image": "/dancers/Smobar Le Balthazar.jpg",
+      "image": "/dancers/smobar-le-balthazar.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -303,7 +303,7 @@
     "authentik": {
       "id": "authentik",
       "name": "Authentik",
-      "image": "/dancers/Authentik.jpg",
+      "image": "/dancers/authentik.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -313,7 +313,7 @@
     "pikan-pointu": {
       "id": "pikan-pointu",
       "name": "Pikan pointu",
-      "image": "/dancers/Pikan pointu.jpeg",
+      "image": "/dancers/pikan-pointu.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -323,7 +323,7 @@
     "wenjel-avataro": {
       "id": "wenjel-avataro",
       "name": "Wenjel Avataro",
-      "image": "/dancers/Wenjel Avataro.jpeg",
+      "image": "/dancers/wenjel-avataro.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -333,7 +333,7 @@
     "jesus-saotao": {
       "id": "jesus-saotao",
       "name": "Jesus saotao",
-      "image": "/dancers/JEZUS SAOTAO.jpeg",
+      "image": "/dancers/jesus-saotao.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -343,7 +343,7 @@
     "etienne-kampos-male": {
       "id": "etienne-kampos-male",
       "name": "Étienne kampos",
-      "image": "/dancers/Etienne kampos.jpg",
+      "image": "/dancers/etienne-kampos.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -353,7 +353,7 @@
     "de-flow": {
       "id": "de-flow",
       "name": "De Flow",
-      "image": "/dancers/De Flow.jpeg",
+      "image": "/dancers/de-flow.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -363,7 +363,7 @@
     "pascal-metaphore": {
       "id": "pascal-metaphore",
       "name": "Pascal métaphore",
-      "image": "/dancers/PASCAL métaphore.jpeg",
+      "image": "/dancers/pascal-metaphore.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -373,7 +373,7 @@
     "el-fally-du-237": {
       "id": "el-fally-du-237",
       "name": "El Fally du 237",
-      "image": "/dancers/El fally du 237.jpg",
+      "image": "/dancers/el-fally-du-237.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -383,7 +383,7 @@
     "escram-shuwingum": {
       "id": "escram-shuwingum",
       "name": "Escram shuwingum",
-      "image": "/dancers/ESCRAM.jpeg",
+      "image": "/dancers/escram.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -393,7 +393,7 @@
     "petit-tchakap": {
       "id": "petit-tchakap",
       "name": "Petit tchakap",
-      "image": "/dancers/petit tchakap.jpg",
+      "image": "/dancers/petit-tchakap.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -403,7 +403,7 @@
     "3-peace": {
       "id": "3-peace",
       "name": "3 peace",
-      "image": "/dancers/3 peace.jpeg",
+      "image": "/dancers/3-peace.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -413,7 +413,7 @@
     "jkaxel-male": {
       "id": "jkaxel-male",
       "name": "Jkaxel",
-      "image": "/dancers/JKAXEL.jpg",
+      "image": "/dancers/jkaxel.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -423,7 +423,7 @@
     "deboy-le-monstre-mbole": {
       "id": "deboy-le-monstre-mbole",
       "name": "Déboy le monstre",
-      "image": "/dancers/DEBOY LE MONSTRE.jpeg",
+      "image": "/dancers/deboy-le-monstre.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -433,7 +433,7 @@
     "tks-officiel": {
       "id": "tks-officiel",
       "name": "Tks officiel",
-      "image": "/dancers/TKS OFFICIEL.jpg",
+      "image": "/dancers/tks-officiel.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -443,7 +443,7 @@
     "4-peace": {
       "id": "4-peace",
       "name": "4 peace",
-      "image": "/dancers/4 peace.jpeg",
+      "image": "/dancers/4-peace.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -453,7 +453,7 @@
     "nyanga-boy": {
       "id": "nyanga-boy",
       "name": "Nyanga Boy",
-      "image": "/dancers/Nyanga Boy.jpeg",
+      "image": "/dancers/nyanga-boy.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -463,7 +463,7 @@
     "tresor-brown": {
       "id": "tresor-brown",
       "name": "Trésor brown",
-      "image": "/dancers/Tresor Brown.jpeg",
+      "image": "/dancers/tresor-brown.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -473,7 +473,7 @@
     "ayi-ventilateur": {
       "id": "ayi-ventilateur",
       "name": "Ayi ventilateur",
-      "image": "/dancers/ayi ventilateur.png",
+      "image": "/dancers/ayi-ventilateur.png",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -483,7 +483,7 @@
     "nounours-traditionnel": {
       "id": "nounours-traditionnel",
       "name": "Nounours traditionnel",
-      "image": "/dancers/le nounours traditionnel.jpeg",
+      "image": "/dancers/nounours-traditionnel.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -493,7 +493,7 @@
     "arcadien-fureur": {
       "id": "arcadien-fureur",
       "name": "Arcadien fureur",
-      "image": "/dancers/Accadient Fureur.jpeg",
+      "image": "/dancers/accadien-fureur.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -503,7 +503,7 @@
     "kibong-adoube": {
       "id": "kibong-adoube",
       "name": "Kibong adoube",
-      "image": "/dancers/Kibong adoube.jpeg",
+      "image": "/dancers/kibong-adoube.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -513,7 +513,7 @@
     "goldy-lastar": {
       "id": "goldy-lastar",
       "name": "Goldy lastar",
-      "image": "/dancers/GOLDY LA-STAR.jpeg",
+      "image": "/dancers/goldy-lastar.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -523,7 +523,7 @@
     "garcon-determine": {
       "id": "garcon-determine",
       "name": "Garçon déterminé",
-      "image": "/dancers/Garçon déterminé.jpg",
+      "image": "/dancers/garcon-determine.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -533,7 +533,7 @@
     "la-religion-noire": {
       "id": "la-religion-noire",
       "name": "La religion noire",
-      "image": "/dancers/religion  noir.JPG",
+      "image": "/dancers/religion-noir.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -543,7 +543,7 @@
     "le-hempe": {
       "id": "le-hempe",
       "name": "Le Hempe",
-      "image": "/dancers/le hempe.jpg",
+      "image": "/dancers/le-hempe.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -553,7 +553,7 @@
     "deboy-et-maguy": {
       "id": "deboy-et-maguy",
       "name": "Déboy le monstre et Maguy merine",
-      "image": "/dancers/DEBOY LE MONSTRE.jpeg",
+      "image": "/dancers/deboy-le-monstre.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -563,7 +563,7 @@
     "4peace-et-rachel": {
       "id": "4peace-et-rachel",
       "name": "4 peace et Rachel élégance",
-      "image": "/dancers/4 peace.jpeg",
+      "image": "/dancers/4-peace.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -573,7 +573,7 @@
     "chica-et-kendi": {
       "id": "chica-et-kendi",
       "name": "Chica bassa et kendi",
-      "image": "/dancers/CHICA BASSA.jpeg",
+      "image": "/dancers/chica-bassa.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -583,7 +583,7 @@
     "tks-et-tresor": {
       "id": "tks-et-tresor",
       "name": "Tks officiel et Trésor brown",
-      "image": "/dancers/TKS OFFICIEL.jpg",
+      "image": "/dancers/tks-officiel.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -593,7 +593,7 @@
     "el-fally-et-davia": {
       "id": "el-fally-et-davia",
       "name": "El fally du 237 et davia off",
-      "image": "/dancers/El fally du 237.jpg",
+      "image": "/dancers/el-fally-du-237.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -603,7 +603,7 @@
     "okonor-et-katia": {
       "id": "okonor-et-katia",
       "name": "O'konor Celeste et Katia_eg",
-      "image": "/dancers/O'konor Celeste.jpeg",
+      "image": "/dancers/okonor-celeste.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
@@ -613,7 +613,7 @@
     "3peace-et-influence": {
       "id": "3peace-et-influence",
       "name": "3 peace et Influence femi",
-      "image": "/dancers/3 peace.jpeg",
+      "image": "/dancers/3-peace.jpeg",
       "votes": 0,
       "quote": 5,
       "badge": null,
