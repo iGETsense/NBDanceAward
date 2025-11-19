@@ -906,11 +906,22 @@ export default function CandidatsPage() {
   const incrementVotes = () => setVoteCount((prev) => prev + 1)
   const decrementVotes = () => setVoteCount((prev) => Math.max(5, prev - 1))
 
-  const filteredCandidates = allCandidates.filter((candidate) => {
-    const matchesSearch = candidate.name.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory = selectedCategory === "Toutes les catégories" || candidate.category === selectedCategory
-    return matchesSearch && matchesCategory
-  })
+  const shuffleArray = (array: any[]) => {
+    const shuffled = [...array]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    return shuffled
+  }
+
+  const filteredCandidates = shuffleArray(
+    allCandidates.filter((candidate) => {
+      const matchesSearch = candidate.name.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesCategory = selectedCategory === "Toutes les catégories" || candidate.category === selectedCategory
+      return matchesSearch && matchesCategory
+    })
+  )
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
