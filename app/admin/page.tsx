@@ -19,7 +19,7 @@ export default function AdminPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories")
   const [withdrawalAmount, setWithdrawalAmount] = useState("")
-  const [withdrawalMethod, setWithdrawalMethod] = useState("bank")
+  const [withdrawalMethod, setWithdrawalMethod] = useState("om")
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false)
   const [withdrawalHistory, setWithdrawalHistory] = useState<any[]>([])
 
@@ -216,7 +216,7 @@ export default function AdminPage() {
       <main className="pt-24 md:pt-28 pb-12">
         <div className="container mx-auto px-4 md:px-6">
           {/* KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             {/* Total Votes */}
             <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-lg p-6 hover:border-yellow-500/50 transition-colors">
               <div className="flex items-start justify-between mb-4">
@@ -261,20 +261,6 @@ export default function AdminPage() {
               </div>
               <p className="text-zinc-400 text-xs">Actifs</p>
             </div>
-
-            {/* Top Candidate */}
-            <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-lg p-6 hover:border-yellow-500/50 transition-colors">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <p className="text-zinc-400 text-sm mb-1">Leader</p>
-                  <h3 className="text-lg font-bold text-white truncate">{topCandidate?.name || "N/A"}</h3>
-                </div>
-                <div className="bg-purple-500/20 p-3 rounded-lg">
-                  <Wallet className="h-6 w-6 text-purple-500" />
-                </div>
-              </div>
-              <p className="text-yellow-500 text-sm font-semibold">{topCandidate?.votes || 0} votes</p>
-            </div>
           </div>
 
           {/* Withdrawal Section */}
@@ -303,7 +289,7 @@ export default function AdminPage() {
                     <div>
                       <p className="font-semibold text-white">{withdrawal.amount.toLocaleString()} XAF</p>
                       <p className="text-sm text-zinc-400">
-                        {withdrawal.method === "bank" ? "Virement Bancaire" : "Mobile Money"} • {withdrawal.date} {withdrawal.time}
+                        {withdrawal.method === "om" ? "Orange Money" : "MTN MoMo"} • {withdrawal.date} {withdrawal.time}
                       </p>
                     </div>
                     <span className="px-3 py-1 bg-green-500/20 text-green-400 text-sm rounded-full">{withdrawal.status}</span>
@@ -423,8 +409,8 @@ export default function AdminPage() {
                   onChange={(e) => setWithdrawalMethod(e.target.value)}
                   className="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-2"
                 >
-                  <option value="bank">Virement Bancaire</option>
-                  <option value="momo">Mobile Money</option>
+                  <option value="om">Orange Money</option>
+                  <option value="momo">MTN MoMo</option>
                 </select>
               </div>
 
