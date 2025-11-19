@@ -1,16 +1,5 @@
 {
   "buildCommand": "pnpm run build",
   "installCommand": "pnpm install --no-frozen-lockfile",
-  "framework": "nextjs",
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "default-src 'self' https: wss:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https:; img-src 'self' data: https:; connect-src 'self' https: wss:; frame-src https: 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
-        }
-      ]
-    }
-  ]
+  "framework": "nextjs"
 }
