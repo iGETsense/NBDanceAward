@@ -842,19 +842,19 @@ const staticCandidates = [
 ]
 
 const mainCategories = [
-  "Meilleur artiste danseur - masculin",
   "Meilleure artiste danseuse féminine",
-  "Meilleur groupe de danse",
-  "Meilleur collaboration duo",
-  "Meilleur artiste Chorégraphe",
-  "Meilleur Performance web",
-  "Meilleure artiste danseur au rythme folklorique",
-  "Meilleur artiste danseur afro coupé décalé",
-  "Meilleur artiste danseur mbolé",
   "Meilleure artiste danseuse mbolé",
-  "Meilleur artiste danseur de l'année",
   "Meilleur artiste jeune danseur/danseuse",
-  "Meilleure artiste danseuse de l'année",
+  "Meilleur Performance web",
+  "Meilleur Groupe de danse",
+  "Meilleur artiste danseur Afro Coupé décalé",
+  "Meilleur artiste danseur masculin",
+  "meilleurs artiste danseurs mbolé",
+  "meilleur artiste danse au rythme folklorique",
+  "meilleurs danseur de l'année",
+  "Meilleurs artiste chorégraphes",
+  "meilleure artiste danseuse de l'année",
+  "Meilleur collaboration duo",
 ]
 
 
