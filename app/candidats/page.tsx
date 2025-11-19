@@ -10,8 +10,12 @@ import ImageWithFallback from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useCandidates } from "@/hooks/useFirebaseData"
+import { allCandidatesData } from "@/lib/candidatesData"
 
-const staticAllCandidates = [
+const staticAllCandidates = allCandidatesData
+
+// Keep old data for reference (commented out)
+const oldStaticCandidates = [
   // 1- Meilleure artiste danseuse féminine
   {
     name: "Maguy merine",
