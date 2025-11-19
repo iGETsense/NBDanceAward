@@ -18,20 +18,13 @@ export async function getCandidates() {
 }
 
 export function subscribeToCandidates(callback: (data: any) => void) {
-  console.log('subscribeToCandidates called')
   const candidatesRef = ref(database, 'candidates')
   const unsubscribe = onValue(candidatesRef, (snapshot) => {
-    console.log('Firebase snapshot received:', snapshot.exists())
     if (snapshot.exists()) {
       const candidatesObj = snapshot.val()
-      console.log('Candidates object from Firebase:', candidatesObj)
       const candidatesArray = Object.values(candidatesObj)
-      console.log('Candidates array:', candidatesArray)
       const withPercentages = calculatePercentages(candidatesArray)
-      console.log('With percentages:', withPercentages)
       callback(withPercentages)
-    } else {
-      console.log('No data exists in Firebase')
     }
   }, (error) => {
     console.error('Firebase error:', error)

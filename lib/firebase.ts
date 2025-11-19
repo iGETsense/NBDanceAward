@@ -18,11 +18,6 @@ const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 export const database = getDatabase(app)
 
-console.log('Firebase initialized:', {
-  projectId: firebaseConfig.projectId,
-  databaseURL: firebaseConfig.databaseURL,
-})
-
 // Initialize Analytics (optional)
 if (typeof window !== 'undefined') {
   getAnalytics(app)

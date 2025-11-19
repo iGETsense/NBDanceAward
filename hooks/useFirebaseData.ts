@@ -9,15 +9,12 @@ export function useCandidates() {
   useEffect(() => {
     try {
       const unsubscribe = subscribeToCandidates((data) => {
-        console.log('Firebase data received:', data)
         const candidatesArray = Array.isArray(data) ? data : Object.values(data || {})
-        console.log('Candidates array:', candidatesArray)
         setCandidates(candidatesArray)
         setLoading(false)
       })
       return unsubscribe
     } catch (err) {
-      console.error('Error in useCandidates:', err)
       setError(err instanceof Error ? err.message : 'Failed to load candidates')
       setLoading(false)
     }
