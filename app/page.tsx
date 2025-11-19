@@ -1149,6 +1149,70 @@ export default function NBDanceAwardPage() {
           showControls={true}
         />
 
+        <div className="py-12 md:py-16">
+          <div className="container mx-auto px-4 md:px-6">
+            <h2 className="mb-8 md:mb-12 text-3xl md:text-4xl font-bold text-center">Catégories Principales</h2>
+
+            {mainCategories.map((category) => {
+              const categoryCandidates = candidates.filter((c) => c.category === category)
+
+              if (categoryCandidates.length === 0) return null
+
+              return (
+                <section key={category} id={category.toLowerCase().replace(/\s+/g, "-")} className="mb-12 md:mb-16">
+                  <div className="mb-6 md:mb-8">
+                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{category}</h3>
+                    <div className="h-1 w-20 bg-yellow-500 rounded-full"></div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 lg:grid-cols-5">
+                    {categoryCandidates.map((candidate, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleCandidateClick(candidate)}
+                        className="flex flex-col items-center cursor-pointer hover-lift transition-smooth"
+                      >
+                        <div className="relative mb-3 md:mb-4">
+                          <div className="relative h-24 w-24 md:h-28 md:w-28 overflow-hidden rounded-full border-[3px] md:border-4 border-yellow-500 md:ring-4 md:ring-yellow-500/20 hover-glow transition-smooth">
+                            <ImageWithFallback
+                              src={candidate.image || "/placeholder.svg"}
+                              alt={candidate.name}
+                              fill
+                              objectFit="cover"
+                              placeholder="blur"
+                            />
+                          </div>
+                          {candidate.badge && (
+                            <div className="absolute -top-1 -right-1 md:-bottom-1 md:-right-1 md:top-auto flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-full bg-pink-500 text-xs font-bold">
+                              {candidate.badge}
+                            </div>
+                          )}
+                        </div>
+
+                        <h3 className="mb-2 md:mb-3 text-center text-sm md:text-base font-semibold">{candidate.name}</h3>
+
+                        <div className="w-full max-w-[100px] md:max-w-none">
+                          <div className="mb-1.5 md:mb-2 h-1 md:h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
+                            <div
+                              className="h-full bg-yellow-500 transition-all duration-500"
+                              style={{ width: `${candidate.percentage}%` }}
+                            />
+                          </div>
+
+                          <div className="flex justify-between text-[10px] md:text-xs text-zinc-400">
+                            <span className="font-semibold text-white">{candidate.votes.toLocaleString()}</span>
+                            <span>{candidate.percentage}%</span>
+                          </div>
+                          <p className="text-[9px] md:text-[10px] text-zinc-500 text-center mt-0.5 md:mt-1">votes</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              )
+            })}
+          </div>
+        </div>
 
         {/* How It Works Section */}
         <section className="border-t border-zinc-800 py-12 md:py-16">
