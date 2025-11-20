@@ -879,7 +879,7 @@ export default function NBDanceAwardPage() {
   const [showBanner, setShowBanner] = useState(true)
   const [isVotingModalOpen, setIsVotingModalOpen] = useState(false)
   const [selectedCandidate, setSelectedCandidate] = useState<any | null>(null)
-  const [voteCount, setVoteCount] = useState(5)
+  const [voteCount, setVoteCount] = useState(1)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"mobile" | "orange">("mobile")
   const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean }>({})
   const [selectedProvider, setSelectedProvider] = useState("mtn-momo-cameroon")
@@ -1502,7 +1502,7 @@ export default function NBDanceAwardPage() {
 
                     <div className="text-center space-y-0.5">
                       <p className="text-xs md:text-sm font-semibold text-white">1 Vote = 105 XAF.</p>
-                      <p className="text-xs md:text-sm text-white">Minimum 5 votes.</p>
+                      <p className="text-xs md:text-sm text-white">Minimum 1 vote.</p>
                     </div>
                   </div>
 

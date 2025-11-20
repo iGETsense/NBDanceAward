@@ -882,7 +882,7 @@ export default function CandidatsPage() {
   const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories")
   const [isVotingModalOpen, setIsVotingModalOpen] = useState(false)
   const [selectedCandidate, setSelectedCandidate] = useState<any | null>(null)
-  const [voteCount, setVoteCount] = useState(5)
+  const [voteCount, setVoteCount] = useState(1)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"mobile" | "orange">("mobile")
   const [selectedProvider, setSelectedProvider] = useState("mtn-momo-cameroon")
   const [showBanner, setShowBanner] = useState(true)
@@ -1376,7 +1376,7 @@ export default function CandidatsPage() {
 
                     <div className="text-center space-y-0.5">
                       <p className="text-xs md:text-sm font-semibold text-white">1 Vote = 105 XAF.</p>
-                      <p className="text-xs md:text-sm text-white">Minimum 5 votes.</p>
+                      <p className="text-xs md:text-sm text-white">Minimum 1 vote.</p>
                     </div>
                   </div>
 
