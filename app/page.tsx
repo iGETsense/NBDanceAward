@@ -1160,7 +1160,7 @@ export default function NBDanceAwardPage() {
             {Array.from(new Set(candidates.map(c => c.category))).sort().map((category) => {
               const categoryCandidates = candidates.filter((c) => c.category === category)
               const isExpanded = expandedCategories[category] || false
-              const itemsPerRow = 5
+              const itemsPerRow = screenSize === "mobile" ? 2 : 5
               const displayedCandidates = isExpanded ? categoryCandidates : categoryCandidates.slice(0, itemsPerRow)
               const hasMore = categoryCandidates.length > itemsPerRow
 
