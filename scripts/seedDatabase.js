@@ -129,7 +129,7 @@ const candidatesData = [
     id: "bebs-velina",
     name: "Beb's velina",
     title: "Talented Dancer",
-    image: "/dancers/Beb's vélina.jpeg",
+    image: "/dancers/bebs-velina.jpeg",
     votes: 1956,
     badge: null,
     percentage: 48,
