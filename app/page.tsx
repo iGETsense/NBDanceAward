@@ -881,6 +881,7 @@ export default function NBDanceAwardPage() {
   const [selectedCandidate, setSelectedCandidate] = useState<any | null>(null)
   const [voteCount, setVoteCount] = useState(5)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"mobile" | "orange">("mobile")
+  const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean }>({})
   const [selectedProvider, setSelectedProvider] = useState("mtn-momo-cameroon")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -1154,10 +1155,14 @@ export default function NBDanceAwardPage() {
 
         <div className="py-12 md:py-16">
           <div className="container mx-auto px-4 md:px-6">
-            <h2 className="mb-8 md:mb-12 text-3xl md:text-4xl font-bold text-center">Catégories Principales</h2>
+            <h2 className="mb-8 md:mb-12 text-3xl md:text-4xl font-bold text-center">Toutes les Catégories</h2>
 
-            {mainCategories.map((category) => {
+            {Array.from(new Set(candidates.map(c => c.category))).sort().map((category) => {
               const categoryCandidates = candidates.filter((c) => c.category === category)
+              const isExpanded = expandedCategories[category] || false
+              const itemsPerRow = 5
+              const displayedCandidates = isExpanded ? categoryCandidates : categoryCandidates.slice(0, itemsPerRow)
+              const hasMore = categoryCandidates.length > itemsPerRow
 
               if (categoryCandidates.length === 0) return null
 
@@ -1169,7 +1174,7 @@ export default function NBDanceAwardPage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 lg:grid-cols-5">
-                    {categoryCandidates.slice(0, 5).map((candidate, index) => (
+                    {displayedCandidates.map((candidate, index) => (
                       <button
                         key={index}
                         onClick={() => handleCandidateClick(candidate)}
@@ -1213,14 +1218,14 @@ export default function NBDanceAwardPage() {
                     ))}
                   </div>
 
-                  {categoryCandidates.length > 5 && (
+                  {hasMore && (
                     <div className="flex justify-center mt-6 md:mt-8">
-                      <Link
-                        href="/candidats"
-                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 rounded-full transition-all font-semibold text-sm md:text-base"
+                      <button
+                        onClick={() => setExpandedCategories(prev => ({ ...prev, [category]: !isExpanded }))}
+                        className="px-6 md:px-8 py-2 md:py-3 bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded-lg transition-colors duration-200"
                       >
-                        Voir Plus ({categoryCandidates.length - 5} autres)
-                      </Link>
+                        {isExpanded ? "Voir Moins" : "Voir Plus"}
+                      </button>
                     </div>
                   )}
                 </section>
