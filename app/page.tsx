@@ -1468,7 +1468,8 @@ export default function NBDanceAwardPage() {
                             src={selectedCandidate.image || "/placeholder.svg"}
                             alt={selectedCandidate.name}
                             fill
-                            className="object-contain"
+                            className="object-cover"
+                            style={{ objectPosition: `${customImagePositioning[selectedCandidate.name] || "top"} center` }}
                           />
                         </div>
                       </div>
