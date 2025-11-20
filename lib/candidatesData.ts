@@ -223,7 +223,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Shazam le vrai",
@@ -232,7 +232,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Xender",
@@ -241,7 +241,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "BB Super l'elu",
@@ -250,7 +250,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Vinny magicien",
@@ -259,7 +259,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Smobar Le Balthazar",
@@ -268,7 +268,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Authentik",
@@ -277,7 +277,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Pikan pointu",
@@ -286,7 +286,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Wenjel Avataro",
@@ -295,7 +295,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Jesus saotao",
@@ -304,7 +304,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Étienne kampos",
@@ -844,7 +844,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Meilleur artiste danseur Afro Coupé - Shazam",
@@ -853,7 +853,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Meilleur artiste danseur Afro Coupé - Xender",
@@ -862,7 +862,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Meilleur artiste danseur Afro Coupé - BB Super",
@@ -871,7 +871,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
   {
     name: "Meilleur artiste danseur Afro Coupé - Vinny",
@@ -880,6 +880,6 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "Meilleur artiste danseur Afro Coupé décalé",
+    category: "Meilleur artiste danseur afro coupé décalé",
   },
 ]
