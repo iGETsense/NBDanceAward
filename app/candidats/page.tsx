@@ -930,12 +930,12 @@ export default function CandidatsPage() {
 
   const handleCandidateClick = (candidate: (typeof allCandidates)[0]) => {
     setSelectedCandidate(candidate)
-    setVoteCount(5)
+    setVoteCount(1)
     setIsVotingModalOpen(true)
   }
 
   const incrementVotes = () => setVoteCount((prev) => prev + 1)
-  const decrementVotes = () => setVoteCount((prev) => Math.max(5, prev - 1))
+  const decrementVotes = () => setVoteCount((prev) => Math.max(1, prev - 1))
 
   // Filter candidates without re-shuffling
   const filteredCandidates = shuffledCandidates.filter((candidate) => {

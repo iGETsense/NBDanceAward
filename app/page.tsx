@@ -938,12 +938,12 @@ export default function NBDanceAwardPage() {
 
   const handleCandidateClick = (candidate: (typeof candidates)[0]) => {
     setSelectedCandidate(candidate)
-    setVoteCount(5)
+    setVoteCount(1)
     setIsVotingModalOpen(true)
   }
 
   const incrementVotes = () => setVoteCount((prev) => prev + 1)
-  const decrementVotes = () => setVoteCount((prev) => Math.max(5, prev - 1))
+  const decrementVotes = () => setVoteCount((prev) => Math.max(1, prev - 1))
 
   // Removed unused loadMoreCandidates and related variables
   // const loadMoreCandidates = () => {
