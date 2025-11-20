@@ -847,17 +847,20 @@ const mainCategories = [
   "Meilleure artiste danseuse mbolé",
   "Meilleur artiste jeune danseur/danseuse",
   "Meilleur Performance web",
-  "Meilleur Groupe de danse",
-  "Meilleur artiste danseur Afro Coupé décalé",
-  "Meilleur artiste danseur masculin",
-  "Meilleur artiste danseur mbolé",
-  "Meilleur artiste danseur au rythme folklorique",
-  "Meilleur artiste danseur de l'année",
   "Meilleur artiste Chorégraphe",
   "Meilleure artiste danseuse de l'année",
   "Meilleur collaboration duo",
 ]
 
+// Candidates with custom image positioning (for better head visibility)
+const customImagePositioning: { [key: string]: string } = {
+  "LMN ponce Off": "top",
+  "Stella officielle3": "top",
+  "Nelly Dora": "center",
+  "Chica bassa": "center",
+  "Influence Femi": "center",
+  "Jessi 237": "center",
+}
 
 const honoraryPrizes = [
   "Best inspiration pour la jeunesse",
@@ -1166,7 +1169,7 @@ export default function NBDanceAwardPage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 lg:grid-cols-5">
-                    {categoryCandidates.map((candidate, index) => (
+                    {categoryCandidates.slice(0, 5).map((candidate, index) => (
                       <button
                         key={index}
                         onClick={() => handleCandidateClick(candidate)}
@@ -1179,7 +1182,7 @@ export default function NBDanceAwardPage() {
                               alt={candidate.name}
                               fill
                               objectFit="cover"
-                              objectPosition="top center"
+                              objectPosition={`${customImagePositioning[candidate.name] || "top"} center`}
                               placeholder="blur"
                             />
                           </div>
@@ -1209,6 +1212,17 @@ export default function NBDanceAwardPage() {
                       </button>
                     ))}
                   </div>
+
+                  {categoryCandidates.length > 5 && (
+                    <div className="flex justify-center mt-6 md:mt-8">
+                      <Link
+                        href="/candidats"
+                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 rounded-full transition-all font-semibold text-sm md:text-base"
+                      >
+                        Voir Plus ({categoryCandidates.length - 5} autres)
+                      </Link>
+                    </div>
+                  )}
                 </section>
               )
             })}

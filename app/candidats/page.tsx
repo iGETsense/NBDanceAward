@@ -861,6 +861,16 @@ const categories = [
   "Meilleure artiste danseuse de l'année",
 ]
 
+// Candidates with custom image positioning (for better head visibility)
+const customImagePositioning: { [key: string]: string } = {
+  "LMN ponce Off": "top",
+  "Stella officielle3": "top",
+  "Nelly Dora": "center",
+  "Chica bassa": "center",
+  "Influence Femi": "center",
+  "Jessi 237": "center",
+}
+
 export default function CandidatsPage() {
   // Firebase hook
   const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
@@ -1136,7 +1146,7 @@ export default function CandidatsPage() {
                         alt={candidate.name}
                         fill
                         objectFit="cover"
-                        objectPosition="top center"
+                        objectPosition={`${customImagePositioning[candidate.name] || "top"} center`}
                         placeholder="blur"
                       />
                     </div>
@@ -1333,7 +1343,7 @@ export default function CandidatsPage() {
                             alt={selectedCandidate.name}
                             fill
                             className="object-cover"
-                            style={{ objectPosition: "top center" }}
+                            style={{ objectPosition: `${customImagePositioning[selectedCandidate.name] || "top"} center` }}
                           />
                         </div>
                       </div>

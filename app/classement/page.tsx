@@ -331,6 +331,16 @@ const mainCategories = [
 
 const honoraryPrizes = ["Best inspiration pour la jeunesse", "Best soutien pour la jeunesse", "Prix d'encouragements"]
 
+// Candidates with custom image positioning (for better head visibility)
+const customImagePositioning: { [key: string]: string } = {
+  "LMN ponce Off": "top",
+  "Stella officielle3": "top",
+  "Nelly Dora": "center",
+  "Chica bassa": "center",
+  "Influence Femi": "center",
+  "Jessi 237": "center",
+}
+
 export default function ClassementPage() {
   // Firebase hook
   const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
@@ -620,7 +630,7 @@ export default function ClassementPage() {
                                 alt={candidate.name}
                                 fill
                                 className="object-cover"
-                                style={{ objectPosition: "top center" }}
+                                style={{ objectPosition: `${customImagePositioning[candidate.name] || "top"} center` }}
                                 loading="lazy"
                                 quality={80}
                                 sizes="(max-width: 768px) 64px, 80px"
