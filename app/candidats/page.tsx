@@ -38,7 +38,7 @@ const oldStaticCandidates = [
   {
     name: "Beb's velina",
     title: "Talented Dancer",
-    image: "/dancers/Beb’s vélina.jpeg",
+    image: "/dancers/bebs-velina.jpeg",
     votes: 1956,
     badge: null,
     percentage: 48,
@@ -74,7 +74,7 @@ const oldStaticCandidates = [
   {
     name: "O'konor Céleste",
     title: "Rising Star",
-    image: "/dancers/O’konor Celeste.jpeg",
+    image: "/dancers/okonor-celeste.jpeg",
     votes: 1298,
     badge: null,
     percentage: 32,
@@ -744,7 +744,7 @@ const oldStaticCandidates = [
   {
     name: "Beb's velina",
     title: "Elegant Dancer",
-    image: "/dancers/Beb’s vélina.jpeg",
+    image: "/dancers/bebs-velina.jpeg",
     votes: 2978,
     badge: 3,
     percentage: 73,
@@ -762,7 +762,7 @@ const oldStaticCandidates = [
   {
     name: "O'konor Céleste",
     title: "Celestial Star",
-    image: "/dancers/O’konor Celeste.jpeg",
+    image: "/dancers/okonor-celeste.jpeg",
     votes: 2545,
     badge: null,
     percentage: 62,
