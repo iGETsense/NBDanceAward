@@ -619,7 +619,7 @@ export default function ClassementPage() {
                                 src={candidate.image || "/placeholder.svg"}
                                 alt={candidate.name}
                                 fill
-                                className="object-cover"
+                                className="object-contain"
                                 loading="lazy"
                                 quality={80}
                                 sizes="(max-width: 768px) 64px, 80px"
