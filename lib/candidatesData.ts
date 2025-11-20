@@ -21,7 +21,7 @@ export const allCandidatesData = [
   {
     name: "Beb's velina",
     title: "Talented Dancer",
-    image: "/dancers/bebs-vlina.jpeg",
+    image: "/dancers/Beb's vélina.jpeg",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -642,7 +642,7 @@ export const allCandidatesData = [
   {
     name: "Beb's velina",
     title: "Female Dancer of the Year",
-    image: "/dancers/bebs-vlina.jpeg",
+    image: "/dancers/Beb's vélina.jpeg",
     votes: 0,
     badge: null,
     percentage: 0,

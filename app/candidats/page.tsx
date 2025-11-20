@@ -38,7 +38,7 @@ const oldStaticCandidates = [
   {
     name: "Beb's velina",
     title: "Talented Dancer",
-    image: "/dancers/bebs-vlina.jpeg",
+    image: "/dancers/Beb's vélina.jpeg",
     votes: 1956,
     badge: null,
     percentage: 48,
@@ -744,7 +744,7 @@ const oldStaticCandidates = [
   {
     name: "Beb's velina",
     title: "Elegant Dancer",
-    image: "/dancers/bebs-vlina.jpeg",
+    image: "/dancers/Beb's vélina.jpeg",
     votes: 2978,
     badge: 3,
     percentage: 73,
