@@ -81,7 +81,7 @@ const staticRankedCandidates = [
     {
       name: "Beb's velina",
       title: "Talented Dancer",
-      image: "/dancers/bebs-velina.jpeg",
+      image: "/dancers/bebs-vlina.jpeg",
       votes: 1956,
       totalVotes: 45000,
       percentage: 48,
