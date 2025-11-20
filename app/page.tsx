@@ -1178,7 +1178,8 @@ export default function NBDanceAwardPage() {
                               src={candidate.image || "/placeholder.svg"}
                               alt={candidate.name}
                               fill
-                              objectFit="contain"
+                              objectFit="cover"
+                              objectPosition="top center"
                               placeholder="blur"
                             />
                           </div>

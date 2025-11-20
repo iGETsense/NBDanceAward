@@ -1135,7 +1135,8 @@ export default function CandidatsPage() {
                         src={candidate.image || "/placeholder.svg"}
                         alt={candidate.name}
                         fill
-                        objectFit="contain"
+                        objectFit="cover"
+                        objectPosition="top center"
                         placeholder="blur"
                       />
                     </div>
@@ -1331,7 +1332,8 @@ export default function CandidatsPage() {
                             src={selectedCandidate.image || "/placeholder.svg"}
                             alt={selectedCandidate.name}
                             fill
-                            className="object-contain"
+                            className="object-cover"
+                            style={{ objectPosition: "top center" }}
                           />
                         </div>
                       </div>
