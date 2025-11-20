@@ -863,8 +863,8 @@ const categories = [
 
 // Candidates with custom image positioning (for better head visibility)
 const customImagePositioning: { [key: string]: string } = {
-  "LMN ponce Off": "top",
-  "Stella officielle3": "top",
+  "LMN ponce Off": "top -20px",
+  "Stella officielle3": "top -20px",
   "Nelly Dora": "center",
   "Chica bassa": "center",
   "Influence Femi": "center",
