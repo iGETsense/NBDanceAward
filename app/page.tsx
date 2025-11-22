@@ -11,6 +11,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import PartnersCarousel from "@/components/PartnersCarousel"
 import { useCandidates, useLeaderboard } from "@/hooks/useFirebaseData"
+import CountdownTimer from "@/components/CountdownTimer"
 
 // Candidates with custom image positioning (for better head visibility)
 const customImagePositioning: { [key: string]: string } = {
@@ -1117,6 +1118,16 @@ export default function NBDanceAwardPage() {
           autoPlayInterval={4000}
           showControls={true}
         />
+
+        {/* Countdown Timer Section */}
+        <section className="py-8 md:py-12 bg-gradient-to-b from-[#0a0a0a] via-zinc-900/50 to-[#0a0a0a] border-y border-zinc-800/50">
+          <div className="container mx-auto px-4 md:px-6">
+            <CountdownTimer 
+              targetDate={new Date('2025-02-01T00:00:00')}
+              className="max-w-4xl mx-auto"
+            />
+          </div>
+        </section>
 
         <div className="py-12 md:py-16">
           <div className="container mx-auto px-4 md:px-6">

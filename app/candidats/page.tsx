@@ -10,6 +10,7 @@ import ImageWithFallback from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useCandidates } from "@/hooks/useFirebaseData"
+import CountdownTimer from "@/components/CountdownTimer"
 
 // Candidates with custom image positioning (for better head visibility)
 const customImagePositioning: { [key: string]: string } = {
@@ -1080,6 +1081,16 @@ export default function CandidatsPage() {
       </header>
 
       <div className="pt-[108px]">
+        {/* Countdown Timer Section */}
+        <section className="py-6 md:py-8 bg-gradient-to-b from-[#0a0a0a] via-zinc-900/50 to-[#0a0a0a] border-b border-zinc-800/50">
+          <div className="container mx-auto px-4 md:px-6">
+            <CountdownTimer 
+              targetDate={new Date('2025-02-01T00:00:00')}
+              className="max-w-4xl mx-auto"
+            />
+          </div>
+        </section>
+
         <div className="container mx-auto px-4 py-8 md:px-6 md:py-12">
           <div className="mb-8 text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Tous les Candidats</h1>
