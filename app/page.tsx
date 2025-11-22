@@ -10,9 +10,9 @@ import ImageWithFallback from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import PartnersCarousel from "@/components/PartnersCarousel"
-import { useLeaderboard } from "@/hooks/useFirebaseData"
+import { CountdownPopup } from "@/components/CountdownPopup"
+import { useLeaderboard, useCandidates } from "@/hooks/useFirebaseData"
 import { useVoting } from "@/hooks/useVoting"
-import { useBackendCandidates } from "@/hooks/useBackendCandidates"
 
 const staticCandidates = [
   // Meilleur artiste danseur - masculin
@@ -871,8 +871,8 @@ const honoraryPrizes = [
 ]
 
 export default function NBDanceAwardPage() {
-  // Backend hook
-  const { candidates, loading: candidatesLoading, error: candidatesError } = useBackendCandidates()
+  // Firebase hook
+  const { candidates, loading: candidatesLoading } = useCandidates()
   const { leaderboard } = useLeaderboard(10)
 
   const [showBanner, setShowBanner] = useState(true)
@@ -1108,6 +1108,9 @@ export default function NBDanceAwardPage() {
         </div>
       </header>
 
+      {/* Countdown Popup */}
+      <CountdownPopup />
+
       <div className="pt-[108px]">
         {/* Hero Section */}
         <section className="relative overflow-hidden">
@@ -1164,14 +1167,7 @@ export default function NBDanceAwardPage() {
               <div className="flex items-center justify-center py-20">
                 <div className="text-center">
                   <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent"></div>
-                  <p className="mt-4 text-zinc-400">Chargement des candidats depuis le serveur...</p>
-                </div>
-              </div>
-            ) : candidatesError ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="text-center">
-                  <p className="text-xl text-red-400 mb-2">Erreur de chargement</p>
-                  <p className="text-sm text-zinc-400">{candidatesError}</p>
+                  <p className="mt-4 text-zinc-400">Chargement des candidats depuis Firebase...</p>
                 </div>
               </div>
             ) : candidates.length === 0 ? (

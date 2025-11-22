@@ -9,10 +9,8 @@ import Image from "next/image"
 import ImageWithFallback from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { CountdownPopup } from "@/components/CountdownPopup"
 import { useCandidates } from "@/hooks/useFirebaseData"
-import { allCandidatesData } from "@/lib/candidatesData"
-
-const staticAllCandidates = allCandidatesData
 
 // Keep old data for reference (commented out)
 const oldStaticCandidates = [
@@ -873,10 +871,7 @@ const customImagePositioning: { [key: string]: string } = {
 
 export default function CandidatsPage() {
   // Firebase hook
-  const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
-  
-  // Use Firebase candidates if available, otherwise use static
-  const allCandidates = firebaseCandidates.length > 0 ? firebaseCandidates : staticAllCandidates
+  const { candidates: allCandidates, loading: candidatesLoading } = useCandidates()
 
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories")
@@ -1082,12 +1077,32 @@ export default function CandidatsPage() {
         </div>
       </header>
 
+      {/* Countdown Popup */}
+      <CountdownPopup />
+
       <div className="pt-[108px]">
         <div className="container mx-auto px-4 py-8 md:px-6 md:py-12">
           <div className="mb-8 text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Tous les Candidats</h1>
             <p className="text-yellow-500 font-semibold">NB DANCE AWARDS</p>
           </div>
+
+          {/* Loading State */}
+          {candidatesLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent"></div>
+                <p className="mt-4 text-zinc-400">Chargement des candidats depuis Firebase...</p>
+              </div>
+            </div>
+          ) : allCandidates.length === 0 ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="text-center">
+                <p className="text-xl text-zinc-400 mb-2">Aucun candidat disponible</p>
+                <p className="text-sm text-zinc-500">Les candidats seront affichés une fois chargés depuis le serveur.</p>
+              </div>
+            </div>
+          ) : null}
 
           <div className="mb-8">
             <h2 className="text-xl font-bold mb-4 text-center">Catégories</h2>

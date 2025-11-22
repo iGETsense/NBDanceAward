@@ -1,0 +1,224 @@
+{
+  "candidates": [
+    {
+      "id": "etienne-kampos",
+      "name": "Étienne kampos",
+      "title": "Male Dance King",
+      "image": "/dancers/Etienne kampos.jpg",
+      "votes": 1847,
+      "badge": 1,
+      "percentage": 45,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    {
+      "id": "de-flow",
+      "name": "De Flow",
+      "title": "Flow Master",
+      "image": "/dancers/De Flow.jpeg",
+      "votes": 1654,
+      "badge": null,
+      "percentage": 40,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    {
+      "id": "pascal-metaphore",
+      "name": "Pascal métaphore",
+      "title": "Poetic Dancer",
+      "image": "/dancers/PASCAL métaphore.jpeg",
+      "votes": 1432,
+      "badge": null,
+      "percentage": 35,
+      "category": "Meilleur artiste danseur - masculin"
+    },
+    {
+      "id": "maguy-merine",
+      "name": "Maguy merine",
+      "title": "Dance Star",
+      "image": "/dancers/MAGUY MERINE.jpeg",
+      "votes": 2534,
+      "badge": 1,
+      "percentage": 62,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    {
+      "id": "kendi",
+      "name": "Kendi",
+      "title": "Dance Performer",
+      "image": "/dancers/KENDI.jpeg",
+      "votes": 2245,
+      "badge": 2,
+      "percentage": 55,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    {
+      "id": "bebs-velina",
+      "name": "Beb's velina",
+      "title": "Talented Dancer",
+      "image": "/dancers/bebs-velina.jpeg",
+      "votes": 1956,
+      "badge": null,
+      "percentage": 48,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    {
+      "id": "afu-dance-academy",
+      "name": "AFU Dance académie",
+      "title": "Professional Group",
+      "image": "/dancers/AFU DANCE ACADEMY STUDIO.jpeg",
+      "votes": 2089,
+      "badge": 1,
+      "percentage": 51,
+      "category": "Meilleur groupe de danse"
+    },
+    {
+      "id": "etat-nwar-dance",
+      "name": "Etat NWAR dance",
+      "title": "Dance Collective",
+      "image": "/dancers/ÉTAT NWAR DANCE SCHOOL.jpg",
+      "votes": 1834,
+      "badge": null,
+      "percentage": 45,
+      "category": "Meilleur groupe de danse"
+    },
+    {
+      "id": "team-escram",
+      "name": "Team Escram",
+      "title": "Dance Crew",
+      "image": "/dancers/TEAM ESCRAM.jpeg",
+      "votes": 1689,
+      "badge": null,
+      "percentage": 41,
+      "category": "Meilleur groupe de danse"
+    },
+    {
+      "id": "deboy-le-monstre",
+      "name": "Déboy le monstre et Maguy merine",
+      "title": "Monster & Queen",
+      "image": "/dancers/DEBOY LE MONSTRE.jpeg",
+      "votes": 1956,
+      "badge": 1,
+      "percentage": 48,
+      "category": "Meilleur collaboration duo"
+    },
+    {
+      "id": "accadien-fureur",
+      "name": "Accadien fureur",
+      "title": "Arcadian Choreographer",
+      "image": "/dancers/Accadient Fureur.jpeg",
+      "votes": 2245,
+      "badge": 1,
+      "percentage": 55,
+      "category": "Meilleur artiste Chorégraphe"
+    },
+    {
+      "id": "goldy-lastar",
+      "name": "Goldy lastar",
+      "title": "Golden Star",
+      "image": "/dancers/GOLDY LA-STAR.jpeg",
+      "votes": 2089,
+      "badge": null,
+      "percentage": 51,
+      "category": "Meilleur artiste Chorégraphe"
+    },
+    {
+      "id": "kendi-web",
+      "name": "Kendi",
+      "title": "Web Star",
+      "image": "/dancers/KENDI.jpeg",
+      "votes": 3245,
+      "badge": 1,
+      "percentage": 79,
+      "category": "Meilleur Performance web"
+    },
+    {
+      "id": "deboy-web",
+      "name": "Déboy le monstre",
+      "title": "Viral Sensation",
+      "image": "/dancers/DEBOY LE MONSTRE.jpeg",
+      "votes": 2834,
+      "badge": 2,
+      "percentage": 69,
+      "category": "Meilleur Performance web"
+    },
+    {
+      "id": "ayi-ventilateur",
+      "name": "Ayi ventilateur",
+      "title": "Wind Master",
+      "image": "/dancers/ayi ventilateur.png",
+      "votes": 1834,
+      "badge": 1,
+      "percentage": 45,
+      "category": "Meilleur artiste danseur au rythme folklorique"
+    },
+    {
+      "id": "ordinateur-baboue",
+      "name": "Ordinateur baboué",
+      "title": "Afro Master",
+      "image": "/dancers/ORDINATEUR baboué.jpeg",
+      "votes": 2156,
+      "badge": 1,
+      "percentage": 53,
+      "category": "Meilleur artiste danseur afro coupé décalé"
+    },
+    {
+      "id": "shazam-le-vrai",
+      "name": "Shazam le vrai",
+      "title": "Décalé Star",
+      "image": "/dancers/SHAZAM.jpeg",
+      "votes": 1923,
+      "badge": null,
+      "percentage": 47,
+      "category": "Meilleur artiste danseur afro coupé décalé"
+    },
+    {
+      "id": "petit-tchakap-mbole",
+      "name": "Petit tchakap",
+      "title": "Mbolé Master",
+      "image": "/dancers/petit tchakap.jpg",
+      "votes": 1867,
+      "badge": 1,
+      "percentage": 46,
+      "category": "Meilleur artiste danseur mbolé"
+    },
+    {
+      "id": "nelly-dora",
+      "name": "Nelly Dora",
+      "title": "Mbolé Master",
+      "image": "/dancers/NELLY DORA.jpeg",
+      "votes": 1956,
+      "badge": 1,
+      "percentage": 48,
+      "category": "Meilleure artiste danseuse mbolé"
+    },
+    {
+      "id": "el-fally-year",
+      "name": "El Fally du 237",
+      "title": "Dancer of the Year",
+      "image": "/dancers/El fally du 237.jpg",
+      "votes": 3456,
+      "badge": 1,
+      "percentage": 84,
+      "category": "Meilleur artiste danseur de l'année"
+    },
+    {
+      "id": "maxime-la-vitesse",
+      "name": "Maxime la vitesse",
+      "title": "Young Prodigy",
+      "image": "/dancers/Maxime la vitesse.jpg",
+      "votes": 2234,
+      "badge": 1,
+      "percentage": 54,
+      "category": "Meilleur artiste jeune danseur/danseuse"
+    },
+    {
+      "id": "katia-eg-year",
+      "name": "Katia eg",
+      "title": "Female Dancer of Year",
+      "image": "/dancers/Katia EG.png",
+      "votes": 3567,
+      "badge": 1,
+      "percentage": 87,
+      "category": "Meilleure artiste danseuse de l'année"
+    }
+  ]
+}

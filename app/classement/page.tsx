@@ -7,6 +7,7 @@ import { Crown, Menu, Shield } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { CountdownPopup } from "@/components/CountdownPopup"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { Input } from "@/components/ui/input"
 
@@ -343,10 +344,7 @@ const customImagePositioning: { [key: string]: string } = {
 
 export default function ClassementPage() {
   // Firebase hook
-  const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
-  
-  // Use Firebase candidates if available, otherwise use static
-  const rankedCandidates = firebaseCandidates.length > 0 ? firebaseCandidates : staticRankedCandidates
+  const { candidates: rankedCandidates, loading: candidatesLoading } = useCandidates()
 
   const [showBanner, setShowBanner] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -583,11 +581,31 @@ export default function ClassementPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Countdown Popup */}
+      <CountdownPopup />
+
       {/* Main Content */}
       <main className="pt-[120px] md:pt-[140px]">
         {/* Main Categories Rankings */}
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+            {/* Loading State */}
+            {candidatesLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="text-center">
+                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent"></div>
+                  <p className="mt-4 text-zinc-400">Chargement du classement depuis Firebase...</p>
+                </div>
+              </div>
+            ) : rankedCandidates.length === 0 ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="text-center">
+                  <p className="text-xl text-zinc-400 mb-2">Aucun candidat disponible</p>
+                  <p className="text-sm text-zinc-500">Le classement sera affiché une fois les candidats chargés depuis le serveur.</p>
+                </div>
+              </div>
+            ) : null}
+
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">CLASSEMENT PAR CATÉGORIE</h2>
 
             <div className="space-y-12 md:space-y-16">

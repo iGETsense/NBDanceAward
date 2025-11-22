@@ -1,17 +1,7 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/api/candidates/route": "app/api/candidates/route.js",
-  "/apple-icon.png/route": "app/apple-icon.png/route.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/icon0.svg/route": "app/icon0.svg/route.js",
-  "/icon1.png/route": "app/icon1.png/route.js",
-  "/manifest.json/route": "app/manifest.json/route.js",
-  "/robots.txt/route": "app/robots.txt/route.js",
-  "/sitemap.xml/route": "app/sitemap.xml/route.js",
-  "/admin/page": "app/admin/page.js",
-  "/regles/page": "app/regles/page.js",
-  "/seo/page": "app/seo/page.js",
   "/page": "app/page.js",
   "/classement/page": "app/classement/page.js",
-  "/candidats/page": "app/candidats/page.js"
+  "/candidats/page": "app/candidats/page.js",
+  "/regles/page": "app/regles/page.js"
 }

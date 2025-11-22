@@ -29,9 +29,10 @@ export function useBackendCandidates() {
           throw new Error('Invalid response format from backend')
         }
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to load candidates from backend'
-        setError(errorMessage)
+        // Log error details for debugging (not shown to user)
         console.error('Error fetching candidates:', err)
+        // Show generic error message to user (no technical details)
+        setError('Une erreur est survenue lors du chargement des candidats. Veuillez rafraîchir la page.')
       } finally {
         setLoading(false)
       }
