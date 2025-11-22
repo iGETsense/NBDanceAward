@@ -934,8 +934,8 @@ export default function CandidatsPage() {
 
   // Filter candidates without re-shuffling
   const filteredCandidates = shuffledCandidates.filter((candidate) => {
-    const matchesSearch = candidate.name.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory = selectedCategory === "Toutes les catégories" || candidate.category === selectedCategory
+    const matchesSearch = (candidate?.name || '').toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesCategory = selectedCategory === "Toutes les catégories" || (candidate?.category || '') === selectedCategory
     return matchesSearch && matchesCategory
   })
 

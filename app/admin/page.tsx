@@ -148,11 +148,11 @@ export default function AdminPage() {
 
   const filteredCandidates = candidates
     .filter((c) => {
-      const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesCategory = selectedCategory === "Toutes les catégories" || c.category === selectedCategory
+      const matchesSearch = (c?.name || '').toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesCategory = selectedCategory === "Toutes les catégories" || (c?.category || '') === selectedCategory
       return matchesSearch && matchesCategory
     })
-    .sort((a, b) => (b.votes || 0) - (a.votes || 0))
+    .sort((a, b) => (b?.votes || 0) - (a?.votes || 0))
 
   const categories = ["Toutes les catégories", ...new Set(candidates.map((c) => c.category))]
 

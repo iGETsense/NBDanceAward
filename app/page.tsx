@@ -1188,9 +1188,9 @@ export default function NBDanceAwardPage() {
               if (categoryCandidates.length === 0) return null
 
               return (
-                <section key={category} id={category.toLowerCase().replace(/\s+/g, "-")} className="mb-12 md:mb-16">
+                <section key={category} id={(category || 'unknown').toLowerCase().replace(/\s+/g, "-")} className="mb-12 md:mb-16">
                   <div className="mb-6 md:mb-8">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{category}</h3>
+                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{category || 'Unknown Category'}</h3>
                     <div className="h-1 w-20 bg-yellow-500 rounded-full"></div>
                   </div>
 
