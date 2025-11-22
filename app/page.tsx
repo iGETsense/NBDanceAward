@@ -13,6 +13,7 @@ import PartnersCarousel from "@/components/PartnersCarousel"
 import { CountdownPopup } from "@/components/CountdownPopup"
 import { useLeaderboard, useCandidates } from "@/hooks/useFirebaseData"
 import { useVoting } from "@/hooks/useVoting"
+import { initializeFirebaseWithCandidates } from "@/lib/initFirebaseData"
 
 const staticCandidates = [
   // Meilleur artiste danseur - masculin
@@ -900,6 +901,13 @@ export default function NBDanceAwardPage() {
   // It should contain all unique categories from the candidates list, plus "Tous".
   // Removed unused categories variable
   // const categories = ["Tous", ...new Set(candidates.map((c) => c.category))]
+
+  // Initialize Firebase with candidates on first load
+  useEffect(() => {
+    initializeFirebaseWithCandidates().catch(err => {
+      console.log('Firebase initialization info:', err)
+    })
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
