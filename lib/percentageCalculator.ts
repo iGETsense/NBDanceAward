@@ -10,7 +10,7 @@ export function calculatePercentages(candidates: any[]): any[] {
   const categoriesMap = new Map<string, any[]>()
   
   candidates.forEach((candidate) => {
-    const categoryId = candidate.categoryId
+    const categoryId = candidate?.categoryId || 'unknown'
     if (!categoriesMap.has(categoryId)) {
       categoriesMap.set(categoryId, [])
     }
@@ -19,7 +19,8 @@ export function calculatePercentages(candidates: any[]): any[] {
 
   // Calculate total votes per category
   const result = candidates.map((candidate) => {
-    const categoryGroup = categoriesMap.get(candidate.categoryId) || []
+    const categoryId = candidate?.categoryId || 'unknown'
+    const categoryGroup = categoriesMap.get(categoryId) || []
     const totalVotesInCategory = categoryGroup.reduce((sum, c) => sum + (c.votes || 0), 0)
 
     // Calculate percentage
@@ -41,12 +42,12 @@ export function calculatePercentages(candidates: any[]): any[] {
  */
 export function getCategoryLeaderboard(candidates: any[], categoryId: string): any[] {
   const categoryGroup = candidates
-    .filter((c) => c.categoryId === categoryId)
+    .filter((c) => (c?.categoryId || 'unknown') === categoryId)
     .map((c) => ({
       ...c,
       percentage: calculatePercentages([c])[0].percentage,
     }))
-    .sort((a, b) => b.votes - a.votes)
+    .sort((a, b) => (b?.votes || 0) - (a?.votes || 0))
 
   return categoryGroup
 }
@@ -58,10 +59,10 @@ export function getTopCandidatesPerCategory(candidates: any[]): any[] {
   const categoriesMap = new Map<string, any>()
 
   candidates.forEach((candidate) => {
-    const categoryId = candidate.categoryId
+    const categoryId = candidate?.categoryId || 'unknown'
     const existing = categoriesMap.get(categoryId)
 
-    if (!existing || candidate.votes > existing.votes) {
+    if (!existing || (candidate?.votes || 0) > (existing?.votes || 0)) {
       categoriesMap.set(categoryId, candidate)
     }
   })
@@ -76,11 +77,12 @@ export function updateCandidatePercentage(
   candidate: any,
   allCandidates: any[]
 ): any {
-  const categoryGroup = allCandidates.filter((c) => c.categoryId === candidate.categoryId)
-  const totalVotesInCategory = categoryGroup.reduce((sum, c) => sum + (c.votes || 0), 0)
+  const categoryId = candidate?.categoryId || 'unknown'
+  const categoryGroup = allCandidates.filter((c) => (c?.categoryId || 'unknown') === categoryId)
+  const totalVotesInCategory = categoryGroup.reduce((sum, c) => sum + (c?.votes || 0), 0)
 
   const percentage = totalVotesInCategory > 0
-    ? Math.round((candidate.votes / totalVotesInCategory) * 100)
+    ? Math.round(((candidate?.votes || 0) / totalVotesInCategory) * 100)
     : 0
 
   return {
