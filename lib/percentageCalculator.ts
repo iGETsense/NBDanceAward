@@ -6,20 +6,20 @@
 export function calculatePercentages(candidates: any[]): any[] {
   if (!candidates || candidates.length === 0) return candidates
 
-  // Group candidates by category
+  // Group candidates by categoryId
   const categoriesMap = new Map<string, any[]>()
   
   candidates.forEach((candidate) => {
-    const category = candidate.category
-    if (!categoriesMap.has(category)) {
-      categoriesMap.set(category, [])
+    const categoryId = candidate.categoryId
+    if (!categoriesMap.has(categoryId)) {
+      categoriesMap.set(categoryId, [])
     }
-    categoriesMap.get(category)!.push(candidate)
+    categoriesMap.get(categoryId)!.push(candidate)
   })
 
   // Calculate total votes per category
   const result = candidates.map((candidate) => {
-    const categoryGroup = categoriesMap.get(candidate.category) || []
+    const categoryGroup = categoriesMap.get(candidate.categoryId) || []
     const totalVotesInCategory = categoryGroup.reduce((sum, c) => sum + (c.votes || 0), 0)
 
     // Calculate percentage
@@ -39,9 +39,9 @@ export function calculatePercentages(candidates: any[]): any[] {
 /**
  * Get leaderboard for a specific category
  */
-export function getCategoryLeaderboard(candidates: any[], category: string): any[] {
+export function getCategoryLeaderboard(candidates: any[], categoryId: string): any[] {
   const categoryGroup = candidates
-    .filter((c) => c.category === category)
+    .filter((c) => c.categoryId === categoryId)
     .map((c) => ({
       ...c,
       percentage: calculatePercentages([c])[0].percentage,
@@ -58,11 +58,11 @@ export function getTopCandidatesPerCategory(candidates: any[]): any[] {
   const categoriesMap = new Map<string, any>()
 
   candidates.forEach((candidate) => {
-    const category = candidate.category
-    const existing = categoriesMap.get(category)
+    const categoryId = candidate.categoryId
+    const existing = categoriesMap.get(categoryId)
 
     if (!existing || candidate.votes > existing.votes) {
-      categoriesMap.set(category, candidate)
+      categoriesMap.set(categoryId, candidate)
     }
   })
 
@@ -76,7 +76,7 @@ export function updateCandidatePercentage(
   candidate: any,
   allCandidates: any[]
 ): any {
-  const categoryGroup = allCandidates.filter((c) => c.category === candidate.category)
+  const categoryGroup = allCandidates.filter((c) => c.categoryId === candidate.categoryId)
   const totalVotesInCategory = categoryGroup.reduce((sum, c) => sum + (c.votes || 0), 0)
 
   const percentage = totalVotesInCategory > 0

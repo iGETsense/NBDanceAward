@@ -9,11 +9,12 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { Input } from "@/components/ui/input"
-import { getImagePath } from "@/lib/imageUtils"
-import CountdownTimer from "@/components/CountdownTimer"
 
-// Candidates with custom image positioning (for better head visibility)
-const customImagePositioning: { [key: string]: string } = {
+// Static candidates for fallback
+const staticRankedCandidates = [
+    // Meilleur artiste danseur - masculin
+    {
+      name: "Étienne kampos",
       title: "Male Dance King",
       image: "/dancers/Etienne kampos.jpg",
       votes: 1847,
@@ -307,6 +308,11 @@ const customImagePositioning: { [key: string]: string } = {
       image: "/dancers/NELLY DORA.jpeg",
       votes: 1467,
       totalVotes: 45000,
+      percentage: 36,
+      category: "Meilleur Performance web",
+    },
+]
+
 const mainCategories = [
   "Meilleure artiste danseuse féminine",
   "Meilleure artiste danseuse mbolé",
@@ -339,8 +345,8 @@ export default function ClassementPage() {
   // Firebase hook
   const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
   
-  // Use only Firebase candidates - show empty if no data
-  const rankedCandidates = firebaseCandidates
+  // Use Firebase candidates if available, otherwise use static
+  const rankedCandidates = firebaseCandidates.length > 0 ? firebaseCandidates : staticRankedCandidates
 
   const [showBanner, setShowBanner] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -579,41 +585,16 @@ export default function ClassementPage() {
 
       {/* Main Content */}
       <main className="pt-[120px] md:pt-[140px]">
-        {/* Countdown Timer Section */}
-        <section className="py-6 md:py-8 bg-gradient-to-b from-[#0a0a0a] via-zinc-900/50 to-[#0a0a0a] border-b border-zinc-800/50">
-          <div className="container mx-auto px-4 md:px-6">
-            <CountdownTimer 
-              targetDate={new Date('2025-02-01T00:00:00')}
-              className="max-w-4xl mx-auto"
-            />
-          </div>
-        </section>
-
         {/* Main Categories Rankings */}
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-4 md:px-6 max-w-5xl">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">CLASSEMENT PAR CATÉGORIE</h2>
 
-            {candidatesLoading ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="text-center">
-                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent"></div>
-                  <p className="mt-4 text-zinc-400">Chargement des candidats...</p>
-                </div>
-              </div>
-            ) : rankedCandidates.length === 0 ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="text-center">
-                  <p className="text-xl text-zinc-400 mb-2">Aucun candidat disponible</p>
-                  <p className="text-sm text-zinc-500">Les candidats seront affichés une fois chargés depuis le backend.</p>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-12 md:space-y-16">
-                {mainCategories.map((category) => {
-                  const categoryCandidates = getCandidatesByCategory(category)
+            <div className="space-y-12 md:space-y-16">
+              {mainCategories.map((category) => {
+                const categoryCandidates = getCandidatesByCategory(category)
 
-                  if (categoryCandidates.length === 0) return null
+                if (categoryCandidates.length === 0) return null
 
                 return (
                   <div key={category} className="space-y-6">
@@ -645,11 +626,11 @@ export default function ClassementPage() {
                           <div className="relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0">
                             <div className="absolute inset-0 rounded-full border-3 border-yellow-500 overflow-hidden">
                               <Image
-                                src={candidate.image ? getImagePath(candidate.image) : "/placeholder.svg"}
-                                alt={candidate.name || "Candidate"}
+                                src={candidate.image || "/placeholder.svg"}
+                                alt={candidate.name}
                                 fill
                                 className="object-cover"
-                                style={{ objectPosition: `${customImagePositioning[candidate.name || ''] || "top"} center` }}
+                                style={{ objectPosition: `${customImagePositioning[candidate.name] || "top"} center` }}
                                 loading="lazy"
                                 quality={80}
                                 sizes="(max-width: 768px) 64px, 80px"
@@ -683,9 +664,8 @@ export default function ClassementPage() {
                     </div>
                   </div>
                 )
-                })}
-              </div>
-            )}
+              })}
+            </div>
           </div>
         </section>
 

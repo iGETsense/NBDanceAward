@@ -1,6 +1,6 @@
 "use client"
 
-import { Smartphone, CreditCard, Award, Menu, Minus, Plus, Lock, Shield, CheckCircle2, User, Mail, ChevronDown, ChevronUp } from 'lucide-react'
+import { Smartphone, CreditCard, Award, Menu, Minus, Plus, Lock, Shield, CheckCircle2, User, Mail, ChevronDown, ChevronUp, AlertCircle, CheckCircle } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -10,11 +10,41 @@ import ImageWithFallback from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import PartnersCarousel from "@/components/PartnersCarousel"
-import { useCandidates, useLeaderboard } from "@/hooks/useFirebaseData"
-import CountdownTimer from "@/components/CountdownTimer"
+import { useLeaderboard } from "@/hooks/useFirebaseData"
+import { useVoting } from "@/hooks/useVoting"
+import { useBackendCandidates } from "@/hooks/useBackendCandidates"
 
-// Candidates with custom image positioning (for better head visibility)
-const customImagePositioning: { [key: string]: string } = {
+const staticCandidates = [
+  // Meilleur artiste danseur - masculin
+  {
+    name: "Étienne kampos",
+    title: "Male Dance King",
+    image: "/dancers/Etienne kampos.jpg",
+    votes: 1847,
+    badge: 1,
+    percentage: 45,
+    category: "Meilleur artiste danseur - masculin",
+  },
+  {
+    name: "De Flow",
+    title: "Flow Master",
+    image: "/dancers/De Flow.jpeg",
+    votes: 1654,
+    badge: null,
+    percentage: 40,
+    category: "Meilleur artiste danseur - masculin",
+  },
+  {
+    name: "Pascal métaphore",
+    title: "Poetic Dancer",
+    image: "/dancers/PASCAL métaphore.jpeg",
+    votes: 1432,
+    badge: null,
+    percentage: 35,
+    category: "Meilleur artiste danseur - masculin",
+  },
+  {
+    name: "El Fally du 237",
     title: "Cameroon Star",
     image: "/dancers/El fally du 237.jpg",
     votes: 1289,
@@ -808,6 +838,12 @@ const customImagePositioning: { [key: string]: string } = {
     image: "/dancers/okonor-celeste.jpeg",
     votes: 2545,
     badge: null,
+    percentage: 62,
+    category: "Meilleure artiste danseuse de l'année",
+  },
+
+]
+
 const mainCategories = [
   "Meilleure artiste danseuse féminine",
   "Meilleure artiste danseuse mbolé",
@@ -835,12 +871,9 @@ const honoraryPrizes = [
 ]
 
 export default function NBDanceAwardPage() {
-  // Firebase hooks
-  const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
+  // Backend hook
+  const { candidates, loading: candidatesLoading, error: candidatesError } = useBackendCandidates()
   const { leaderboard } = useLeaderboard(10)
-  
-  // Use only Firebase candidates - show empty if no data
-  const candidates = firebaseCandidates
 
   const [showBanner, setShowBanner] = useState(true)
   const [isVotingModalOpen, setIsVotingModalOpen] = useState(false)
@@ -854,6 +887,10 @@ export default function NBDanceAwardPage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [authMode, setAuthMode] = useState<"login" | "register">("login")
   const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">("desktop")
+  const [phoneNumber, setPhoneNumber] = useState("")
+  
+  // Voting hook
+  const { submitVote, isSubmitting, error: voteError, success: voteSuccess, resetState } = useVoting()
 
   // Removed unused state variables
   // const [displayedCandidatesCount, setDisplayedCandidatesCount] = useState(6)
@@ -1119,16 +1156,6 @@ export default function NBDanceAwardPage() {
           showControls={true}
         />
 
-        {/* Countdown Timer Section */}
-        <section className="py-8 md:py-12 bg-gradient-to-b from-[#0a0a0a] via-zinc-900/50 to-[#0a0a0a] border-y border-zinc-800/50">
-          <div className="container mx-auto px-4 md:px-6">
-            <CountdownTimer 
-              targetDate={new Date('2025-02-01T00:00:00')}
-              className="max-w-4xl mx-auto"
-            />
-          </div>
-        </section>
-
         <div className="py-12 md:py-16">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="mb-8 md:mb-12 text-3xl md:text-4xl font-bold text-center">Toutes les Catégories</h2>
@@ -1137,14 +1164,21 @@ export default function NBDanceAwardPage() {
               <div className="flex items-center justify-center py-20">
                 <div className="text-center">
                   <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent"></div>
-                  <p className="mt-4 text-zinc-400">Chargement des candidats...</p>
+                  <p className="mt-4 text-zinc-400">Chargement des candidats depuis le serveur...</p>
+                </div>
+              </div>
+            ) : candidatesError ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="text-center">
+                  <p className="text-xl text-red-400 mb-2">Erreur de chargement</p>
+                  <p className="text-sm text-zinc-400">{candidatesError}</p>
                 </div>
               </div>
             ) : candidates.length === 0 ? (
               <div className="flex items-center justify-center py-20">
                 <div className="text-center">
                   <p className="text-xl text-zinc-400 mb-2">Aucun candidat disponible</p>
-                  <p className="text-sm text-zinc-500">Les candidats seront affichés une fois chargés depuis le backend.</p>
+                  <p className="text-sm text-zinc-500">Les candidats seront affichés une fois chargés depuis le serveur.</p>
                 </div>
               </div>
             ) : (
@@ -1158,7 +1192,7 @@ export default function NBDanceAwardPage() {
               if (categoryCandidates.length === 0) return null
 
               return (
-                <section key={category} id={(category || '').toLowerCase().replace(/\s+/g, "-")} className="mb-12 md:mb-16">
+                <section key={category} id={category.toLowerCase().replace(/\s+/g, "-")} className="mb-12 md:mb-16">
                   <div className="mb-6 md:mb-8">
                     <h3 className="text-2xl md:text-3xl font-bold mb-2">{category}</h3>
                     <div className="h-1 w-20 bg-yellow-500 rounded-full"></div>
@@ -1222,7 +1256,7 @@ export default function NBDanceAwardPage() {
                 </section>
               )
             }))
-            )}
+            }
           </div>
         </div>
 
@@ -1498,8 +1532,27 @@ export default function NBDanceAwardPage() {
                     </div>
                   </div>
 
-                  <Button className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold py-4 md:py-5 text-sm md:text-base rounded-full uppercase">
-                    Proceed to payment
+                  <Button 
+                    onClick={async () => {
+                      const result = await submitVote({
+                        candidateId: selectedCandidate.id,
+                        voteCount,
+                        phoneNumber,
+                        paymentMethod: selectedPaymentMethod,
+                        provider: selectedProvider,
+                      })
+                      if (result.success) {
+                        setTimeout(() => {
+                          setIsVotingModalOpen(false)
+                          setPhoneNumber("")
+                          setVoteCount(1)
+                          resetState()
+                        }, 2000)
+                      }
+                    }}
+                    disabled={isSubmitting}
+                    className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 md:py-5 text-sm md:text-base rounded-full uppercase">
+                    {isSubmitting ? 'Processing...' : 'Proceed to payment'}
                   </Button>
                 </>
               )}
@@ -1590,11 +1643,27 @@ export default function NBDanceAwardPage() {
                   <Input
                     type="tel"
                     placeholder="6xx xxx xxx"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                     className="w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-20 md:pl-24 pr-10 md:pr-12 py-4 md:py-5 text-sm md:text-base text-white placeholder:text-zinc-500 focus:border-yellow-500"
                   />
                   <Lock className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-zinc-500" />
                 </div>
               </div>
+
+              {/* Error/Success Messages */}
+              {voteError && (
+                <div className="mb-4 md:mb-6 flex items-center gap-2 rounded-lg bg-red-500/10 border border-red-500/50 p-3 md:p-4">
+                  <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-red-500 flex-shrink-0" />
+                  <p className="text-xs md:text-sm text-red-500">{voteError}</p>
+                </div>
+              )}
+              {voteSuccess && (
+                <div className="mb-4 md:mb-6 flex items-center gap-2 rounded-lg bg-green-500/10 border border-green-500/50 p-3 md:p-4">
+                  <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
+                  <p className="text-xs md:text-sm text-green-500">Vote submitted successfully! Closing...</p>
+                </div>
+              )}
 
               {/* Security Badges */}
               <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs text-zinc-400">

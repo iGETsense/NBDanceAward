@@ -148,9 +148,7 @@ export default function AdminPage() {
 
   const filteredCandidates = candidates
     .filter((c) => {
-      const candidateName = (c.name || '').toLowerCase()
-      const searchLower = (searchQuery || '').toLowerCase()
-      const matchesSearch = candidateName.includes(searchLower)
+      const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase())
       const matchesCategory = selectedCategory === "Toutes les catégories" || c.category === selectedCategory
       return matchesSearch && matchesCategory
     })

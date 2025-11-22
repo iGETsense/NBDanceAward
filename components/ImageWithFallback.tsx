@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { getImagePath } from "@/lib/imageUtils"
 
 interface ImageWithFallbackProps {
   src: string
@@ -41,8 +40,7 @@ export default function ImageWithFallback({
 
   // Reset states when src changes
   useEffect(() => {
-    const normalizedSrc = getImagePath(src)
-    setImageSrc(normalizedSrc)
+    setImageSrc(src)
     setIsLoading(true)
     setHasError(false)
   }, [src])

@@ -10,10 +10,12 @@ import ImageWithFallback from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useCandidates } from "@/hooks/useFirebaseData"
-import CountdownTimer from "@/components/CountdownTimer"
+import { allCandidatesData } from "@/lib/candidatesData"
 
-// Candidates with custom image positioning (for better head visibility)
-const customImagePositioning: { [key: string]: string } = {
+const staticAllCandidates = allCandidatesData
+
+// Keep old data for reference (commented out)
+const oldStaticCandidates = [
   // 1- Meilleure artiste danseuse féminine
   {
     name: "Maguy merine",
@@ -840,6 +842,8 @@ const customImagePositioning: { [key: string]: string } = {
     percentage: 23,
     category: "Meilleur collaboration duo",
   },
+]
+
 const categories = [
   "Toutes les catégories",
   "Meilleur artiste danseur - masculin",
@@ -871,8 +875,8 @@ export default function CandidatsPage() {
   // Firebase hook
   const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
   
-  // Use only Firebase candidates - show empty if no data
-  const allCandidates = firebaseCandidates
+  // Use Firebase candidates if available, otherwise use static
+  const allCandidates = firebaseCandidates.length > 0 ? firebaseCandidates : staticAllCandidates
 
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories")
@@ -935,9 +939,7 @@ export default function CandidatsPage() {
 
   // Filter candidates without re-shuffling
   const filteredCandidates = shuffledCandidates.filter((candidate) => {
-    const candidateName = (candidate.name || '').toLowerCase()
-    const searchLower = (searchQuery || '').toLowerCase()
-    const matchesSearch = candidateName.includes(searchLower)
+    const matchesSearch = candidate.name.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = selectedCategory === "Toutes les catégories" || candidate.category === selectedCategory
     return matchesSearch && matchesCategory
   })
@@ -1081,16 +1083,6 @@ export default function CandidatsPage() {
       </header>
 
       <div className="pt-[108px]">
-        {/* Countdown Timer Section */}
-        <section className="py-6 md:py-8 bg-gradient-to-b from-[#0a0a0a] via-zinc-900/50 to-[#0a0a0a] border-b border-zinc-800/50">
-          <div className="container mx-auto px-4 md:px-6">
-            <CountdownTimer 
-              targetDate={new Date('2025-02-01T00:00:00')}
-              className="max-w-4xl mx-auto"
-            />
-          </div>
-        </section>
-
         <div className="container mx-auto px-4 py-8 md:px-6 md:py-12">
           <div className="mb-8 text-center">
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Tous les Candidats</h1>
@@ -1138,21 +1130,7 @@ export default function CandidatsPage() {
             )}
           </div>
 
-          {candidatesLoading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="text-center">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent"></div>
-                <p className="mt-4 text-zinc-400">Chargement des candidats...</p>
-              </div>
-            </div>
-          ) : allCandidates.length === 0 ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="text-center">
-                <p className="text-xl text-zinc-400 mb-2">Aucun candidat disponible</p>
-                <p className="text-sm text-zinc-500">Les candidats seront affichés une fois chargés depuis le backend.</p>
-              </div>
-            </div>
-          ) : filteredCandidates.length > 0 ? (
+          {filteredCandidates.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-6 animate-stagger">
               {filteredCandidates.map((candidate, index) => (
                 <button

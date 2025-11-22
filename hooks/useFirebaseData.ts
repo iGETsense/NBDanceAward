@@ -1,5 +1,26 @@
 import { useEffect, useState } from 'react'
-import { subscribeToCandidates, subscribeToLeaderboard, getUserVotes } from '@/lib/database'
+import { subscribeToCandidates, subscribeToLeaderboard, getUserVotes, subscribeToCategories } from '@/lib/database'
+
+export function useCategories() {
+  const [categories, setCategories] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    try {
+      const unsubscribe = subscribeToCategories((data) => {
+        setCategories(data)
+        setLoading(false)
+      })
+      return unsubscribe
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load categories')
+      setLoading(false)
+    }
+  }, [])
+
+  return { categories, loading, error }
+}
 
 export function useCandidates() {
   const [candidates, setCandidates] = useState<any[]>([])
