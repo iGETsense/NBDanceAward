@@ -120,16 +120,6 @@
       "percentage": 0,
       "category": "Meilleure artiste danseuse mbolé"
     },
-    "yvan10": {
-      "id": "yvan10",
-      "name": "Yvan10",
-      "image": "/dancers/Yvan 10.jpeg",
-      "votes": 0,
-      "quote": 5,
-      "badge": null,
-      "percentage": 0,
-      "category": "Meilleure artiste danseuse mbolé"
-    },
     "maxime-la-vitesse": {
       "id": "maxime-la-vitesse",
       "name": "Maxime la vitesse",
@@ -244,16 +234,6 @@
       "id": "mbole-dancing",
       "name": "Mbolé Dancing",
       "image": "/dancers/mbole-dancing.jpeg",
-      "votes": 0,
-      "quote": 5,
-      "badge": null,
-      "percentage": 0,
-      "category": "Meilleur Groupe de danse"
-    },
-    "talented-afro": {
-      "id": "talented-afro",
-      "name": "Talented Afro",
-      "image": "/dancers/Talented Afro.jpg",
       "votes": 0,
       "quote": 5,
       "badge": null,
