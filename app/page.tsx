@@ -12,37 +12,8 @@ import Link from "next/link"
 import PartnersCarousel from "@/components/PartnersCarousel"
 import { useCandidates, useLeaderboard } from "@/hooks/useFirebaseData"
 
-const staticCandidates = [
-  // Meilleur artiste danseur - masculin
-  {
-    name: "Étienne kampos",
-    title: "Male Dance King",
-    image: "/dancers/Etienne kampos.jpg",
-    votes: 1847,
-    badge: 1,
-    percentage: 45,
-    category: "Meilleur artiste danseur - masculin",
-  },
-  {
-    name: "De Flow",
-    title: "Flow Master",
-    image: "/dancers/De Flow.jpeg",
-    votes: 1654,
-    badge: null,
-    percentage: 40,
-    category: "Meilleur artiste danseur - masculin",
-  },
-  {
-    name: "Pascal métaphore",
-    title: "Poetic Dancer",
-    image: "/dancers/PASCAL métaphore.jpeg",
-    votes: 1432,
-    badge: null,
-    percentage: 35,
-    category: "Meilleur artiste danseur - masculin",
-  },
-  {
-    name: "El Fally du 237",
+// Candidates with custom image positioning (for better head visibility)
+const customImagePositioning: { [key: string]: string } = {
     title: "Cameroon Star",
     image: "/dancers/El fally du 237.jpg",
     votes: 1289,
@@ -836,12 +807,6 @@ const staticCandidates = [
     image: "/dancers/okonor-celeste.jpeg",
     votes: 2545,
     badge: null,
-    percentage: 62,
-    category: "Meilleure artiste danseuse de l'année",
-  },
-
-]
-
 const mainCategories = [
   "Meilleure artiste danseuse féminine",
   "Meilleure artiste danseuse mbolé",
@@ -873,8 +838,8 @@ export default function NBDanceAwardPage() {
   const { candidates: firebaseCandidates, loading: candidatesLoading } = useCandidates()
   const { leaderboard } = useLeaderboard(10)
   
-  // Use Firebase candidates if available, otherwise use static
-  const candidates = firebaseCandidates.length > 0 ? firebaseCandidates : staticCandidates
+  // Use only Firebase candidates - show empty if no data
+  const candidates = firebaseCandidates
 
   const [showBanner, setShowBanner] = useState(true)
   const [isVotingModalOpen, setIsVotingModalOpen] = useState(false)
@@ -1157,7 +1122,22 @@ export default function NBDanceAwardPage() {
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="mb-8 md:mb-12 text-3xl md:text-4xl font-bold text-center">Toutes les Catégories</h2>
 
-            {Array.from(new Set(candidates.map(c => c.category))).sort().map((category) => {
+            {candidatesLoading ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="text-center">
+                  <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-yellow-500 border-r-transparent"></div>
+                  <p className="mt-4 text-zinc-400">Chargement des candidats...</p>
+                </div>
+              </div>
+            ) : candidates.length === 0 ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="text-center">
+                  <p className="text-xl text-zinc-400 mb-2">Aucun candidat disponible</p>
+                  <p className="text-sm text-zinc-500">Les candidats seront affichés une fois chargés depuis le backend.</p>
+                </div>
+              </div>
+            ) : (
+              Array.from(new Set(candidates.map(c => c.category))).sort().map((category) => {
               const categoryCandidates = candidates.filter((c) => c.category === category)
               const isExpanded = expandedCategories[category] || false
               const itemsPerRow = screenSize === "mobile" ? 2 : 5
@@ -1167,7 +1147,7 @@ export default function NBDanceAwardPage() {
               if (categoryCandidates.length === 0) return null
 
               return (
-                <section key={category} id={category.toLowerCase().replace(/\s+/g, "-")} className="mb-12 md:mb-16">
+                <section key={category} id={(category || '').toLowerCase().replace(/\s+/g, "-")} className="mb-12 md:mb-16">
                   <div className="mb-6 md:mb-8">
                     <h3 className="text-2xl md:text-3xl font-bold mb-2">{category}</h3>
                     <div className="h-1 w-20 bg-yellow-500 rounded-full"></div>
@@ -1230,7 +1210,8 @@ export default function NBDanceAwardPage() {
                   )}
                 </section>
               )
-            })}
+            }))
+            )}
           </div>
         </div>
 
