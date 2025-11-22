@@ -303,7 +303,7 @@ export default function AdminPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <p className="text-zinc-400 text-sm mb-1">Total des Votes</p>
-                  <h3 className="text-3xl md:text-4xl font-bold text-white">{totalVotes.toLocaleString()}</h3>
+                  <h3 className="text-3xl md:text-4xl font-bold text-white">{(totalVotes || 0).toLocaleString()}</h3>
                 </div>
                 <div className="bg-yellow-500/20 p-3 rounded-lg">
                   <TrendingUp className="h-6 w-6 text-yellow-500" />
@@ -320,7 +320,7 @@ export default function AdminPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <p className="text-zinc-400 text-sm mb-1">Revenu Total</p>
-                  <h3 className="text-3xl md:text-4xl font-bold text-white">{totalRevenue.toLocaleString()} XAF</h3>
+                  <h3 className="text-3xl md:text-4xl font-bold text-white">{(totalRevenue || 0).toLocaleString()} XAF</h3>
                 </div>
                 <div className="bg-green-500/20 p-3 rounded-lg">
                   <DollarSign className="h-6 w-6 text-green-500" />
@@ -368,7 +368,7 @@ export default function AdminPage() {
                 withdrawalHistory.map((withdrawal) => (
                   <div key={withdrawal.id} className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4 flex items-center justify-between">
                     <div>
-                      <p className="font-semibold text-white">{withdrawal.amount.toLocaleString()} XAF</p>
+                      <p className="font-semibold text-white">{(withdrawal?.amount || 0).toLocaleString()} XAF</p>
                       <p className="text-sm text-zinc-400">
                         {withdrawal.method === "om" ? "Orange Money" : "MTN MoMo"} • {withdrawal.date} {withdrawal.time}
                       </p>
@@ -443,7 +443,7 @@ export default function AdminPage() {
                         <span className="font-bold text-yellow-500">{candidate.votes || 0}</span>
                       </td>
                       <td className="py-4 px-4 text-right">
-                        <span className="text-green-400">{((candidate.votes || 0) * 5).toLocaleString()} XAF</span>
+                        <span className="text-green-400">{(((candidate?.votes || 0) * 5) || 0).toLocaleString()} XAF</span>
                       </td>
                       <td className="py-4 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">

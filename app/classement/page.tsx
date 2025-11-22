@@ -365,8 +365,8 @@ export default function ClassementPage() {
     return rankedCandidates.filter((c: any) => c.category === category).sort((a: any, b: any) => b.votes - a.votes)
   }
 
-  const formatVotes = (votes: number) => {
-    return votes.toLocaleString("fr-FR")
+  const formatVotes = (votes: number | undefined) => {
+    return (votes || 0).toLocaleString("fr-FR")
   }
 
   return (

@@ -1187,8 +1187,8 @@ export default function CandidatsPage() {
                     </div>
 
                     <div className="flex justify-between text-[10px] md:text-xs text-zinc-400">
-                      <span className="font-semibold text-white">{candidate.votes.toLocaleString()}</span>
-                      <span>{candidate.percentage}%</span>
+                      <span className="font-semibold text-white">{(candidate?.votes || 0).toLocaleString()}</span>
+                      <span>{candidate?.percentage || 0}%</span>
                     </div>
                     <p className="text-[9px] md:text-[10px] text-zinc-500 text-center mt-0.5 md:mt-1">votes</p>
                   </div>
