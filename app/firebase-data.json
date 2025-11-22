@@ -1,0 +1,644 @@
+{
+  "candidates": {
+    "maguy-merine": {
+      "id": "maguy-merine",
+      "name": "Maguy merine",
+      "image": "/dancers/maguy-merine.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "kendi": {
+      "id": "kendi",
+      "name": "Kendi",
+      "image": "/dancers/kendi.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "bebs-velina": {
+      "id": "bebs-velina",
+      "name": "Beb's velina",
+      "image": "/dancers/bebs-velina.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "katia-eg": {
+      "id": "katia-eg",
+      "name": "Katia eg",
+      "image": "/dancers/katia-eg.png",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "stella-officielle3": {
+      "id": "stella-officielle3",
+      "name": "Stella officielle3",
+      "image": "/dancers/stella-officielle3.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "nounours": {
+      "id": "nounours",
+      "name": "Nounours",
+      "image": "/dancers/nounours.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "okonor-celeste": {
+      "id": "okonor-celeste",
+      "name": "O'konor Céleste",
+      "image": "/dancers/okonor-celeste.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse féminine"
+    },
+    "nelly-dora": {
+      "id": "nelly-dora",
+      "name": "Nelly Dora",
+      "image": "/dancers/nelly-dora.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse mbolé"
+    },
+    "chica-bassa": {
+      "id": "chica-bassa",
+      "name": "Chica bassa",
+      "image": "/dancers/chica-bassa.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse mbolé"
+    },
+    "lmn-ponce-off": {
+      "id": "lmn-ponce-off",
+      "name": "LMN ponce Off",
+      "image": "/dancers/lmn-ponce-off.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse mbolé"
+    },
+    "influence-femi": {
+      "id": "influence-femi",
+      "name": "Influence Femi",
+      "image": "/dancers/influence-femi.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse mbolé"
+    },
+    "jessi-237": {
+      "id": "jessi-237",
+      "name": "Jessi 237",
+      "image": "/dancers/jessi-237.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse mbolé"
+    },
+    "yvan10": {
+      "id": "yvan10",
+      "name": "Yvan10",
+      "image": "/dancers/yvan10.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleure artiste danseuse mbolé"
+    },
+    "maxime-la-vitesse": {
+      "id": "maxime-la-vitesse",
+      "name": "Maxime la vitesse",
+      "image": "/dancers/maxime-la-vitesse.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste jeune danseur/danseuse"
+    },
+    "kloe-la-machine": {
+      "id": "kloe-la-machine",
+      "name": "Kloe la machine",
+      "image": "/dancers/kloe-la-machine.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste jeune danseur/danseuse"
+    },
+    "meldjess-peace": {
+      "id": "meldjess-peace",
+      "name": "Meldjess peace",
+      "image": "/dancers/meldjess-peace.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste jeune danseur/danseuse"
+    },
+    "jumeaux-de-la-capitale": {
+      "id": "jumeaux-de-la-capitale",
+      "name": "Jumeaux de la capitale",
+      "image": "/dancers/jumeaux-capitale.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste jeune danseur/danseuse"
+    },
+    "deboy-le-monstre": {
+      "id": "deboy-le-monstre",
+      "name": "Déboy le monstre",
+      "image": "/dancers/deboy-le-monstre.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur Performance web"
+    },
+    "el-fally-237": {
+      "id": "el-fally-237",
+      "name": "El fally 237",
+      "image": "/dancers/el-fally-du-237.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur Performance web"
+    },
+    "jkaxel": {
+      "id": "jkaxel",
+      "name": "Jkaxel",
+      "image": "/dancers/jkaxel.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur Performance web"
+    },
+    "etienne-kampos": {
+      "id": "etienne-kampos",
+      "name": "Étienne kampos",
+      "image": "/dancers/etienne-kampos.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur Performance web"
+    },
+    "afu-dance-academie": {
+      "id": "afu-dance-academie",
+      "name": "AFU Dance académie",
+      "image": "/dancers/afu-dance-academy.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur Groupe de danse"
+    },
+    "etat-nwar-dance": {
+      "id": "etat-nwar-dance",
+      "name": "Etat NWAR dance",
+      "image": "/dancers/etat-nwar-dance.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur Groupe de danse"
+    },
+    "team-escram": {
+      "id": "team-escram",
+      "name": "Team Escram",
+      "image": "/dancers/team-escram.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur Groupe de danse"
+    },
+    "mbole-dancing": {
+      "id": "mbole-dancing",
+      "name": "Mbolé Dancing",
+      "image": "/dancers/mbole-dancing.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur Groupe de danse"
+    },
+    "talented-afro": {
+      "id": "talented-afro",
+      "name": "Talented Afro",
+      "image": "/dancers/talented-afro.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur Groupe de danse"
+    },
+    "ordinateur-baboue": {
+      "id": "ordinateur-baboue",
+      "name": "Ordinateur baboué",
+      "image": "/dancers/ordinateur-baboue.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur Afro Coupé décalé"
+    },
+    "shazam-le-vrai": {
+      "id": "shazam-le-vrai",
+      "name": "Shazam le vrai",
+      "image": "/dancers/shazam.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur Afro Coupé décalé"
+    },
+    "xender": {
+      "id": "xender",
+      "name": "Xender",
+      "image": "/dancers/xender.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur Afro Coupé décalé"
+    },
+    "bb-super-lelu": {
+      "id": "bb-super-lelu",
+      "name": "BB Super l'elu",
+      "image": "/dancers/bb-super-lelu.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur Afro Coupé décalé"
+    },
+    "vinny-magicien": {
+      "id": "vinny-magicien",
+      "name": "Vinny magicien",
+      "image": "/dancers/vinny-magicien.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur Afro Coupé décalé"
+    },
+    "smobar-le-balthazar": {
+      "id": "smobar-le-balthazar",
+      "name": "Smobar Le Balthazar",
+      "image": "/dancers/smobar-le-balthazar.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur Afro Coupé décalé"
+    },
+    "authentik": {
+      "id": "authentik",
+      "name": "Authentik",
+      "image": "/dancers/authentik.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur Afro Coupé décalé"
+    },
+    "pikan-pointu": {
+      "id": "pikan-pointu",
+      "name": "Pikan pointu",
+      "image": "/dancers/pikan-pointu.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur Afro Coupé décalé"
+    },
+    "wenjel-avataro": {
+      "id": "wenjel-avataro",
+      "name": "Wenjel Avataro",
+      "image": "/dancers/wenjel-avataro.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur Afro Coupé décalé"
+    },
+    "jesus-saotao": {
+      "id": "jesus-saotao",
+      "name": "Jesus saotao",
+      "image": "/dancers/jesus-saotao.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur Afro Coupé décalé"
+    },
+    "etienne-kampos-male": {
+      "id": "etienne-kampos-male",
+      "name": "Étienne kampos",
+      "image": "/dancers/etienne-kampos.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur masculin"
+    },
+    "de-flow": {
+      "id": "de-flow",
+      "name": "De Flow",
+      "image": "/dancers/de-flow.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur masculin"
+    },
+    "pascal-metaphore": {
+      "id": "pascal-metaphore",
+      "name": "Pascal métaphore",
+      "image": "/dancers/pascal-metaphore.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur masculin"
+    },
+    "el-fally-du-237": {
+      "id": "el-fally-du-237",
+      "name": "El Fally du 237",
+      "image": "/dancers/el-fally-du-237.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur masculin"
+    },
+    "escram-shuwingum": {
+      "id": "escram-shuwingum",
+      "name": "Escram shuwingum",
+      "image": "/dancers/escram.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur masculin"
+    },
+    "petit-tchakap": {
+      "id": "petit-tchakap",
+      "name": "Petit tchakap",
+      "image": "/dancers/petit-tchakap.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur masculin"
+    },
+    "3-peace": {
+      "id": "3-peace",
+      "name": "3 peace",
+      "image": "/dancers/3-peace.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur masculin"
+    },
+    "jkaxel-male": {
+      "id": "jkaxel-male",
+      "name": "Jkaxel",
+      "image": "/dancers/jkaxel.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur masculin"
+    },
+    "deboy-le-monstre-mbole": {
+      "id": "deboy-le-monstre-mbole",
+      "name": "Déboy le monstre",
+      "image": "/dancers/deboy-le-monstre.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "meilleurs artiste danseurs mbolé"
+    },
+    "tks-officiel": {
+      "id": "tks-officiel",
+      "name": "Tks officiel",
+      "image": "/dancers/tks-officiel.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "meilleurs artiste danseurs mbolé"
+    },
+    "4-peace": {
+      "id": "4-peace",
+      "name": "4 peace",
+      "image": "/dancers/4-peace.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "meilleurs artiste danseurs mbolé"
+    },
+    "nyanga-boy": {
+      "id": "nyanga-boy",
+      "name": "Nyanga Boy",
+      "image": "/dancers/nyanga-boy.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "meilleurs artiste danseurs mbolé"
+    },
+    "tresor-brown": {
+      "id": "tresor-brown",
+      "name": "Trésor brown",
+      "image": "/dancers/tresor-brown.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "meilleurs artiste danseurs mbolé"
+    },
+    "ayi-ventilateur": {
+      "id": "ayi-ventilateur",
+      "name": "Ayi ventilateur",
+      "image": "/dancers/ayi-ventilateur.png",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "meilleur artiste danse au rythme folklorique"
+    },
+    "nounours-traditionnel": {
+      "id": "nounours-traditionnel",
+      "name": "Nounours traditionnel",
+      "image": "/dancers/nounours-traditionnel.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "meilleur artiste danse au rythme folklorique"
+    },
+    "arcadien-fureur": {
+      "id": "arcadien-fureur",
+      "name": "Arcadien fureur",
+      "image": "/dancers/accadien-fureur.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "meilleur artiste danse au rythme folklorique"
+    },
+    "kibong-adoube": {
+      "id": "kibong-adoube",
+      "name": "Kibong adoube",
+      "image": "/dancers/kibong-adoube.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "meilleur artiste danse au rythme folklorique"
+    },
+    "goldy-lastar": {
+      "id": "goldy-lastar",
+      "name": "Goldy lastar",
+      "image": "/dancers/goldy-lastar.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleurs artiste chorégraphes"
+    },
+    "garcon-determine": {
+      "id": "garcon-determine",
+      "name": "Garçon déterminé",
+      "image": "/dancers/garcon-determine.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleurs artiste chorégraphes"
+    },
+    "la-religion-noire": {
+      "id": "la-religion-noire",
+      "name": "La religion noire",
+      "image": "/dancers/religion-noir.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleurs artiste chorégraphes"
+    },
+    "le-hempe": {
+      "id": "le-hempe",
+      "name": "Le Hempe",
+      "image": "/dancers/le-hempe.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleurs artiste chorégraphes"
+    },
+    "deboy-et-maguy": {
+      "id": "deboy-et-maguy",
+      "name": "Déboy le monstre et Maguy merine",
+      "image": "/dancers/deboy-le-monstre.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo"
+    },
+    "4peace-et-rachel": {
+      "id": "4peace-et-rachel",
+      "name": "4 peace et Rachel élégance",
+      "image": "/dancers/4-peace.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo"
+    },
+    "chica-et-kendi": {
+      "id": "chica-et-kendi",
+      "name": "Chica bassa et kendi",
+      "image": "/dancers/chica-bassa.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo"
+    },
+    "tks-et-tresor": {
+      "id": "tks-et-tresor",
+      "name": "Tks officiel et Trésor brown",
+      "image": "/dancers/tks-officiel.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo"
+    },
+    "el-fally-et-davia": {
+      "id": "el-fally-et-davia",
+      "name": "El fally du 237 et davia off",
+      "image": "/dancers/el-fally-du-237.jpg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo"
+    },
+    "okonor-et-katia": {
+      "id": "okonor-et-katia",
+      "name": "O'konor Celeste et Katia_eg",
+      "image": "/dancers/okonor-celeste.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo"
+    },
+    "3peace-et-influence": {
+      "id": "3peace-et-influence",
+      "name": "3 peace et Influence femi",
+      "image": "/dancers/3-peace.jpeg",
+      "votes": 0,
+      "quote": 5,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo"
+    }
+  }
+}

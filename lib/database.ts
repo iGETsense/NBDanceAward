@@ -32,13 +32,166 @@ export function subscribeToCandidates(callback: (data: any) => void) {
   return unsubscribe
 }
 
+/**
+ * Validates candidate data before adding
+ */
+function validateCandidateData(candidateData: any): { valid: boolean; error?: string } {
+  if (!candidateData) {
+    return { valid: false, error: 'Candidate data is required' }
+  }
+
+  if (!candidateData.name || typeof candidateData.name !== 'string' || candidateData.name.trim().length === 0) {
+    return { valid: false, error: 'Candidate name is required and must be a non-empty string' }
+  }
+
+  if (!candidateData.image || typeof candidateData.image !== 'string' || candidateData.image.trim().length === 0) {
+    return { valid: false, error: 'Candidate image path is required' }
+  }
+
+  if (!candidateData.category || typeof candidateData.category !== 'string' || candidateData.category.trim().length === 0) {
+    return { valid: false, error: 'Candidate category is required' }
+  }
+
+  // Ensure title exists (use name if not provided)
+  if (!candidateData.title) {
+    candidateData.title = candidateData.name
+  }
+
+  // Normalize data
+  candidateData.name = candidateData.name.trim()
+  candidateData.title = candidateData.title.trim()
+  candidateData.image = candidateData.image.trim()
+  candidateData.category = candidateData.category.trim()
+  candidateData.votes = candidateData.votes || 0
+  candidateData.percentage = candidateData.percentage || 0
+  candidateData.badge = candidateData.badge || null
+
+  // Remove quote field if it exists (use title instead)
+  if (candidateData.quote) {
+    delete candidateData.quote
+  }
+
+  return { valid: true }
+}
+
+/**
+ * Check if a candidate with the same name and category already exists
+ */
+async function checkDuplicateCandidate(name: string, category: string, excludeId?: string): Promise<{ exists: boolean; existingId?: string }> {
+  try {
+    const snapshot = await get(ref(database, 'candidates'))
+    if (!snapshot.exists()) {
+      return { exists: false }
+    }
+
+    const candidates = snapshot.val()
+    const normalizedName = name.toLowerCase().trim()
+    const normalizedCategory = category.trim()
+
+    for (const [id, candidate] of Object.entries(candidates as any)) {
+      if (excludeId && id === excludeId) continue
+
+      const candidateName = (candidate.name || '').toLowerCase().trim()
+      const candidateCategory = (candidate.category || '').trim()
+
+      if (candidateName === normalizedName && candidateCategory === normalizedCategory) {
+        return { exists: true, existingId: id }
+      }
+    }
+
+    return { exists: false }
+  } catch (error) {
+    console.error('Error checking duplicate candidate:', error)
+    return { exists: false }
+  }
+}
+
 export async function addCandidate(candidateId: string, candidateData: any) {
   try {
+    // Validate candidate ID
+    if (!candidateId || typeof candidateId !== 'string' || candidateId.trim().length === 0) {
+      return { success: false, error: 'Invalid candidate ID' }
+    }
+
+    candidateId = candidateId.trim().toLowerCase().replace(/\s+/g, '-')
+
+    // Check if candidate ID already exists
+    const existingSnapshot = await get(ref(database, `candidates/${candidateId}`))
+    if (existingSnapshot.exists()) {
+      return { success: false, error: `Candidate with ID "${candidateId}" already exists` }
+    }
+
+    // Validate candidate data
+    const validation = validateCandidateData(candidateData)
+    if (!validation.valid) {
+      return { success: false, error: validation.error }
+    }
+
+    // Check for duplicate name + category combination
+    const duplicateCheck = await checkDuplicateCandidate(candidateData.name, candidateData.category)
+    if (duplicateCheck.exists) {
+      return { 
+        success: false, 
+        error: `A candidate with the name "${candidateData.name}" already exists in category "${candidateData.category}" (ID: ${duplicateCheck.existingId})` 
+      }
+    }
+
+    // Ensure ID matches the candidateId parameter
+    candidateData.id = candidateId
+
+    // Add candidate to database
     await set(ref(database, `candidates/${candidateId}`), candidateData)
-    return { success: true }
+    
+    return { success: true, candidateId }
   } catch (error) {
     console.error('Error adding candidate:', error)
-    return { success: false, error }
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error occurred' }
+  }
+}
+
+/**
+ * Update an existing candidate
+ */
+export async function updateCandidate(candidateId: string, candidateData: any) {
+  try {
+    if (!candidateId || typeof candidateId !== 'string' || candidateId.trim().length === 0) {
+      return { success: false, error: 'Invalid candidate ID' }
+    }
+
+    // Check if candidate exists
+    const existingSnapshot = await get(ref(database, `candidates/${candidateId}`))
+    if (!existingSnapshot.exists()) {
+      return { success: false, error: `Candidate with ID "${candidateId}" does not exist` }
+    }
+
+    // Validate candidate data
+    const validation = validateCandidateData(candidateData)
+    if (!validation.valid) {
+      return { success: false, error: validation.error }
+    }
+
+    // Check for duplicate name + category (excluding current candidate)
+    const duplicateCheck = await checkDuplicateCandidate(candidateData.name, candidateData.category, candidateId)
+    if (duplicateCheck.exists) {
+      return { 
+        success: false, 
+        error: `A candidate with the name "${candidateData.name}" already exists in category "${candidateData.category}" (ID: ${duplicateCheck.existingId})` 
+      }
+    }
+
+    // Preserve existing votes and percentage if not provided
+    const existing = existingSnapshot.val()
+    candidateData.votes = candidateData.votes !== undefined ? candidateData.votes : existing.votes
+    candidateData.percentage = candidateData.percentage !== undefined ? candidateData.percentage : existing.percentage
+    candidateData.id = candidateId
+
+    // Update candidate
+    await set(ref(database, `candidates/${candidateId}`), candidateData)
+    
+    return { success: true, candidateId }
+  } catch (error) {
+    console.error('Error updating candidate:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error occurred' }
   }
 }
 
