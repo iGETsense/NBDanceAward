@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Menu, LogOut, TrendingUp, Users, DollarSign, Eye, EyeOff, Download, Wallet, ArrowUpRight, Filter, Search, AlertCircle } from "lucide-react"
+import { Menu, LogOut, TrendingUp, Users, DollarSign, Eye, EyeOff, Download, Wallet, ArrowUpRight, Filter, Search, AlertCircle, RotateCcw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { sanitizeInput, validateNumeric, validateWithdrawalData, RateLimiter } from "@/lib/security"
+import { initializeFirebaseWithCandidates } from "@/lib/initFirebaseData"
 
 export default function AdminPage() {
   const [showBanner, setShowBanner] = useState(true)
@@ -27,6 +28,8 @@ export default function AdminPage() {
   const [isLocked, setIsLocked] = useState(false)
   const [lockTime, setLockTime] = useState(0)
   const [securityError, setSecurityError] = useState("")
+  const [isResettingFirebase, setIsResettingFirebase] = useState(false)
+  const [resetMessage, setResetMessage] = useState("")
 
   const { candidates } = useCandidates()
 
@@ -140,6 +143,32 @@ export default function AdminPage() {
     
     // Security: Log withdrawal for audit trail
     console.log(`[AUDIT] Withdrawal processed: ${amount} XAF via ${withdrawalMethod}`)
+  }
+
+  const handleResetFirebase = async () => {
+    if (!confirm("⚠️ Êtes-vous sûr? Cela va réinitialiser tous les candidats depuis le fichier JSON.")) {
+      return
+    }
+
+    setIsResettingFirebase(true)
+    setResetMessage("")
+
+    try {
+      const result = await initializeFirebaseWithCandidates(true)
+      if (result.success) {
+        setResetMessage(`✅ ${result.count} candidats ont été réinitialisés avec succès!`)
+        // Reload page after 2 seconds
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000)
+      } else {
+        setResetMessage(`❌ Erreur: ${result.error}`)
+      }
+    } catch (error) {
+      setResetMessage(`❌ Erreur: ${error instanceof Error ? error.message : "Unknown error"}`)
+    } finally {
+      setIsResettingFirebase(false)
+    }
   }
 
   const totalVotes = candidates.reduce((sum, c) => sum + (c.votes || 0), 0)
@@ -342,6 +371,32 @@ export default function AdminPage() {
               </div>
               <p className="text-zinc-400 text-xs">Actifs</p>
             </div>
+          </div>
+
+          {/* Firebase Reset Section */}
+          <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-red-700/50 rounded-lg p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                <RotateCcw className="h-6 w-6 text-red-500" />
+                Gestion Firebase
+              </h2>
+              <Button
+                onClick={handleResetFirebase}
+                disabled={isResettingFirebase}
+                className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg transition-all"
+              >
+                <RotateCcw className="h-4 w-4 mr-2" />
+                {isResettingFirebase ? "Réinitialisation..." : "Réinitialiser Firebase"}
+              </Button>
+            </div>
+            {resetMessage && (
+              <p className={`text-sm ${resetMessage.includes("✅") ? "text-green-400" : "text-red-400"}`}>
+                {resetMessage}
+              </p>
+            )}
+            <p className="text-zinc-400 text-sm mt-2">
+              Réinitialise tous les candidats depuis le fichier EXAMPLE_CANDIDATES.json
+            </p>
           </div>
 
           {/* Withdrawal Section */}

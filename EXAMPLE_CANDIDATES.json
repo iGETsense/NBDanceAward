@@ -8,7 +8,8 @@
       "votes": 1847,
       "badge": 1,
       "percentage": 45,
-      "category": "Meilleur artiste danseur - masculin"
+      "category": "Meilleur artiste danseur - masculin",
+      "categoryId": "male-dancer"
     },
     {
       "id": "de-flow",
@@ -18,7 +19,8 @@
       "votes": 1654,
       "badge": null,
       "percentage": 40,
-      "category": "Meilleur artiste danseur - masculin"
+      "category": "Meilleur artiste danseur - masculin",
+      "categoryId": "male-dancer"
     },
     {
       "id": "pascal-metaphore",
@@ -28,7 +30,8 @@
       "votes": 1432,
       "badge": null,
       "percentage": 35,
-      "category": "Meilleur artiste danseur - masculin"
+      "category": "Meilleur artiste danseur - masculin",
+      "categoryId": "male-dancer"
     },
     {
       "id": "maguy-merine",
@@ -38,7 +41,8 @@
       "votes": 2534,
       "badge": 1,
       "percentage": 62,
-      "category": "Meilleure artiste danseuse féminine"
+      "category": "Meilleure artiste danseuse féminine",
+      "categoryId": "female-dancer"
     },
     {
       "id": "kendi",
@@ -48,7 +52,8 @@
       "votes": 2245,
       "badge": 2,
       "percentage": 55,
-      "category": "Meilleure artiste danseuse féminine"
+      "category": "Meilleure artiste danseuse féminine",
+      "categoryId": "female-dancer"
     },
     {
       "id": "bebs-velina",
@@ -58,7 +63,8 @@
       "votes": 1956,
       "badge": null,
       "percentage": 48,
-      "category": "Meilleure artiste danseuse féminine"
+      "category": "Meilleure artiste danseuse féminine",
+      "categoryId": "female-dancer"
     },
     {
       "id": "afu-dance-academy",
@@ -68,7 +74,8 @@
       "votes": 2089,
       "badge": 1,
       "percentage": 51,
-      "category": "Meilleur groupe de danse"
+      "category": "Meilleur groupe de danse",
+      "categoryId": "dance-group"
     },
     {
       "id": "etat-nwar-dance",
@@ -78,7 +85,8 @@
       "votes": 1834,
       "badge": null,
       "percentage": 45,
-      "category": "Meilleur groupe de danse"
+      "category": "Meilleur groupe de danse",
+      "categoryId": "dance-group"
     },
     {
       "id": "team-escram",
@@ -88,7 +96,8 @@
       "votes": 1689,
       "badge": null,
       "percentage": 41,
-      "category": "Meilleur groupe de danse"
+      "category": "Meilleur groupe de danse",
+      "categoryId": "dance-group"
     },
     {
       "id": "deboy-le-monstre",
@@ -98,7 +107,8 @@
       "votes": 1956,
       "badge": 1,
       "percentage": 48,
-      "category": "Meilleur collaboration duo"
+      "category": "Meilleur collaboration duo",
+      "categoryId": "duo-collaboration"
     },
     {
       "id": "accadien-fureur",
@@ -108,7 +118,8 @@
       "votes": 2245,
       "badge": 1,
       "percentage": 55,
-      "category": "Meilleur artiste Chorégraphe"
+      "category": "Meilleur artiste Chorégraphe",
+      "categoryId": "choreographer"
     },
     {
       "id": "goldy-lastar",
@@ -118,7 +129,8 @@
       "votes": 2089,
       "badge": null,
       "percentage": 51,
-      "category": "Meilleur artiste Chorégraphe"
+      "category": "Meilleur artiste Chorégraphe",
+      "categoryId": "choreographer"
     },
     {
       "id": "kendi-web",
@@ -128,7 +140,8 @@
       "votes": 3245,
       "badge": 1,
       "percentage": 79,
-      "category": "Meilleur Performance web"
+      "category": "Meilleur Performance web",
+      "categoryId": "web-performance"
     },
     {
       "id": "deboy-web",
@@ -138,7 +151,8 @@
       "votes": 2834,
       "badge": 2,
       "percentage": 69,
-      "category": "Meilleur Performance web"
+      "category": "Meilleur Performance web",
+      "categoryId": "web-performance"
     },
     {
       "id": "ayi-ventilateur",
@@ -148,7 +162,8 @@
       "votes": 1834,
       "badge": 1,
       "percentage": 45,
-      "category": "Meilleur artiste danseur au rythme folklorique"
+      "category": "Meilleur artiste danseur au rythme folklorique",
+      "categoryId": "folkloric-dancer"
     },
     {
       "id": "ordinateur-baboue",
@@ -158,7 +173,8 @@
       "votes": 2156,
       "badge": 1,
       "percentage": 53,
-      "category": "Meilleur artiste danseur afro coupé décalé"
+      "category": "Meilleur artiste danseur afro coupé décalé",
+      "categoryId": "afro-decale-dancer"
     },
     {
       "id": "shazam-le-vrai",
@@ -168,7 +184,8 @@
       "votes": 1923,
       "badge": null,
       "percentage": 47,
-      "category": "Meilleur artiste danseur afro coupé décalé"
+      "category": "Meilleur artiste danseur afro coupé décalé",
+      "categoryId": "afro-decale-dancer"
     },
     {
       "id": "petit-tchakap-mbole",
@@ -178,7 +195,8 @@
       "votes": 1867,
       "badge": 1,
       "percentage": 46,
-      "category": "Meilleur artiste danseur mbolé"
+      "category": "Meilleur artiste danseur mbolé",
+      "categoryId": "mbole-male-dancer"
     },
     {
       "id": "nelly-dora",
@@ -188,7 +206,8 @@
       "votes": 1956,
       "badge": 1,
       "percentage": 48,
-      "category": "Meilleure artiste danseuse mbolé"
+      "category": "Meilleure artiste danseuse mbolé",
+      "categoryId": "mbole-female-dancer"
     },
     {
       "id": "el-fally-year",
@@ -198,7 +217,8 @@
       "votes": 3456,
       "badge": 1,
       "percentage": 84,
-      "category": "Meilleur artiste danseur de l'année"
+      "category": "Meilleur artiste danseur de l'année",
+      "categoryId": "male-dancer-year"
     },
     {
       "id": "maxime-la-vitesse",
@@ -208,7 +228,8 @@
       "votes": 2234,
       "badge": 1,
       "percentage": 54,
-      "category": "Meilleur artiste jeune danseur/danseuse"
+      "category": "Meilleur artiste jeune danseur/danseuse",
+      "categoryId": "young-dancer"
     },
     {
       "id": "katia-eg-year",
@@ -218,7 +239,8 @@
       "votes": 3567,
       "badge": 1,
       "percentage": 87,
-      "category": "Meilleure artiste danseuse de l'année"
+      "category": "Meilleure artiste danseuse de l'année",
+      "categoryId": "female-dancer-year"
     }
   ]
 }

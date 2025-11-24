@@ -5,17 +5,22 @@
  */
 
 import { database } from './firebase'
-import { ref, set, get } from 'firebase/database'
+import { ref, set, get, remove } from 'firebase/database'
 
-export async function initializeFirebaseWithCandidates() {
+export async function initializeFirebaseWithCandidates(forceReset: boolean = false) {
   try {
-    // Check if candidates already exist
     const candidatesRef = ref(database, 'candidates')
-    const snapshot = await get(candidatesRef)
     
-    if (snapshot.exists()) {
-      console.log('✅ Candidates already exist in Firebase')
-      return { success: true, message: 'Candidates already initialized' }
+    // Check if candidates already exist
+    if (!forceReset) {
+      const snapshot = await get(candidatesRef)
+      if (snapshot.exists()) {
+        console.log('✅ Candidates already exist in Firebase')
+        return { success: true, message: 'Candidates already initialized' }
+      }
+    } else {
+      console.log('🔄 Force resetting candidates...')
+      await remove(candidatesRef)
     }
 
     // Load candidates from the JSON file
