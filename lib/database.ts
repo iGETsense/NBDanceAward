@@ -76,17 +76,72 @@ export async function getCandidatesByCategory(categoryId: string) {
 
 export function subscribeToCandidates(callback: (data: any) => void) {
   const candidatesRef = ref(database, 'candidates')
-  const unsubscribe = onValue(candidatesRef, (snapshot) => {
+  const categoriesRef = ref(database, 'categories')
+  
+  let candidates: any = {}
+  let categories: any = {}
+  
+  // Subscribe to candidates
+  const unsubscribeCandidates = onValue(candidatesRef, (snapshot) => {
     if (snapshot.exists()) {
-      const candidatesObj = snapshot.val()
-      const candidatesArray = Object.values(candidatesObj)
-      const withPercentages = calculatePercentages(candidatesArray)
-      callback(withPercentages)
+      candidates = snapshot.val()
+      updateAndCallback()
     }
   }, (error) => {
-    console.error('Firebase error:', error)
+    console.error('Firebase error (candidates):', error)
   })
-  return unsubscribe
+  
+  // Subscribe to categories
+  const unsubscribeCategories = onValue(categoriesRef, (snapshot) => {
+    if (snapshot.exists()) {
+      categories = snapshot.val()
+      updateAndCallback()
+    }
+  }, (error) => {
+    console.error('Firebase error (categories):', error)
+  })
+  
+  // Update callback with percentages calculated per category
+  const updateAndCallback = () => {
+    if (Object.keys(candidates).length === 0 || Object.keys(categories).length === 0) return
+    
+    const candidatesArray = Object.values(candidates)
+    const candidatesWithPercentages = candidatesArray.map((candidate: any) => {
+      // Find all categories this candidate belongs to
+      const candidateCategories = Object.values(categories).filter((cat: any) => 
+        cat.candidates && cat.candidates.includes(candidate.id)
+      )
+      
+      // Calculate percentage for each category
+      const percentagesByCategory: any = {}
+      candidateCategories.forEach((cat: any) => {
+        const categoryId = cat.id
+        const candidatesInCategory = cat.candidates
+          .map((id: string) => candidates[id])
+          .filter((c: any) => c)
+        
+        const totalVotes = candidatesInCategory.reduce((sum: number, c: any) => sum + (c.votes || 0), 0)
+        const percentage = totalVotes > 0 
+          ? Math.round((candidate.votes / totalVotes) * 100)
+          : 0
+        
+        percentagesByCategory[categoryId] = percentage
+      })
+      
+      return {
+        ...candidate,
+        percentage: Object.values(percentagesByCategory)[0] || 0, // Default to first category
+        percentagesByCategory,
+      }
+    })
+    
+    callback(candidatesWithPercentages)
+  }
+  
+  return () => {
+    unsubscribeCandidates()
+    unsubscribeCategories()
+  }
 }
 
 export async function addCandidate(candidateId: string, candidateData: any) {
