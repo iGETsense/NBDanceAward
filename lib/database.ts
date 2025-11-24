@@ -80,15 +80,12 @@ export function subscribeToCandidates(callback: (data: any) => void) {
   
   let candidates: any = {}
   let categories: any = {}
-  let isInitialized = false
   
-  // Subscribe to candidates with optimized data loading
+  // Subscribe to candidates
   const unsubscribeCandidates = onValue(candidatesRef, (snapshot) => {
     if (snapshot.exists()) {
       candidates = snapshot.val()
-      if (isInitialized) {
-        updateAndCallback()
-      }
+      updateAndCallback()
     }
   }, (error) => {
     console.error('Firebase error (candidates):', error)
@@ -98,61 +95,69 @@ export function subscribeToCandidates(callback: (data: any) => void) {
   const unsubscribeCategories = onValue(categoriesRef, (snapshot) => {
     if (snapshot.exists()) {
       categories = snapshot.val()
-      if (!isInitialized) {
-        isInitialized = true
-      }
-      updateAndCallback()
     }
+    updateAndCallback()
   }, (error) => {
     console.error('Firebase error (categories):', error)
   })
   
   // Update callback with percentages calculated per category
   const updateAndCallback = () => {
-    if (Object.keys(candidates).length === 0 || Object.keys(categories).length === 0) return
+    if (Object.keys(candidates).length === 0) return
     
     const candidatesArray = Object.values(candidates)
     
-    // Cache percentages to avoid recalculation
-    const percentageCache: any = {}
-    
-    const candidatesWithPercentages = candidatesArray.map((candidate: any) => {
-      // Find all categories this candidate belongs to
-      const candidateCategories = Object.values(categories).filter((cat: any) => 
-        cat.candidates && cat.candidates.includes(candidate.id)
-      )
+    // If categories exist, calculate percentages per category
+    if (Object.keys(categories).length > 0) {
+      // Cache percentages to avoid recalculation
+      const percentageCache: any = {}
       
-      // Calculate percentage for each category
-      const percentagesByCategory: any = {}
-      candidateCategories.forEach((cat: any) => {
-        const categoryId = cat.id
-        const cacheKey = `${categoryId}-${candidate.id}`
+      const candidatesWithPercentages = candidatesArray.map((candidate: any) => {
+        // Find all categories this candidate belongs to
+        const candidateCategories = Object.values(categories).filter((cat: any) => 
+          cat.candidates && cat.candidates.includes(candidate.id)
+        )
         
-        if (!percentageCache[categoryId]) {
-          const candidatesInCategory = cat.candidates
-            .map((id: string) => candidates[id])
-            .filter((c: any) => c)
+        // Calculate percentage for each category
+        const percentagesByCategory: any = {}
+        candidateCategories.forEach((cat: any) => {
+          const categoryId = cat.id
           
-          const totalVotes = candidatesInCategory.reduce((sum: number, c: any) => sum + (c.votes || 0), 0)
-          percentageCache[categoryId] = totalVotes
+          if (!percentageCache[categoryId]) {
+            const candidatesInCategory = cat.candidates
+              .map((id: string) => candidates[id])
+              .filter((c: any) => c)
+            
+            const totalVotes = candidatesInCategory.reduce((sum: number, c: any) => sum + (c.votes || 0), 0)
+            percentageCache[categoryId] = totalVotes
+          }
+          
+          const totalVotes = percentageCache[categoryId]
+          const percentage = totalVotes > 0 
+            ? Math.round((candidate.votes / totalVotes) * 100)
+            : 0
+          
+          percentagesByCategory[categoryId] = percentage
+        })
+        
+        return {
+          ...candidate,
+          percentage: Object.values(percentagesByCategory)[0] || 0,
+          percentagesByCategory,
         }
-        
-        const totalVotes = percentageCache[categoryId]
-        const percentage = totalVotes > 0 
-          ? Math.round((candidate.votes / totalVotes) * 100)
-          : 0
-        
-        percentagesByCategory[categoryId] = percentage
       })
       
-      return {
+      callback(candidatesWithPercentages)
+    } else {
+      // If categories don't exist yet, just return candidates without percentages
+      const candidatesWithPercentages = candidatesArray.map((candidate: any) => ({
         ...candidate,
-        percentage: Object.values(percentagesByCategory)[0] || 0,
-        percentagesByCategory,
-      }
-    })
-    
-    callback(candidatesWithPercentages)
+        percentage: 0,
+        percentagesByCategory: {},
+      }))
+      
+      callback(candidatesWithPercentages)
+    }
   }
   
   return () => {
