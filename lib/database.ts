@@ -47,13 +47,27 @@ export async function getCandidates() {
 
 export async function getCandidatesByCategory(categoryId: string) {
   try {
-    const snapshot = await get(ref(database, 'candidates'))
-    if (snapshot.exists()) {
-      const candidatesObj = snapshot.val()
-      const filtered = Object.values(candidatesObj).filter((c: any) => c.categoryId === categoryId)
-      return filtered
+    // Get category with candidate IDs
+    const categoryRef = ref(database, `categories/${categoryId}`)
+    const categorySnapshot = await get(categoryRef)
+    
+    if (!categorySnapshot.exists()) {
+      return []
     }
-    return []
+    
+    const category = categorySnapshot.val()
+    const candidateIds = category.candidates || []
+    
+    // Fetch full candidate data for each ID
+    const candidates = await Promise.all(
+      candidateIds.map(async (id: string) => {
+        const candRef = ref(database, `candidates/${id}`)
+        const candSnapshot = await get(candRef)
+        return candSnapshot.val()
+      })
+    )
+    
+    return candidates.filter(c => c !== null)
   } catch (error) {
     console.error('Error fetching candidates by category:', error)
     return []
