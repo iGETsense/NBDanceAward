@@ -1251,7 +1251,7 @@ export default function NBDanceAwardPage() {
                     <div className="flex justify-center mt-6 md:mt-8">
                       <button
                         onClick={() => setExpandedCategories(prev => ({ ...prev, [category]: !isExpanded }))}
-                        className="px-6 md:px-8 py-2 md:py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold rounded-lg transition-colors duration-200 shadow-lg hover:shadow-yellow-500/50"
+                        className="px-6 md:px-8 py-2 md:py-3 bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded-lg transition-colors duration-200"
                       >
                         {isExpanded ? "Voir Moins" : "Voir Plus"}
                       </button>

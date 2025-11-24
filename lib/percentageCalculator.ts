@@ -6,12 +6,31 @@
 export function calculatePercentages(candidates: any[]): any[] {
   if (!candidates || candidates.length === 0) return candidates
 
-  // For new structure: candidates already have their category info
-  // Just add percentage field (will be calculated per category by the component)
+  // Group candidates by categoryId
+  const categoriesMap = new Map<string, any[]>()
+  
+  candidates.forEach((candidate) => {
+    const categoryId = candidate?.categoryId || 'unknown'
+    if (!categoriesMap.has(categoryId)) {
+      categoriesMap.set(categoryId, [])
+    }
+    categoriesMap.get(categoryId)!.push(candidate)
+  })
+
+  // Calculate total votes per category
   const result = candidates.map((candidate) => {
+    const categoryId = candidate?.categoryId || 'unknown'
+    const categoryGroup = categoriesMap.get(categoryId) || []
+    const totalVotesInCategory = categoryGroup.reduce((sum, c) => sum + (c.votes || 0), 0)
+
+    // Calculate percentage
+    const percentage = totalVotesInCategory > 0 
+      ? Math.round((candidate.votes / totalVotesInCategory) * 100)
+      : 0
+
     return {
       ...candidate,
-      percentage: 0, // Will be calculated by component based on category
+      percentage,
     }
   })
 
