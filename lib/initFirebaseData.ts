@@ -10,7 +10,7 @@ import { ref, set, get, remove } from 'firebase/database'
 export async function initializeFirebaseWithCandidates(forceReset: boolean = false) {
   try {
     const candidatesRef = ref(database, 'candidates')
-    
+
     // Check if candidates already exist
     if (!forceReset) {
       const snapshot = await get(candidatesRef)
@@ -33,20 +33,38 @@ export async function initializeFirebaseWithCandidates(forceReset: boolean = fal
       return { success: false, error: 'No candidates found' }
     }
 
-    // Convert array to object with candidate IDs as keys
-    const candidatesObj: any = {}
+    // Convert array to object with candidate IDs as keys (without category fields)
+    const candidatesObj: any = {};
+    const candidateCategories: any[] = [];
     candidates.forEach((candidate: any, index: number) => {
-      const id = candidate.id || `candidate-${index + 1}`
+      const id = candidate.id || `candidate-${index + 1}`;
+      // Store candidate data without category info
+      const { category, categoryId, ...rest } = candidate;
       candidatesObj[id] = {
-        ...candidate,
+        ...rest,
         id,
         votes: candidate.votes || 0,
         percentage: 0,
+      };
+      // Record link(s) – a candidate may belong to multiple categories in future
+      if (categoryId) {
+        candidateCategories.push({ candidateId: id, categoryId });
       }
-    })
+    });
 
-    // Write to Firebase
-    await set(candidatesRef, candidatesObj)
+    // Write candidates to Firebase
+    await set(candidatesRef, candidatesObj);
+
+    // Write candidateCategories link table
+    const candidateCategoriesRef = ref(database, 'candidateCategories');
+    await set(candidateCategoriesRef, candidateCategories);
+
+    // Write categories to Firebase
+    const categoriesRef = ref(database, 'categories');
+    await set(categoriesRef, {
+      // categories defined in categories.json
+      // This will be overwritten each init
+    });
 
     console.log(`✅ Successfully initialized ${candidates.length} candidates in Firebase`)
     return { success: true, count: candidates.length }
