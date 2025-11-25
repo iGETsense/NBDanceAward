@@ -1,6 +1,7 @@
 import { database } from './firebase'
 import { ref, set, update, get, onValue, increment } from 'firebase/database'
 import { calculatePercentages, updateCandidatePercentage } from './percentageCalculator'
+import { getCandidateImage } from './candidateImages'
 
 // ============ CATEGORIES ============
 
@@ -111,7 +112,7 @@ export function subscribeToCandidates(callback: (data: any) => void) {
         console.log('🗺️ [DEBUG] Category map size:', candidateCategoryMap.size)
         console.log('🗺️ [DEBUG] First 3 mappings:', Array.from(candidateCategoryMap.entries()).slice(0, 3))
 
-        // Enrich candidates with category information
+        // Enrich candidates with category information AND images from frontend
         const enrichedCandidates = candidatesArray.map((candidate: any) => {
           const categoryId = candidateCategoryMap.get(candidate.id)
           const category = categoryId && categoriesObj[categoryId] ? categoriesObj[categoryId] : null
@@ -119,7 +120,8 @@ export function subscribeToCandidates(callback: (data: any) => void) {
           return {
             ...candidate,
             categoryId: categoryId || 'unknown',
-            category: category ? category.name : 'Unknown Category'
+            category: category ? category.name : 'Unknown Category',
+            image: getCandidateImage(candidate.id)
           }
         })
 
@@ -300,7 +302,7 @@ export function subscribeToLeaderboard(callback: (data: any) => void, limit: num
           candidateCategoryMap.set(link.candidateId, link.categoryId)
         })
 
-        // Enrich candidates with category information
+        // Enrich candidates with category information AND images from frontend
         const enrichedCandidates = candidatesArray.map((candidate: any) => {
           const categoryId = candidateCategoryMap.get(candidate.id)
           const category = categoryId && categoriesObj[categoryId] ? categoriesObj[categoryId] : null
@@ -308,7 +310,8 @@ export function subscribeToLeaderboard(callback: (data: any) => void, limit: num
           return {
             ...candidate,
             categoryId: categoryId || 'unknown',
-            category: category ? category.name : 'Unknown Category'
+            category: category ? category.name : 'Unknown Category',
+            image: getCandidateImage(candidate.id)
           }
         })
 
