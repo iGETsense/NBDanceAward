@@ -10,10 +10,12 @@ import ImageWithFallback from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import PartnersCarousel from "@/components/PartnersCarousel"
-import { CountdownPopup } from "@/components/CountdownPopup"
-import { useLeaderboard, useCandidates } from "@/hooks/useFirebaseData"
-import { useVoting } from "@/hooks/useVoting"
+import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { initializeFirebaseWithCandidates } from "@/lib/initFirebaseData"
+import { useCandidates, useLeaderboard } from "@/hooks/useFirebaseData"
+import { useVoting } from "@/hooks/useVoting"
+import { CountdownPopup } from "@/components/CountdownPopup"
+
 
 const staticCandidates = [
   // Meilleur artiste danseur - masculin
@@ -886,9 +888,14 @@ export default function NBDanceAwardPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">("desktop")
   const [phoneNumber, setPhoneNumber] = useState("")
-  
+
   // Voting hook
   const { submitVote, isSubmitting, error: voteError, success: voteSuccess, resetState } = useVoting()
+
+  // Scroll animations
+  const partnersSection = useScrollAnimation()
+  const categoriesTitle = useScrollAnimation()
+  const howItWorksSection = useScrollAnimation()
 
   // Removed unused state variables
   // const [displayedCandidatesCount, setDisplayedCandidatesCount] = useState(6)
@@ -978,9 +985,8 @@ export default function NBDanceAwardPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <div
-        className={`fixed top-0 left-0 right-0 z-50 bg-black py-3 text-center text-sm tracking-[0.3em] text-white font-light shadow-xl transition-all duration-300 ${
-          showBanner ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 bg-black py-3 text-center text-sm tracking-[0.3em] text-white font-light shadow-xl transition-all duration-300 ${showBanner ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+          }`}
       >
         NB DANCE AWARDS
       </div>
@@ -1115,25 +1121,27 @@ export default function NBDanceAwardPage() {
         </section>
 
         {/* Partners Carousel */}
-        <PartnersCarousel
-          partners={[
-            { name: "LOGOGGG", logo: "/partners/LOGOGGG.png" },
-            { name: "WhatsApp Image 1", logo: "/partners/WhatsApp Image 2025-10-07 à 17.22.43_94d52ea3.jpg" },
-            { name: "WhatsApp Image 2", logo: "/partners/WhatsApp Image 2025-11-10 à 07.19.11_8ab8bff9.jpg" },
-            { name: "WhatsApp Image 3", logo: "/partners/WhatsApp Image 2025-11-13 à 22.31.35_9f132a8b.jpg" },
-            { name: "NB", logo: "/partners/nb.png" },
-            { name: "IGS", logo: "/partners/igs.png" },
-            { name: "Partenaire Officiel", logo: "/partners/partenaire officiel.jpg" },
-            { name: "Photo Partner", logo: "/partners/photo_2025-08-18_12-32-07.png" },
-          ]}
-          autoPlay={true}
-          autoPlayInterval={4000}
-          showControls={true}
-        />
+        <div ref={partnersSection.ref as any} className={`transition-all duration-700 ${partnersSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <PartnersCarousel
+            partners={[
+              { name: "LOGOGGG", logo: "/partners/LOGOGGG.png" },
+              { name: "WhatsApp Image 1", logo: "/partners/WhatsApp Image 2025-10-07 à 17.22.43_94d52ea3.jpg" },
+              { name: "WhatsApp Image 2", logo: "/partners/WhatsApp Image 2025-11-10 à 07.19.11_8ab8bff9.jpg" },
+              { name: "WhatsApp Image 3", logo: "/partners/WhatsApp Image 2025-11-13 à 22.31.35_9f132a8b.jpg" },
+              { name: "NB", logo: "/partners/nb.png" },
+              { name: "IGS", logo: "/partners/igs.png" },
+              { name: "Partenaire Officiel", logo: "/partners/partenaire officiel.jpg" },
+              { name: "Photo Partner", logo: "/partners/photo_2025-08-18_12-32-07.png" },
+            ]}
+            autoPlay={true}
+            autoPlayInterval={4000}
+            showControls={true}
+          />
+        </div>
 
         <div className="py-12 md:py-16">
           <div className="container mx-auto px-4 md:px-6">
-            <h2 className="mb-8 md:mb-12 text-3xl md:text-4xl font-bold text-center">Toutes les Catégories</h2>
+            <h2 ref={categoriesTitle.ref as any} className={`mb-8 md:mb-12 text-3xl md:text-4xl font-bold text-center transition-all duration-700 ${categoriesTitle.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>Toutes les Catégories</h2>
 
             {candidatesLoading ? (
               <div className="flex items-center justify-center py-20">
@@ -1151,90 +1159,90 @@ export default function NBDanceAwardPage() {
               </div>
             ) : (
               Array.from(new Set(candidates.map(c => c.category))).sort().map((category) => {
-              const categoryCandidates = candidates.filter((c) => c.category === category)
-              const isExpanded = expandedCategories[category] || false
-              const itemsPerRow = screenSize === "mobile" ? 2 : 5
-              const displayedCandidates = isExpanded ? categoryCandidates : categoryCandidates.slice(0, itemsPerRow)
-              const hasMore = categoryCandidates.length > itemsPerRow
+                const categoryCandidates = candidates.filter((c) => c.category === category)
+                const isExpanded = expandedCategories[category] || false
+                const itemsPerRow = screenSize === "mobile" ? 2 : 5
+                const displayedCandidates = isExpanded ? categoryCandidates : categoryCandidates.slice(0, itemsPerRow)
+                const hasMore = categoryCandidates.length > itemsPerRow
 
-              if (categoryCandidates.length === 0) return null
+                if (categoryCandidates.length === 0) return null
 
-              return (
-                <section key={category} id={(category || 'unknown').toLowerCase().replace(/\s+/g, "-")} className="mb-12 md:mb-16">
-                  <div className="mb-6 md:mb-8">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{category || 'Unknown Category'}</h3>
-                    <div className="h-1 w-20 bg-yellow-500 rounded-full"></div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 lg:grid-cols-5">
-                    {displayedCandidates.map((candidate, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleCandidateClick(candidate)}
-                        className="flex flex-col items-center cursor-pointer hover-lift transition-smooth"
-                      >
-                        <div className="relative mb-3 md:mb-4">
-                          <div className="relative h-24 w-24 md:h-28 md:w-28 overflow-hidden rounded-full border-[3px] md:border-4 border-yellow-500 md:ring-4 md:ring-yellow-500/20 hover-glow transition-smooth">
-                            <ImageWithFallback
-                              src={candidate.image || "/placeholder.svg"}
-                              alt={candidate.name}
-                              fill
-                              objectFit="cover"
-                              objectPosition={`${customImagePositioning[candidate.name] || "top"} center`}
-                              placeholder="blur"
-                            />
-                          </div>
-                          {candidate.badge && (
-                            <div className="absolute -top-1 -right-1 md:-bottom-1 md:-right-1 md:top-auto flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-full bg-pink-500 text-xs font-bold">
-                              {candidate.badge}
-                            </div>
-                          )}
-                        </div>
-
-                        <h3 className="mb-2 md:mb-3 text-center text-sm md:text-base font-semibold">{candidate.name}</h3>
-
-                        <div className="w-full max-w-[100px] md:max-w-none">
-                          <div className="mb-1.5 md:mb-2 h-1 md:h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
-                            <div
-                              className="h-full bg-yellow-500 transition-all duration-500"
-                              style={{ width: `${candidate.percentage}%` }}
-                            />
-                          </div>
-
-                          <div className="flex justify-between text-[10px] md:text-xs text-zinc-400">
-                            <span className="font-semibold text-white">{(candidate?.votes || 0).toLocaleString()}</span>
-                            <span>{candidate?.percentage || 0}%</span>
-                          </div>
-                          <p className="text-[9px] md:text-[10px] text-zinc-500 text-center mt-0.5 md:mt-1">votes</p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-
-                  {hasMore && (
-                    <div className="flex justify-center mt-6 md:mt-8">
-                      <button
-                        onClick={() => setExpandedCategories(prev => ({ ...prev, [category]: !isExpanded }))}
-                        className="px-6 md:px-8 py-2 md:py-3 bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded-lg transition-colors duration-200"
-                      >
-                        {isExpanded ? "Voir Moins" : "Voir Plus"}
-                      </button>
+                return (
+                  <section key={category} id={(category || 'unknown').toLowerCase().replace(/\s+/g, "-")} className="mb-12 md:mb-16">
+                    <div className="mb-6 md:mb-8">
+                      <h3 className="text-2xl md:text-3xl font-bold mb-2">{category || 'Unknown Category'}</h3>
+                      <div className="h-1 w-20 bg-yellow-500 rounded-full"></div>
                     </div>
-                  )}
-                </section>
-              )
-            }))
+
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 lg:grid-cols-5">
+                      {displayedCandidates.map((candidate, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleCandidateClick(candidate)}
+                          className="flex flex-col items-center cursor-pointer hover-lift transition-smooth"
+                        >
+                          <div className="relative mb-3 md:mb-4">
+                            <div className="relative h-24 w-24 md:h-28 md:w-28 overflow-hidden rounded-full border-[3px] md:border-4 border-yellow-500 md:ring-4 md:ring-yellow-500/20 hover-glow transition-smooth">
+                              <ImageWithFallback
+                                src={candidate.image || "/placeholder.svg"}
+                                alt={candidate.name}
+                                fill
+                                objectFit="cover"
+                                objectPosition={`${customImagePositioning[candidate.name] || "top"} center`}
+                                placeholder="blur"
+                              />
+                            </div>
+                            {candidate.badge && (
+                              <div className="absolute -top-1 -right-1 md:-bottom-1 md:-right-1 md:top-auto flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-full bg-pink-500 text-xs font-bold">
+                                {candidate.badge}
+                              </div>
+                            )}
+                          </div>
+
+                          <h3 className="mb-2 md:mb-3 text-center text-sm md:text-base font-semibold">{candidate.name}</h3>
+
+                          <div className="w-full max-w-[100px] md:max-w-none">
+                            <div className="mb-1.5 md:mb-2 h-1 md:h-1.5 w-full overflow-hidden rounded-full bg-zinc-800">
+                              <div
+                                className="h-full bg-yellow-500 transition-all duration-500"
+                                style={{ width: `${candidate.percentage}%` }}
+                              />
+                            </div>
+
+                            <div className="flex justify-between text-[10px] md:text-xs text-zinc-400">
+                              <span className="font-semibold text-white">{(candidate?.votes || 0).toLocaleString()}</span>
+                              <span>{candidate?.percentage || 0}%</span>
+                            </div>
+                            <p className="text-[9px] md:text-[10px] text-zinc-500 text-center mt-0.5 md:mt-1">votes</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+
+                    {hasMore && (
+                      <div className="flex justify-center mt-6 md:mt-8">
+                        <button
+                          onClick={() => setExpandedCategories(prev => ({ ...prev, [category]: !isExpanded }))}
+                          className="px-6 md:px-8 py-2 md:py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-lg transition-colors duration-200"
+                        >
+                          {isExpanded ? "Voir Moins" : "Voir Plus"}
+                        </button>
+                      </div>
+                    )}
+                  </section>
+                )
+              }))
             }
           </div>
         </div>
 
         {/* How It Works Section */}
-        <section className="border-t border-zinc-800 py-12 md:py-16">
+        <section ref={howItWorksSection.ref as any} className="border-t border-zinc-800 py-12 md:py-16">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="mb-8 text-center text-2xl font-bold md:mb-12 md:text-3xl">Comment Ça Marche ?</h2>
 
             <div className="grid gap-8 md:grid-cols-3 md:gap-12">
-              <div className="flex flex-col items-center text-center">
+              <div className={`flex flex-col items-center text-center transition-all duration-700 delay-100 ${howItWorksSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                 <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full border-[3px] border-yellow-500 bg-gradient-to-br from-yellow-600/10 to-yellow-800/10 md:mb-6 md:h-24 md:w-24">
                   <Smartphone className="h-10 w-10 text-yellow-500 md:h-12 md:w-12" />
                 </div>
@@ -1242,7 +1250,7 @@ export default function NBDanceAwardPage() {
                 <h3 className="text-sm font-semibold md:text-base">1. Choisissez Votre Danseur</h3>
               </div>
 
-              <div className="flex flex-col items-center text-center">
+              <div className={`flex flex-col items-center text-center transition-all duration-700 delay-200 ${howItWorksSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                 <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full border-[3px] border-yellow-500 bg-gradient-to-br from-yellow-600/10 to-yellow-800/10 md:mb-6 md:h-24 md:w-24">
                   <CreditCard className="h-10 w-10 text-yellow-500 md:h-12 md:w-12" />
                 </div>
@@ -1250,7 +1258,7 @@ export default function NBDanceAwardPage() {
                 <h3 className="text-sm font-semibold md:text-base">2. Payez Vos Votes!</h3>
               </div>
 
-              <div className="flex flex-col items-center text-center">
+              <div className={`flex flex-col items-center text-center transition-all duration-700 delay-300 ${howItWorksSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                 <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full border-[3px] border-yellow-500 bg-gradient-to-br from-yellow-600/10 to-yellow-800/10 md:mb-6 md:h-24 md:w-24">
                   <Award className="h-10 w-10 text-yellow-500 md:h-12 md:w-12" />
                 </div>
@@ -1382,7 +1390,7 @@ export default function NBDanceAwardPage() {
                     </div>
                   </div>
 
-                  <Button 
+                  <Button
                     onClick={async () => {
                       const result = await submitVote({
                         candidateId: selectedCandidate.id,
@@ -1416,11 +1424,10 @@ export default function NBDanceAwardPage() {
               <div className="grid grid-cols-2 gap-2 md:gap-3 mb-4 md:mb-6">
                 <button
                   onClick={() => setSelectedPaymentMethod("mobile")}
-                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-lg border-2 transition-all ${
-                    selectedPaymentMethod === "mobile"
-                      ? "border-yellow-500 bg-yellow-500/10"
-                      : "border-zinc-700 hover:border-zinc-600"
-                  }`}
+                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-lg border-2 transition-all ${selectedPaymentMethod === "mobile"
+                    ? "border-yellow-500 bg-yellow-500/10"
+                    : "border-zinc-700 hover:border-zinc-600"
+                    }`}
                 >
                   <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-orange-500">
                     <Smartphone className="h-5 w-5 md:h-6 md:w-6 text-white" />
@@ -1430,11 +1437,10 @@ export default function NBDanceAwardPage() {
 
                 <button
                   onClick={() => setSelectedPaymentMethod("orange")}
-                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-lg border-2 transition-all ${
-                    selectedPaymentMethod === "orange"
-                      ? "border-yellow-500 bg-yellow-500/10"
-                      : "border-zinc-700 hover:border-zinc-600"
-                  }`}
+                  className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-lg border-2 transition-all ${selectedPaymentMethod === "orange"
+                    ? "border-yellow-500 bg-yellow-500/10"
+                    : "border-zinc-700 hover:border-zinc-600"
+                    }`}
                 >
                   <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-orange-500">
                     <span className="text-lg md:text-xl font-bold text-white">OM</span>

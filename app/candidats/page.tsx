@@ -11,6 +11,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { CountdownPopup } from "@/components/CountdownPopup"
 import { useCandidates } from "@/hooks/useFirebaseData"
+import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 
 // Keep old data for reference (commented out)
 const oldStaticCandidates = [
@@ -884,6 +885,11 @@ export default function CandidatsPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [shuffledCandidates, setShuffledCandidates] = useState<any[]>([])
 
+  // Scroll animations
+  const pageTitle = useScrollAnimation()
+  const searchSection = useScrollAnimation()
+  const categoriesSection = useScrollAnimation()
+
   // Shuffle candidates only on initial load
   useEffect(() => {
     if (allCandidates.length > 0 && shuffledCandidates.length === 0) {
@@ -1046,8 +1052,8 @@ export default function CandidatsPage() {
       <div className="pt-[108px]">
         <div className="container mx-auto px-4 py-8 md:px-6 md:py-12">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">Tous les Candidats</h1>
-            <p className="text-yellow-500 font-semibold">NB DANCE AWARDS</p>
+            <h1 ref={pageTitle.ref as any} className={`text-3xl md:text-4xl font-bold mb-2 transition-all duration-700 ${pageTitle.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>Tous les Candidats</h1>
+            <p className={`text-yellow-500 font-semibold transition-all duration-700 delay-100 ${pageTitle.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>NB DANCE AWARDS</p>
           </div>
 
           {/* Loading State */}
@@ -1067,8 +1073,8 @@ export default function CandidatsPage() {
             </div>
           ) : null}
 
-          <div className="mb-8">
-            <h2 className="text-xl font-bold mb-4 text-center">Catégories</h2>
+          <div ref={categoriesSection.ref as any} className="mb-8">
+            <h2 className={`text-xl font-bold mb-4 text-center transition-all duration-700 ${categoriesSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>Catégories</h2>
             <div className="overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0">
               <div className="flex md:flex-wrap md:justify-center gap-2 md:gap-3 min-w-max md:min-w-0">
                 {categories.map((category) => (
@@ -1076,8 +1082,8 @@ export default function CandidatsPage() {
                     key={category}
                     onClick={() => setSelectedCategory(category)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap ${selectedCategory === category
-                        ? "bg-yellow-500 text-black"
-                        : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+                      ? "bg-yellow-500 text-black"
+                      : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
                       }`}
                   >
                     {category}
@@ -1087,8 +1093,8 @@ export default function CandidatsPage() {
             </div>
           </div>
 
-          <div className="mb-8 md:mb-12">
-            <div className="relative max-w-2xl mx-auto">
+          <div ref={searchSection.ref as any} className="mb-8 md:mb-12">
+            <div className={`relative max-w-2xl mx-auto transition-all duration-700 ${searchSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-400" />
               <Input
                 type="text"
@@ -1259,8 +1265,8 @@ export default function CandidatsPage() {
                 <button
                   onClick={() => setSelectedPaymentMethod("mobile")}
                   className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-lg border-2 transition-all ${selectedPaymentMethod === "mobile"
-                      ? "border-yellow-500 bg-yellow-500/10"
-                      : "border-zinc-700 hover:border-zinc-600"
+                    ? "border-yellow-500 bg-yellow-500/10"
+                    : "border-zinc-700 hover:border-zinc-600"
                     }`}
                 >
                   <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-orange-500">
@@ -1272,8 +1278,8 @@ export default function CandidatsPage() {
                 <button
                   onClick={() => setSelectedPaymentMethod("orange")}
                   className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-lg border-2 transition-all ${selectedPaymentMethod === "orange"
-                      ? "border-yellow-500 bg-yellow-500/10"
-                      : "border-zinc-700 hover:border-zinc-600"
+                    ? "border-yellow-500 bg-yellow-500/10"
+                    : "border-zinc-700 hover:border-zinc-600"
                     }`}
                 >
                   <div className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full bg-orange-500">

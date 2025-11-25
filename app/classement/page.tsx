@@ -10,6 +10,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { CountdownPopup } from "@/components/CountdownPopup"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { Input } from "@/components/ui/input"
+import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 
 // Static candidates for fallback
 const staticRankedCandidates = [
@@ -349,6 +350,9 @@ export default function ClassementPage() {
   const [showBanner, setShowBanner] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
+  // Scroll animation
+  const pageTitle = useScrollAnimation()
+
   useEffect(() => {
     const handleScroll = () => {
       setShowBanner(window.scrollY === 0)
@@ -496,7 +500,7 @@ export default function ClassementPage() {
               </div>
             ) : null}
 
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">CLASSEMENT PAR CATÉGORIE</h2>
+            <h2 ref={pageTitle.ref as any} className={`text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 transition-all duration-700 ${pageTitle.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>CLASSEMENT PAR CATÉGORIE</h2>
 
             <div className="space-y-12 md:space-y-16">
               {mainCategories.map((category) => {
