@@ -85,6 +85,8 @@ export function subscribeToCandidates(callback: (data: any) => void) {
       const candidatesObj = snapshot.val()
       const candidatesArray = Object.values(candidatesObj)
 
+      console.log('📊 [DEBUG] Candidates loaded:', candidatesArray.length)
+
       // Fetch categories and candidateCategories to enrich candidate data
       try {
         const [categoriesSnapshot, linksSnapshot] = await Promise.all([
@@ -95,12 +97,19 @@ export function subscribeToCandidates(callback: (data: any) => void) {
         const categoriesObj = categoriesSnapshot.exists() ? categoriesSnapshot.val() : {}
         const links = linksSnapshot.exists() ? linksSnapshot.val() : []
 
+        console.log('📂 [DEBUG] Categories loaded:', Object.keys(categoriesObj).length)
+        console.log('🔗 [DEBUG] Links loaded:', Array.isArray(links) ? links.length : Object.keys(links).length)
+        console.log('🔗 [DEBUG] Links structure:', links)
+
         // Create a map of candidateId -> categoryId
         const candidateCategoryMap = new Map<string, string>()
         const linksArray = Array.isArray(links) ? links : Object.values(links)
         linksArray.forEach((link: any) => {
           candidateCategoryMap.set(link.candidateId, link.categoryId)
         })
+
+        console.log('🗺️ [DEBUG] Category map size:', candidateCategoryMap.size)
+        console.log('🗺️ [DEBUG] First 3 mappings:', Array.from(candidateCategoryMap.entries()).slice(0, 3))
 
         // Enrich candidates with category information
         const enrichedCandidates = candidatesArray.map((candidate: any) => {
@@ -114,17 +123,20 @@ export function subscribeToCandidates(callback: (data: any) => void) {
           }
         })
 
+        console.log('✨ [DEBUG] First enriched candidate:', enrichedCandidates[0])
+        console.log('✨ [DEBUG] Enriched candidates with categories:', enrichedCandidates.filter(c => c.category !== 'Unknown Category').length)
+
         const withPercentages = calculatePercentages(enrichedCandidates)
         callback(withPercentages)
       } catch (error) {
-        console.error('Error enriching candidates with categories:', error)
+        console.error('❌ [ERROR] Error enriching candidates with categories:', error)
         // Fallback: return candidates without category info
         const withPercentages = calculatePercentages(candidatesArray)
         callback(withPercentages)
       }
     }
   }, (error) => {
-    console.error('Firebase error:', error)
+    console.error('❌ [ERROR] Firebase error:', error)
   })
   return unsubscribe
 }
