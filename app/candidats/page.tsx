@@ -1263,7 +1263,10 @@ export default function CandidatsPage() {
               {/* Payment Methods */}
               <div className="grid grid-cols-2 gap-2 md:gap-3 mb-4 md:mb-6">
                 <button
-                  onClick={() => setSelectedPaymentMethod("mobile")}
+                  onClick={() => {
+                    setSelectedPaymentMethod("mobile")
+                    setSelectedProvider("mtn-momo-cameroon")
+                  }}
                   className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-lg border-2 transition-all ${selectedPaymentMethod === "mobile"
                     ? "border-yellow-500 bg-yellow-500/10"
                     : "border-zinc-700 hover:border-zinc-600"
@@ -1276,7 +1279,10 @@ export default function CandidatsPage() {
                 </button>
 
                 <button
-                  onClick={() => setSelectedPaymentMethod("orange")}
+                  onClick={() => {
+                    setSelectedPaymentMethod("orange")
+                    setSelectedProvider("orange-money-cameroon")
+                  }}
                   className={`flex flex-col items-center gap-1 md:gap-2 p-2 md:p-3 rounded-lg border-2 transition-all ${selectedPaymentMethod === "orange"
                     ? "border-yellow-500 bg-yellow-500/10"
                     : "border-zinc-700 hover:border-zinc-600"
