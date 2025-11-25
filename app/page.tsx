@@ -1456,31 +1456,6 @@ export default function NBDanceAwardPage() {
                   : "Orange Money"}
               </div>
 
-              {/* Provider Selection */}
-              <div className="mb-4 md:mb-6">
-                <label className="mb-1.5 md:mb-2 block text-xs md:text-sm font-medium text-white">
-                  Sélectionnez le Fournisseur
-                </label>
-                <select
-                  value={selectedProvider}
-                  onChange={(e) => setSelectedProvider(e.target.value)}
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 md:px-4 md:py-3 text-sm md:text-base text-white focus:border-yellow-500 focus:outline-none [&_option]:bg-zinc-900 [&_option]:text-white"
-                >
-                  {selectedPaymentMethod === "mobile" && (
-                    <>
-                      <option value="mtn-momo-cameroon">MTN MoMo (Cameroun)</option>
-                      <option value="orange-money-cameroon">Orange Money (Cameroun)</option>
-                      <option value="airtel-cameroon">Airtel Money (Cameroun)</option>
-                    </>
-                  )}
-                  {selectedPaymentMethod === "orange" && (
-                    <>
-                      <option value="orange-money-cameroon">Orange Money (Cameroun)</option>
-                    </>
-                  )}
-                </select>
-              </div>
-
               {/* Total Votes */}
               <div className="mb-4 md:mb-6">
                 <div className="rounded-lg bg-zinc-800 px-3 py-2 md:px-4 md:py-3 text-center text-xs md:text-sm font-medium text-white">

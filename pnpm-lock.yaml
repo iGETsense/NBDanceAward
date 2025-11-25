@@ -4,10 +4,16 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@dataconnect/generated': link:src/dataconnect-generated
+
 importers:
 
   .:
     dependencies:
+      '@dataconnect/generated':
+        specifier: link:src/dataconnect-generated
+        version: link:src/dataconnect-generated
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.66.0(react@19.2.0))

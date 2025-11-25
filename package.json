@@ -11,6 +11,7 @@
     "seed-db": "npx tsx scripts/seedDatabase.ts"
   },
   "dependencies": {
+    "@dataconnect/generated": "link:src/dataconnect-generated",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
