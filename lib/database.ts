@@ -47,13 +47,31 @@ export async function getCandidates() {
 
 export async function getCandidatesByCategory(categoryId: string) {
   try {
-    const snapshot = await get(ref(database, 'candidates'))
-    if (snapshot.exists()) {
-      const candidatesObj = snapshot.val()
-      const filtered = Object.values(candidatesObj).filter((c: any) => c.categoryId === categoryId)
-      return filtered
+    // Get candidate IDs for this category from the link table
+    const linkSnapshot = await get(ref(database, 'candidateCategories'))
+    if (!linkSnapshot.exists()) {
+      return []
     }
-    return []
+
+    const links = linkSnapshot.val()
+    const candidateIds = Array.isArray(links)
+      ? links.filter((link: any) => link.categoryId === categoryId).map((link: any) => link.candidateId)
+      : Object.values(links).filter((link: any) => link.categoryId === categoryId).map((link: any) => link.candidateId)
+
+    // Get all candidates
+    const candidatesSnapshot = await get(ref(database, 'candidates'))
+    if (!candidatesSnapshot.exists()) {
+      return []
+    }
+
+    const candidatesObj = candidatesSnapshot.val()
+
+    // Filter candidates by IDs from link table
+    const filtered = Object.entries(candidatesObj)
+      .filter(([id]) => candidateIds.includes(id))
+      .map(([_, candidate]) => candidate)
+
+    return filtered
   } catch (error) {
     console.error('Error fetching candidates by category:', error)
     return []
@@ -62,12 +80,48 @@ export async function getCandidatesByCategory(categoryId: string) {
 
 export function subscribeToCandidates(callback: (data: any) => void) {
   const candidatesRef = ref(database, 'candidates')
-  const unsubscribe = onValue(candidatesRef, (snapshot) => {
+  const unsubscribe = onValue(candidatesRef, async (snapshot) => {
     if (snapshot.exists()) {
       const candidatesObj = snapshot.val()
       const candidatesArray = Object.values(candidatesObj)
-      const withPercentages = calculatePercentages(candidatesArray)
-      callback(withPercentages)
+
+      // Fetch categories and candidateCategories to enrich candidate data
+      try {
+        const [categoriesSnapshot, linksSnapshot] = await Promise.all([
+          get(ref(database, 'categories')),
+          get(ref(database, 'candidateCategories'))
+        ])
+
+        const categoriesObj = categoriesSnapshot.exists() ? categoriesSnapshot.val() : {}
+        const links = linksSnapshot.exists() ? linksSnapshot.val() : []
+
+        // Create a map of candidateId -> categoryId
+        const candidateCategoryMap = new Map<string, string>()
+        const linksArray = Array.isArray(links) ? links : Object.values(links)
+        linksArray.forEach((link: any) => {
+          candidateCategoryMap.set(link.candidateId, link.categoryId)
+        })
+
+        // Enrich candidates with category information
+        const enrichedCandidates = candidatesArray.map((candidate: any) => {
+          const categoryId = candidateCategoryMap.get(candidate.id)
+          const category = categoryId && categoriesObj[categoryId] ? categoriesObj[categoryId] : null
+
+          return {
+            ...candidate,
+            categoryId: categoryId || 'unknown',
+            category: category ? category.name : 'Unknown Category'
+          }
+        })
+
+        const withPercentages = calculatePercentages(enrichedCandidates)
+        callback(withPercentages)
+      } catch (error) {
+        console.error('Error enriching candidates with categories:', error)
+        // Fallback: return candidates without category info
+        const withPercentages = calculatePercentages(candidatesArray)
+        callback(withPercentages)
+      }
     }
   }, (error) => {
     console.error('Firebase error:', error)
@@ -97,7 +151,7 @@ export async function submitVote(
 ) {
   try {
     const voteId = `${userId}_${Date.now()}`
-    
+
     // Add vote record
     await set(ref(database, `votes/${voteId}`), {
       userId,
@@ -212,15 +266,54 @@ export async function getLeaderboard(limit: number = 10) {
 
 export function subscribeToLeaderboard(callback: (data: any) => void, limit: number = 10) {
   const candidatesRef = ref(database, 'candidates')
-  const unsubscribe = onValue(candidatesRef, (snapshot) => {
+  const unsubscribe = onValue(candidatesRef, async (snapshot) => {
     if (snapshot.exists()) {
       const candidatesObj = snapshot.val()
       const candidatesArray = Object.values(candidatesObj)
-      const withPercentages = calculatePercentages(candidatesArray)
-      const sorted = withPercentages
-        .sort((a: any, b: any) => (b.votes || 0) - (a.votes || 0))
-        .slice(0, limit)
-      callback(sorted)
+
+      // Fetch categories and candidateCategories to enrich candidate data
+      try {
+        const [categoriesSnapshot, linksSnapshot] = await Promise.all([
+          get(ref(database, 'categories')),
+          get(ref(database, 'candidateCategories'))
+        ])
+
+        const categoriesObj = categoriesSnapshot.exists() ? categoriesSnapshot.val() : {}
+        const links = linksSnapshot.exists() ? linksSnapshot.val() : []
+
+        // Create a map of candidateId -> categoryId
+        const candidateCategoryMap = new Map<string, string>()
+        const linksArray = Array.isArray(links) ? links : Object.values(links)
+        linksArray.forEach((link: any) => {
+          candidateCategoryMap.set(link.candidateId, link.categoryId)
+        })
+
+        // Enrich candidates with category information
+        const enrichedCandidates = candidatesArray.map((candidate: any) => {
+          const categoryId = candidateCategoryMap.get(candidate.id)
+          const category = categoryId && categoriesObj[categoryId] ? categoriesObj[categoryId] : null
+
+          return {
+            ...candidate,
+            categoryId: categoryId || 'unknown',
+            category: category ? category.name : 'Unknown Category'
+          }
+        })
+
+        const withPercentages = calculatePercentages(enrichedCandidates)
+        const sorted = withPercentages
+          .sort((a: any, b: any) => (b.votes || 0) - (a.votes || 0))
+          .slice(0, limit)
+        callback(sorted)
+      } catch (error) {
+        console.error('Error enriching leaderboard with categories:', error)
+        // Fallback: return candidates without category info
+        const withPercentages = calculatePercentages(candidatesArray)
+        const sorted = withPercentages
+          .sort((a: any, b: any) => (b.votes || 0) - (a.votes || 0))
+          .slice(0, limit)
+        callback(sorted)
+      }
     }
   })
   return unsubscribe
