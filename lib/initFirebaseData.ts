@@ -7,20 +7,25 @@
 import { database } from './firebase'
 import { ref, set, get, remove } from 'firebase/database'
 
-export async function initializeFirebaseWithCandidates(forceReset: boolean = false) {
+export async function initializeFirebaseWithCandidates(forceReset: boolean = true) {
   try {
     const candidatesRef = ref(database, 'candidates')
 
-    // Check if candidates already exist
-    if (!forceReset) {
+    // Force reset to load new normalized structure
+    if (forceReset) {
+      console.log('🔄 Force resetting database to load normalized structure...')
+      await Promise.all([
+        remove(candidatesRef),
+        remove(ref(database, 'categories')),
+        remove(ref(database, 'candidateCategories'))
+      ])
+    } else {
+      // Check if candidates already exist
       const snapshot = await get(candidatesRef)
       if (snapshot.exists()) {
         console.log('✅ Candidates already exist in Firebase')
         return { success: true, message: 'Candidates already initialized' }
       }
-    } else {
-      console.log('🔄 Force resetting candidates...')
-      await remove(candidatesRef)
     }
 
     // Load full database from the JSON file
@@ -71,13 +76,18 @@ export async function initializeFirebaseWithCandidates(forceReset: boolean = fal
 
 // Auto-initialize on first load (client-side only)
 if (typeof window !== 'undefined') {
-  // Check if we should initialize (only once per session)
-  const hasInitialized = sessionStorage.getItem('firebase-initialized')
-  if (!hasInitialized) {
-    initializeFirebaseWithCandidates().then((result) => {
+  // Version key to force re-initialization when structure changes
+  const DB_VERSION = 'v2-normalized'
+  const currentVersion = sessionStorage.getItem('firebase-db-version')
+
+  if (currentVersion !== DB_VERSION) {
+    console.log('🔄 Database structure changed, re-initializing...')
+    sessionStorage.removeItem('firebase-initialized')
+    initializeFirebaseWithCandidates(true).then((result) => {
       if (result.success) {
         sessionStorage.setItem('firebase-initialized', 'true')
-        console.log('🎉 Firebase initialized with candidates')
+        sessionStorage.setItem('firebase-db-version', DB_VERSION)
+        console.log('🎉 Firebase initialized with normalized structure')
       }
     })
   }
