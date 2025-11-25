@@ -75,20 +75,21 @@ export async function initializeFirebaseWithCandidates(forceReset: boolean = tru
 }
 
 // Auto-initialize on first load (client-side only)
-if (typeof window !== 'undefined') {
-  // Version key to force re-initialization when structure changes
-  const DB_VERSION = 'v2-normalized'
-  const currentVersion = sessionStorage.getItem('firebase-db-version')
-
-  if (currentVersion !== DB_VERSION) {
-    console.log('🔄 Database structure changed, re-initializing...')
-    sessionStorage.removeItem('firebase-initialized')
-    initializeFirebaseWithCandidates(true).then((result) => {
-      if (result.success) {
-        sessionStorage.setItem('firebase-initialized', 'true')
-        sessionStorage.setItem('firebase-db-version', DB_VERSION)
-        console.log('🎉 Firebase initialized with normalized structure')
-      }
-    })
-  }
-}
+// DISABLED: Import data manually via Firebase Console to avoid permission errors
+// if (typeof window !== 'undefined') {
+//   // Version key to force re-initialization when structure changes
+//   const DB_VERSION = 'v2-normalized'
+//   const currentVersion = sessionStorage.getItem('firebase-db-version')
+//   
+//   if (currentVersion !== DB_VERSION) {
+//     console.log('🔄 Database structure changed, re-initializing...')
+//     sessionStorage.removeItem('firebase-initialized')
+//     initializeFirebaseWithCandidates(true).then((result) => {
+//       if (result.success) {
+//         sessionStorage.setItem('firebase-initialized', 'true')
+//         sessionStorage.setItem('firebase-db-version', DB_VERSION)
+//         console.log('🎉 Firebase initialized with normalized structure')
+//       }
+//     })
+//   }
+// }

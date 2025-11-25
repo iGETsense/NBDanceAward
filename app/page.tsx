@@ -11,7 +11,6 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import PartnersCarousel from "@/components/PartnersCarousel"
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
-import { initializeFirebaseWithCandidates } from "@/lib/initFirebaseData"
 import { useCandidates, useLeaderboard } from "@/hooks/useFirebaseData"
 import { useVoting } from "@/hooks/useVoting"
 import { CountdownPopup } from "@/components/CountdownPopup"
@@ -906,12 +905,6 @@ export default function NBDanceAwardPage() {
   // Removed unused categories variable
   // const categories = ["Tous", ...new Set(candidates.map((c) => c.category))]
 
-  // Initialize Firebase with candidates on first load
-  useEffect(() => {
-    initializeFirebaseWithCandidates().catch(err => {
-      console.log('Firebase initialization info:', err)
-    })
-  }, [])
 
   useEffect(() => {
     const handleScroll = () => {

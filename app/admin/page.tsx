@@ -3,13 +3,12 @@
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Menu, LogOut, TrendingUp, Users, DollarSign, Eye, EyeOff, Download, Wallet, ArrowUpRight, Filter, Search, AlertCircle, RotateCcw } from "lucide-react"
+import { Menu, LogOut, TrendingUp, Users, DollarSign, Eye, EyeOff, Download, Wallet, ArrowUpRight, Filter, Search, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { sanitizeInput, validateNumeric, validateWithdrawalData, RateLimiter } from "@/lib/security"
-import { initializeFirebaseWithCandidates } from "@/lib/initFirebaseData"
 
 export default function AdminPage() {
   const [showBanner, setShowBanner] = useState(true)
@@ -28,14 +27,12 @@ export default function AdminPage() {
   const [isLocked, setIsLocked] = useState(false)
   const [lockTime, setLockTime] = useState(0)
   const [securityError, setSecurityError] = useState("")
-  const [isResettingFirebase, setIsResettingFirebase] = useState(false)
-  const [resetMessage, setResetMessage] = useState("")
 
   const { candidates } = useCandidates()
 
   // Security: Rate limiter for login attempts
   const loginLimiter = new RateLimiter(5, 300000) // 5 attempts per 5 minutes
-  
+
   // Mock admin password (in production, use proper authentication)
   const ADMIN_PASSWORD = "NB2024Admin"
 
@@ -66,7 +63,7 @@ export default function AdminPage() {
 
     // Security: Constant-time comparison to prevent timing attacks
     const isValidPassword = passwordInput === ADMIN_PASSWORD
-    
+
     if (isValidPassword) {
       setIsAuthenticated(true)
       localStorage.setItem("nbAdminAuth", "true")
@@ -78,7 +75,7 @@ export default function AdminPage() {
       // Security: Track failed attempts
       const newAttempts = loginAttempts + 1
       setLoginAttempts(newAttempts)
-      
+
       if (newAttempts >= 5) {
         setIsLocked(true)
         setLockTime(Date.now() + 300000) // Lock for 5 minutes
@@ -98,7 +95,7 @@ export default function AdminPage() {
   const handleWithdrawal = () => {
     // Security: Validate withdrawal data
     const amount = parseFloat(withdrawalAmount)
-    
+
     if (!withdrawalAmount || !validateNumeric(amount)) {
       setSecurityError("Montant invalide")
       return
@@ -140,36 +137,11 @@ export default function AdminPage() {
     setWithdrawalAmount("")
     setShowWithdrawalModal(false)
     setSecurityError("")
-    
+
     // Security: Log withdrawal for audit trail
     console.log(`[AUDIT] Withdrawal processed: ${amount} XAF via ${withdrawalMethod}`)
   }
 
-  const handleResetFirebase = async () => {
-    if (!confirm("⚠️ Êtes-vous sûr? Cela va réinitialiser tous les candidats depuis le fichier JSON.")) {
-      return
-    }
-
-    setIsResettingFirebase(true)
-    setResetMessage("")
-
-    try {
-      const result = await initializeFirebaseWithCandidates(true)
-      if (result.success) {
-        setResetMessage(`✅ ${result.count} candidats ont été réinitialisés avec succès!`)
-        // Reload page after 2 seconds
-        setTimeout(() => {
-          window.location.reload()
-        }, 2000)
-      } else {
-        setResetMessage(`❌ Erreur: ${result.error}`)
-      }
-    } catch (error) {
-      setResetMessage(`❌ Erreur: ${error instanceof Error ? error.message : "Unknown error"}`)
-    } finally {
-      setIsResettingFirebase(false)
-    }
-  }
 
   const totalVotes = candidates.reduce((sum, c) => sum + (c.votes || 0), 0)
   const totalRevenue = totalVotes * 5 // 5 per vote
@@ -249,9 +221,8 @@ export default function AdminPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Banner */}
       <div
-        className={`fixed top-0 left-0 right-0 z-50 bg-black py-3 text-center text-sm tracking-[0.3em] text-white font-light shadow-xl transition-all duration-300 ${
-          showBanner ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 bg-black py-3 text-center text-sm tracking-[0.3em] text-white font-light shadow-xl transition-all duration-300 ${showBanner ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+          }`}
       >
         NB DANCE AWARDS - ADMIN
       </div>
@@ -373,31 +344,6 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {/* Firebase Reset Section */}
-          <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-red-700/50 rounded-lg p-6 mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                <RotateCcw className="h-6 w-6 text-red-500" />
-                Gestion Firebase
-              </h2>
-              <Button
-                onClick={handleResetFirebase}
-                disabled={isResettingFirebase}
-                className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg transition-all"
-              >
-                <RotateCcw className="h-4 w-4 mr-2" />
-                {isResettingFirebase ? "Réinitialisation..." : "Réinitialiser Firebase"}
-              </Button>
-            </div>
-            {resetMessage && (
-              <p className={`text-sm ${resetMessage.includes("✅") ? "text-green-400" : "text-red-400"}`}>
-                {resetMessage}
-              </p>
-            )}
-            <p className="text-zinc-400 text-sm mt-2">
-              Réinitialise tous les candidats depuis le fichier EXAMPLE_CANDIDATES.json
-            </p>
-          </div>
 
           {/* Withdrawal Section */}
           <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-lg p-6 mb-8">
