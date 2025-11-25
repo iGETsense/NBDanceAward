@@ -884,9 +884,6 @@ export default function NBDanceAwardPage() {
   const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean }>({})
   const [selectedProvider, setSelectedProvider] = useState("mtn-momo-cameroon")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
-  const [authMode, setAuthMode] = useState<"login" | "register">("login")
   const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">("desktop")
   const [phoneNumber, setPhoneNumber] = useState("")
   
@@ -1060,26 +1057,7 @@ export default function NBDanceAwardPage() {
                 >
                   Classement
                 </Link>
-                {isLoggedIn ? (
-                  <a
-                    href="#"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="px-4 py-3 text-base font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
-                  >
-                    Mon Compte
-                  </a>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false)
-                      setIsLoginModalOpen(true)
-                      setAuthMode("login")
-                    }}
-                    className="mx-4 mt-2 px-4 py-3 text-base font-bold bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 rounded-lg transition-colors"
-                  >
-                    Se Connecter
-                  </button>
-                )}
+
               </nav>
             </SheetContent>
           </Sheet>
@@ -1097,21 +1075,7 @@ export default function NBDanceAwardPage() {
             <Link href="/classement" className="text-zinc-400 hover:text-purple-400 transition-colors">
               Classement
             </Link>
-            {isLoggedIn ? (
-              <a href="#" className="text-zinc-400 hover:text-purple-400 transition-colors">
-                Mon Compte
-              </a>
-            ) : (
-              <button
-                onClick={() => {
-                  setIsLoginModalOpen(true)
-                  setAuthMode("login")
-                }}
-                className="px-6 py-2 font-semibold bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 rounded-md transition-colors"
-              >
-                Se Connecter
-              </button>
-            )}
+
           </nav>
         </div>
       </header>
@@ -1357,125 +1321,7 @@ export default function NBDanceAwardPage() {
         </footer>
       </div>
 
-      {/* Login/Register Modal */}
-      <Dialog open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto bg-[#0a0a0a] border-zinc-800 p-0">
-          <DialogTitle className="sr-only">
-            {authMode === "login" ? "Connexion" : "Inscription"}
-          </DialogTitle>
-          <div className="p-6 md:p-8">
-            <div className="flex flex-col items-center mb-6">
-              <div className="relative h-16 w-16 mb-4">
-                <Image src="/logo.png" alt="NB Dance Award" fill className="object-contain" />
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                {authMode === "login" ? "Connexion" : "Inscription"}
-              </h2>
-              <p className="text-sm text-zinc-400 text-center">
-                {authMode === "login"
-                  ? "Connectez-vous pour voter pour vos danseurs préférés"
-                  : "Créez un compte pour commencer à voter"}
-              </p>
-            </div>
 
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-              {authMode === "register" && (
-                <div>
-                  <label className="mb-2 block text-sm font-medium">Nom Complet</label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
-                    <Input
-                      type="text"
-                      placeholder="Entrez votre nom"
-                      className="w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-10 pr-4 py-5 text-base text-white placeholder:text-zinc-500 focus:border-yellow-500"
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <label className="mb-2 block text-sm font-medium">Email ou Téléphone</label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
-                  <Input
-                    type="text"
-                    placeholder="exemple@email.com ou +237 6xx xxx xxx"
-                    className="w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-10 pr-4 py-5 text-base text-white placeholder:text-zinc-500 focus:border-yellow-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-medium">Mot de Passe</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
-                  <Input
-                    type="password"
-                    placeholder="Entrez votre mot de passe"
-                    className="w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-10 pr-4 py-5 text-base text-white placeholder:text-zinc-500 focus:border-yellow-500"
-                  />
-                </div>
-              </div>
-
-              {authMode === "register" && (
-                <div>
-                  <label className="mb-2 block text-sm font-medium">Confirmer le Mot de Passe</label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-500" />
-                    <Input
-                      type="password"
-                      placeholder="Confirmez votre mot de passe"
-                      className="w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-10 pr-4 py-5 text-base text-white placeholder:text-zinc-500 focus:border-yellow-500"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {authMode === "login" && (
-                <div className="flex justify-end">
-                  <a href="#" className="text-sm text-yellow-500 hover:text-yellow-400 transition-colors">
-                    Mot de passe oublié?
-                  </a>
-                </div>
-              )}
-
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold py-5 text-base rounded-lg"
-              >
-                {authMode === "login" ? "Se Connecter" : "S'inscrire"}
-              </Button>
-
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-zinc-800"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="bg-[#0a0a0a] px-4 text-zinc-400">OU</span>
-                </div>
-              </div>
-
-              <div className="text-center">
-                <p className="text-sm text-zinc-400">
-                  {authMode === "login" ? "Vous n'avez pas de compte?" : "Vous avez déjà un compte?"}
-                  <button
-                    type="button"
-                    onClick={() => setAuthMode(authMode === "login" ? "register" : "login")}
-                    className="ml-2 font-semibold text-yellow-500 hover:text-yellow-400 transition-colors"
-                  >
-                    {authMode === "login" ? "Se Connecter" : "Se Connecter"}
-                  </button>
-                </p>
-              </div>
-
-              <div className="flex items-center justify-center gap-2 text-xs text-zinc-500 pt-4">
-                <Shield className="h-4 w-4" />
-                <span>Vos données sont protégées et sécurisées</span>
-              </div>
-            </form>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Voting Modal */}
       <Dialog open={isVotingModalOpen} onOpenChange={setIsVotingModalOpen}>

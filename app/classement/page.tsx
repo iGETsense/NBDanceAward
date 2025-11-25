@@ -13,305 +13,305 @@ import { Input } from "@/components/ui/input"
 
 // Static candidates for fallback
 const staticRankedCandidates = [
-    // Meilleur artiste danseur - masculin
-    {
-      name: "Étienne kampos",
-      title: "Male Dance King",
-      image: "/dancers/Etienne kampos.jpg",
-      votes: 1847,
-      totalVotes: 45000,
-      percentage: 45,
-      category: "Meilleur artiste danseur - masculin",
-    },
-    {
-      name: "De Flow",
-      title: "Flow Master",
-      image: "/dancers/De Flow.jpeg",
-      votes: 1654,
-      totalVotes: 45000,
-      percentage: 40,
-      category: "Meilleur artiste danseur - masculin",
-    },
-    {
-      name: "Pascal métaphore",
-      title: "Poetic Dancer",
-      image: "/dancers/PASCAL métaphore.jpeg",
-      votes: 1432,
-      totalVotes: 45000,
-      percentage: 35,
-      category: "Meilleur artiste danseur - masculin",
-    },
-    {
-      name: "El Fally du 237",
-      title: "Cameroon Star",
-      image: "/dancers/El fally du 237.jpg",
-      votes: 1289,
-      totalVotes: 45000,
-      percentage: 31,
-      category: "Meilleur artiste danseur - masculin",
-    },
-    {
-      name: "Escram shuwingum",
-      title: "Smooth Performer",
-      image: "/dancers/ESCRAM.jpeg",
-      votes: 1156,
-      totalVotes: 45000,
-      percentage: 28,
-      category: "Meilleur artiste danseur - masculin",
-    },
+  // Meilleur artiste danseur - masculin
+  {
+    name: "Étienne kampos",
+    title: "Male Dance King",
+    image: "/dancers/Etienne kampos.jpg",
+    votes: 1847,
+    totalVotes: 45000,
+    percentage: 45,
+    category: "Meilleur artiste danseur - masculin",
+  },
+  {
+    name: "De Flow",
+    title: "Flow Master",
+    image: "/dancers/De Flow.jpeg",
+    votes: 1654,
+    totalVotes: 45000,
+    percentage: 40,
+    category: "Meilleur artiste danseur - masculin",
+  },
+  {
+    name: "Pascal métaphore",
+    title: "Poetic Dancer",
+    image: "/dancers/PASCAL métaphore.jpeg",
+    votes: 1432,
+    totalVotes: 45000,
+    percentage: 35,
+    category: "Meilleur artiste danseur - masculin",
+  },
+  {
+    name: "El Fally du 237",
+    title: "Cameroon Star",
+    image: "/dancers/El fally du 237.jpg",
+    votes: 1289,
+    totalVotes: 45000,
+    percentage: 31,
+    category: "Meilleur artiste danseur - masculin",
+  },
+  {
+    name: "Escram shuwingum",
+    title: "Smooth Performer",
+    image: "/dancers/ESCRAM.jpeg",
+    votes: 1156,
+    totalVotes: 45000,
+    percentage: 28,
+    category: "Meilleur artiste danseur - masculin",
+  },
 
-    // Meilleure artiste danseuse féminine
-    {
-      name: "Maguy merine",
-      title: "Dance Star",
-      image: "/dancers/MAGUY MERINE.jpeg",
-      votes: 2534,
-      totalVotes: 45000,
-      percentage: 62,
-      category: "Meilleure artiste danseuse féminine",
-    },
-    {
-      name: "Kendi",
-      title: "Dance Performer",
-      image: "/dancers/KENDI.jpeg",
-      votes: 2245,
-      totalVotes: 45000,
-      percentage: 55,
-      category: "Meilleure artiste danseuse féminine",
-    },
-    {
-      name: "Beb's velina",
-      title: "Talented Dancer",
-      image: "/dancers/bebs-velina.jpeg",
-      votes: 1956,
-      totalVotes: 45000,
-      percentage: 48,
-      category: "Meilleure artiste danseuse féminine",
-    },
-    {
-      name: "Katia eg",
-      title: "Professional Artist",
-      image: "/dancers/Katia EG.png",
-      votes: 1723,
-      totalVotes: 45000,
-      percentage: 42,
-      category: "Meilleure artiste danseuse féminine",
-    },
-    {
-      name: "Stella officielle3",
-      title: "Star Performer",
-      image: "/dancers/Stella Officielle3.jpeg",
-      votes: 1567,
-      totalVotes: 45000,
-      percentage: 38,
-      category: "Meilleure artiste danseuse féminine",
-    },
+  // Meilleure artiste danseuse féminine
+  {
+    name: "Maguy merine",
+    title: "Dance Star",
+    image: "/dancers/MAGUY MERINE.jpeg",
+    votes: 2534,
+    totalVotes: 45000,
+    percentage: 62,
+    category: "Meilleure artiste danseuse féminine",
+  },
+  {
+    name: "Kendi",
+    title: "Dance Performer",
+    image: "/dancers/KENDI.jpeg",
+    votes: 2245,
+    totalVotes: 45000,
+    percentage: 55,
+    category: "Meilleure artiste danseuse féminine",
+  },
+  {
+    name: "Beb's velina",
+    title: "Talented Dancer",
+    image: "/dancers/bebs-velina.jpeg",
+    votes: 1956,
+    totalVotes: 45000,
+    percentage: 48,
+    category: "Meilleure artiste danseuse féminine",
+  },
+  {
+    name: "Katia eg",
+    title: "Professional Artist",
+    image: "/dancers/Katia EG.png",
+    votes: 1723,
+    totalVotes: 45000,
+    percentage: 42,
+    category: "Meilleure artiste danseuse féminine",
+  },
+  {
+    name: "Stella officielle3",
+    title: "Star Performer",
+    image: "/dancers/Stella Officielle3.jpeg",
+    votes: 1567,
+    totalVotes: 45000,
+    percentage: 38,
+    category: "Meilleure artiste danseuse féminine",
+  },
 
-    // Meilleur groupe de danse
-    {
-      name: "AFU Dance académie",
-      title: "Professional Group",
-      image: "/dancers/AFU DANCE ACADEMY STUDIO.jpeg",
-      votes: 2089,
-      totalVotes: 45000,
-      percentage: 51,
-      category: "Meilleur groupe de danse",
-    },
-    {
-      name: "Etat NWAR dance",
-      title: "Dance Collective",
-      image: "/dancers/ÉTAT NWAR DANCE SCHOOL.jpg",
-      votes: 1834,
-      totalVotes: 45000,
-      percentage: 45,
-      category: "Meilleur groupe de danse",
-    },
-    {
-      name: "Team Escram",
-      title: "Dance Crew",
-      image: "/dancers/TEAM ESCRAM.jpeg",
-      votes: 1689,
-      totalVotes: 45000,
-      percentage: 41,
-      category: "Meilleur groupe de danse",
-    },
-    {
-      name: "Mbolé Dancing",
-      title: "Cultural Group",
-      image: "/dancers/Mbole Dancing.jpeg",
-      votes: 1445,
-      totalVotes: 45000,
-      percentage: 35,
-      category: "Meilleur groupe de danse",
-    },
+  // Meilleur groupe de danse
+  {
+    name: "AFU Dance académie",
+    title: "Professional Group",
+    image: "/dancers/AFU DANCE ACADEMY STUDIO.jpeg",
+    votes: 2089,
+    totalVotes: 45000,
+    percentage: 51,
+    category: "Meilleur groupe de danse",
+  },
+  {
+    name: "Etat NWAR dance",
+    title: "Dance Collective",
+    image: "/dancers/ÉTAT NWAR DANCE SCHOOL.jpg",
+    votes: 1834,
+    totalVotes: 45000,
+    percentage: 45,
+    category: "Meilleur groupe de danse",
+  },
+  {
+    name: "Team Escram",
+    title: "Dance Crew",
+    image: "/dancers/TEAM ESCRAM.jpeg",
+    votes: 1689,
+    totalVotes: 45000,
+    percentage: 41,
+    category: "Meilleur groupe de danse",
+  },
+  {
+    name: "Mbolé Dancing",
+    title: "Cultural Group",
+    image: "/dancers/Mbole Dancing.jpeg",
+    votes: 1445,
+    totalVotes: 45000,
+    percentage: 35,
+    category: "Meilleur groupe de danse",
+  },
 
-    // Meilleur collaboration duo
-    {
-      name: "Déboy le monstre et Maguy merine",
-      title: "Monster & Queen",
-      image: "/dancers/DEBOY LE MONSTRE.jpeg",
-      votes: 1956,
-      totalVotes: 45000,
-      percentage: 48,
-      category: "Meilleur collaboration duo",
-    },
-    {
-      name: "4 peace et Rachel élégance",
-      title: "Peace & Elegance",
-      image: "/dancers/4 peace.jpeg",
-      votes: 1723,
-      totalVotes: 45000,
-      percentage: 42,
-      category: "Meilleur collaboration duo",
-    },
-    {
-      name: "Chica bassa et kendi",
-      title: "Chica & Kendi",
-      image: "/dancers/CHICA BASSA.jpeg",
-      votes: 1567,
-      totalVotes: 45000,
-      percentage: 38,
-      category: "Meilleur collaboration duo",
-    },
-    {
-      name: "Tks officiel et Trésor brown",
-      title: "TKS & Treasure",
-      image: "/dancers/TKS OFFICIEL.jpg",
-      votes: 1432,
-      totalVotes: 45000,
-      percentage: 35,
-      category: "Meilleur collaboration duo",
-    },
-    {
-      name: "El fally du 237 et davia off",
-      title: "Fally & Davia",
-      image: "/dancers/El fally du 237.jpg",
-      votes: 1298,
-      totalVotes: 45000,
-      percentage: 32,
-      category: "Meilleur collaboration duo",
-    },
+  // Meilleur collaboration duo
+  {
+    name: "Déboy le monstre et Maguy merine",
+    title: "Monster & Queen",
+    image: "/dancers/DEBOY LE MONSTRE.jpeg",
+    votes: 1956,
+    totalVotes: 45000,
+    percentage: 48,
+    category: "Meilleur collaboration duo",
+  },
+  {
+    name: "4 peace et Rachel élégance",
+    title: "Peace & Elegance",
+    image: "/dancers/4 peace.jpeg",
+    votes: 1723,
+    totalVotes: 45000,
+    percentage: 42,
+    category: "Meilleur collaboration duo",
+  },
+  {
+    name: "Chica bassa et kendi",
+    title: "Chica & Kendi",
+    image: "/dancers/CHICA BASSA.jpeg",
+    votes: 1567,
+    totalVotes: 45000,
+    percentage: 38,
+    category: "Meilleur collaboration duo",
+  },
+  {
+    name: "Tks officiel et Trésor brown",
+    title: "TKS & Treasure",
+    image: "/dancers/TKS OFFICIEL.jpg",
+    votes: 1432,
+    totalVotes: 45000,
+    percentage: 35,
+    category: "Meilleur collaboration duo",
+  },
+  {
+    name: "El fally du 237 et davia off",
+    title: "Fally & Davia",
+    image: "/dancers/El fally du 237.jpg",
+    votes: 1298,
+    totalVotes: 45000,
+    percentage: 32,
+    category: "Meilleur collaboration duo",
+  },
 
-    // Meilleur artiste Chorégraphe
-    {
-      name: "Accadien fureur",
-      title: "Arcadian Choreographer",
-      image: "/dancers/Accadient Fureur.jpeg",
-      votes: 2245,
-      totalVotes: 45000,
-      percentage: 55,
-      category: "Meilleur artiste Chorégraphe",
-    },
-    {
-      name: "Goldy lastar",
-      title: "Golden Star",
-      image: "/dancers/GOLDY LA-STAR.jpeg",
-      votes: 2089,
-      totalVotes: 45000,
-      percentage: 51,
-      category: "Meilleur artiste Chorégraphe",
-    },
-    {
-      name: "Garçon déterminé",
-      title: "Determined Boy",
-      image: "/dancers/Garçon déterminé.jpg",
-      votes: 1834,
-      totalVotes: 45000,
-      percentage: 45,
-      category: "Meilleur artiste Chorégraphe",
-    },
-    {
-      name: "El Fally du 237",
-      title: "Versatile Artist",
-      image: "/dancers/El fally du 237.jpg",
-      votes: 1689,
-      totalVotes: 45000,
-      percentage: 41,
-      category: "Meilleur artiste Chorégraphe",
-    },
-    {
-      name: "La religion noire",
-      title: "Black Religion",
-      image: "/dancers/religion  noir.JPG",
-      votes: 1567,
-      totalVotes: 45000,
-      percentage: 38,
-      category: "Meilleur artiste Chorégraphe",
-    },
+  // Meilleur artiste Chorégraphe
+  {
+    name: "Accadien fureur",
+    title: "Arcadian Choreographer",
+    image: "/dancers/Accadient Fureur.jpeg",
+    votes: 2245,
+    totalVotes: 45000,
+    percentage: 55,
+    category: "Meilleur artiste Chorégraphe",
+  },
+  {
+    name: "Goldy lastar",
+    title: "Golden Star",
+    image: "/dancers/GOLDY LA-STAR.jpeg",
+    votes: 2089,
+    totalVotes: 45000,
+    percentage: 51,
+    category: "Meilleur artiste Chorégraphe",
+  },
+  {
+    name: "Garçon déterminé",
+    title: "Determined Boy",
+    image: "/dancers/Garçon déterminé.jpg",
+    votes: 1834,
+    totalVotes: 45000,
+    percentage: 45,
+    category: "Meilleur artiste Chorégraphe",
+  },
+  {
+    name: "El Fally du 237",
+    title: "Versatile Artist",
+    image: "/dancers/El fally du 237.jpg",
+    votes: 1689,
+    totalVotes: 45000,
+    percentage: 41,
+    category: "Meilleur artiste Chorégraphe",
+  },
+  {
+    name: "La religion noire",
+    title: "Black Religion",
+    image: "/dancers/religion  noir.JPG",
+    votes: 1567,
+    totalVotes: 45000,
+    percentage: 38,
+    category: "Meilleur artiste Chorégraphe",
+  },
 
-    // Meilleur Performance web
-    {
-      name: "Kendi",
-      title: "Web Star",
-      image: "/dancers/KENDI.jpeg",
-      votes: 3245,
-      totalVotes: 45000,
-      percentage: 79,
-      category: "Meilleur Performance web",
-    },
-    {
-      name: "Déboy le monstre",
-      title: "Viral Sensation",
-      image: "/dancers/DEBOY LE MONSTRE.jpeg",
-      votes: 2834,
-      totalVotes: 45000,
-      percentage: 69,
-      category: "Meilleur Performance web",
-    },
-    {
-      name: "El fally 237",
-      title: "Online Star",
-      image: "/dancers/El fally du 237.jpg",
-      votes: 2456,
-      totalVotes: 45000,
-      percentage: 60,
-      category: "Meilleur Performance web",
-    },
-    {
-      name: "Jkaxel",
-      title: "Internet Performer",
-      image: "/dancers/JKAXEL.jpg",
-      votes: 2189,
-      totalVotes: 45000,
-      percentage: 53,
-      category: "Meilleur Performance web",
-    },
-    {
-      name: "Maguy merine",
-      title: "Online Presence",
-      image: "/dancers/MAGUY MERINE.jpeg",
-      votes: 1967,
-      totalVotes: 45000,
-      percentage: 48,
-      category: "Meilleur Performance web",
-    },
-    {
-      name: "Jessi 237",
-      title: "Digital Star",
-      image: "/dancers/Jessi 237.jpeg",
-      votes: 1789,
-      totalVotes: 45000,
-      percentage: 44,
-      category: "Meilleur Performance web",
-    },
-    {
-      name: "Étienne kampos",
-      title: "Web Performer",
-      image: "/dancers/Etienne kampos.jpg",
-      votes: 1623,
-      totalVotes: 45000,
-      percentage: 40,
-      category: "Meilleur Performance web",
-    },
-    {
-      name: "Nelly Dora",
-      title: "Online Artist",
-      image: "/dancers/NELLY DORA.jpeg",
-      votes: 1467,
-      totalVotes: 45000,
-      percentage: 36,
-      category: "Meilleur Performance web",
-    },
+  // Meilleur Performance web
+  {
+    name: "Kendi",
+    title: "Web Star",
+    image: "/dancers/KENDI.jpeg",
+    votes: 3245,
+    totalVotes: 45000,
+    percentage: 79,
+    category: "Meilleur Performance web",
+  },
+  {
+    name: "Déboy le monstre",
+    title: "Viral Sensation",
+    image: "/dancers/DEBOY LE MONSTRE.jpeg",
+    votes: 2834,
+    totalVotes: 45000,
+    percentage: 69,
+    category: "Meilleur Performance web",
+  },
+  {
+    name: "El fally 237",
+    title: "Online Star",
+    image: "/dancers/El fally du 237.jpg",
+    votes: 2456,
+    totalVotes: 45000,
+    percentage: 60,
+    category: "Meilleur Performance web",
+  },
+  {
+    name: "Jkaxel",
+    title: "Internet Performer",
+    image: "/dancers/JKAXEL.jpg",
+    votes: 2189,
+    totalVotes: 45000,
+    percentage: 53,
+    category: "Meilleur Performance web",
+  },
+  {
+    name: "Maguy merine",
+    title: "Online Presence",
+    image: "/dancers/MAGUY MERINE.jpeg",
+    votes: 1967,
+    totalVotes: 45000,
+    percentage: 48,
+    category: "Meilleur Performance web",
+  },
+  {
+    name: "Jessi 237",
+    title: "Digital Star",
+    image: "/dancers/Jessi 237.jpeg",
+    votes: 1789,
+    totalVotes: 45000,
+    percentage: 44,
+    category: "Meilleur Performance web",
+  },
+  {
+    name: "Étienne kampos",
+    title: "Web Performer",
+    image: "/dancers/Etienne kampos.jpg",
+    votes: 1623,
+    totalVotes: 45000,
+    percentage: 40,
+    category: "Meilleur Performance web",
+  },
+  {
+    name: "Nelly Dora",
+    title: "Online Artist",
+    image: "/dancers/NELLY DORA.jpeg",
+    votes: 1467,
+    totalVotes: 45000,
+    percentage: 36,
+    category: "Meilleur Performance web",
+  },
 ]
 
 const mainCategories = [
@@ -348,9 +348,6 @@ export default function ClassementPage() {
 
   const [showBanner, setShowBanner] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [showAuthModal, setShowAuthModal] = useState(false)
-  const [authMode, setAuthMode] = useState<"login" | "register">("login")
 
   useEffect(() => {
     const handleScroll = () => {
@@ -373,18 +370,16 @@ export default function ClassementPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       {/* Banner */}
       <div
-        className={`fixed top-0 left-0 right-0 z-50 bg-black py-3 text-center text-sm tracking-[0.3em] text-white font-light shadow-xl transition-transform duration-300 ${
-          showBanner ? "translate-y-0" : "-translate-y-full"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 bg-black py-3 text-center text-sm tracking-[0.3em] text-white font-light shadow-xl transition-transform duration-300 ${showBanner ? "translate-y-0" : "-translate-y-full"
+          }`}
       >
         NB DANCE AWARDS
       </div>
 
       {/* Header */}
       <header
-        className={`fixed left-0 right-0 z-40 border-b border-zinc-800 bg-[#0a0a0a] transition-all duration-300 ${
-          showBanner ? "top-[48px]" : "top-0"
-        }`}
+        className={`fixed left-0 right-0 z-40 border-b border-zinc-800 bg-[#0a0a0a] transition-all duration-300 ${showBanner ? "top-[48px]" : "top-0"
+          }`}
       >
         <div className="container mx-auto flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
           <Link href="/" className="flex items-center gap-2 md:gap-3">
@@ -449,25 +444,7 @@ export default function ClassementPage() {
                   >
                     Classement
                   </Link>
-                  {isLoggedIn ? (
-                    <a
-                      href="#"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-base font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
-                    >
-                      Mon Compte
-                    </a>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false)
-                        setShowAuthModal(true)
-                      }}
-                      className="w-full text-left px-4 py-3 text-base font-medium text-yellow-500 hover:text-yellow-400 hover:bg-zinc-800 rounded-lg transition-colors"
-                    >
-                      Se Connecter
-                    </button>
-                  )}
+
                 </nav>
               </div>
             </SheetContent>
@@ -487,99 +464,12 @@ export default function ClassementPage() {
             <Link href="/classement" className="text-sm font-medium text-white transition-colors">
               Classement
             </Link>
-            {isLoggedIn ? (
-              <a href="#" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
-                Mon Compte
-              </a>
-            ) : (
-              <Button
-                onClick={() => setShowAuthModal(true)}
-                className="bg-pink-600 hover:bg-pink-700 text-white font-semibold px-6"
-              >
-                Se Connecter
-              </Button>
-            )}
+
           </nav>
         </div>
       </header>
 
-      {/* Auth Modal */}
-      <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
-        <DialogContent className="max-w-md bg-[#0a0a0a] border-zinc-800 p-6 md:p-8">
-          <div className="space-y-6">
-            <div className="text-center">
-              <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                {authMode === "login" ? "Connexion" : "Inscription"}
-              </h2>
-              <p className="text-sm text-zinc-400">
-                {authMode === "login"
-                  ? "Connectez-vous pour voter pour vos danseurs préférés"
-                  : "Créez un compte pour commencer à voter"}
-              </p>
-            </div>
 
-            <div className="space-y-4">
-              {authMode === "register" && (
-                <div>
-                  <label className="block text-sm font-medium mb-2">Nom Complet</label>
-                  <Input
-                    type="text"
-                    placeholder="Entrez votre nom"
-                    className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
-                  />
-                </div>
-              )}
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Email ou Téléphone</label>
-                <Input
-                  type="text"
-                  placeholder="exemple@email.com ou +237 6XX XXX XXX"
-                  className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Mot de Passe</label>
-                <Input
-                  type="password"
-                  placeholder="••••••••"
-                  className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
-                />
-              </div>
-
-              {authMode === "register" && (
-                <div>
-                  <label className="block text-sm font-medium mb-2">Confirmer le Mot de Passe</label>
-                  <Input
-                    type="password"
-                    placeholder="••••••••"
-                    className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
-                  />
-                </div>
-              )}
-
-              <Button className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-6 text-base">
-                {authMode === "login" ? "Se Connecter" : "S'inscrire"}
-              </Button>
-
-              <div className="text-center">
-                <button
-                  onClick={() => setAuthMode(authMode === "login" ? "register" : "login")}
-                  className="text-sm text-yellow-500 hover:text-yellow-400 transition-colors"
-                >
-                  {authMode === "login" ? "Pas encore de compte ? Inscrivez-vous" : "Déjà un compte ? Connectez-vous"}
-                </button>
-              </div>
-
-              <div className="flex items-center justify-center gap-2 text-xs text-zinc-500">
-                <Shield className="h-4 w-4" />
-                <span>Connexion sécurisée SSL</span>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Countdown Popup */}
       <CountdownPopup />
