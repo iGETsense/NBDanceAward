@@ -23,48 +23,43 @@ export async function initializeFirebaseWithCandidates(forceReset: boolean = fal
       await remove(candidatesRef)
     }
 
-    // Load candidates from the JSON file
-    const response = await fetch('/EXAMPLE_CANDIDATES.json')
+    // Load full database from the JSON file
+    const response = await fetch('/full_db.json')
     const data = await response.json()
     const candidates = data.candidates || []
+    const categories = data.categories || []
+    const candidateCategories = data.candidateCategories || []
 
     if (candidates.length === 0) {
-      console.error('❌ No candidates found in EXAMPLE_CANDIDATES.json')
+      console.error('❌ No candidates found in full_db.json')
       return { success: false, error: 'No candidates found' }
     }
 
-    // Convert array to object with candidate IDs as keys (without category fields)
+    // Convert candidates array to object with candidate IDs as keys
     const candidatesObj: any = {};
-    const candidateCategories: any[] = [];
-    candidates.forEach((candidate: any, index: number) => {
-      const id = candidate.id || `candidate-${index + 1}`;
-      // Store candidate data without category info
-      const { category, categoryId, ...rest } = candidate;
-      candidatesObj[id] = {
+    candidates.forEach((candidate: any) => {
+      const { categoryIds, ...rest } = candidate; // Remove categoryIds from candidate object
+      candidatesObj[candidate.id] = {
         ...rest,
-        id,
         votes: candidate.votes || 0,
-        percentage: 0,
+        percentage: candidate.percentage || 0,
       };
-      // Record link(s) – a candidate may belong to multiple categories in future
-      if (categoryId) {
-        candidateCategories.push({ candidateId: id, categoryId });
-      }
     });
 
-    // Write candidates to Firebase
+    // Convert categories array to object with category IDs as keys
+    const categoriesObj: any = {};
+    categories.forEach((category: any) => {
+      categoriesObj[category.id] = category;
+    });
+
+    // Write all data to Firebase
     await set(candidatesRef, candidatesObj);
 
-    // Write candidateCategories link table
+    const categoriesRef = ref(database, 'categories');
+    await set(categoriesRef, categoriesObj);
+
     const candidateCategoriesRef = ref(database, 'candidateCategories');
     await set(candidateCategoriesRef, candidateCategories);
-
-    // Write categories to Firebase
-    const categoriesRef = ref(database, 'categories');
-    await set(categoriesRef, {
-      // categories defined in categories.json
-      // This will be overwritten each init
-    });
 
     console.log(`✅ Successfully initialized ${candidates.length} candidates in Firebase`)
     return { success: true, count: candidates.length }
