@@ -893,6 +893,16 @@ export default function CandidatsPage() {
   // Shuffle candidates only on initial load
   useEffect(() => {
     if (allCandidates.length > 0 && shuffledCandidates.length === 0) {
+      // Deduplicate candidates by baseId (keep first occurrence)
+      const uniqueCandidates = allCandidates.reduce((acc: any[], current: any) => {
+        const baseId = current.baseId || current.id
+        const exists = acc.find((item: any) => (item.baseId || item.id) === baseId)
+        if (!exists) {
+          acc.push(current)
+        }
+        return acc
+      }, [])
+
       const shuffleArray = (array: any[]) => {
         const shuffled = [...array]
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -901,7 +911,7 @@ export default function CandidatsPage() {
         }
         return shuffled
       }
-      setShuffledCandidates(shuffleArray(allCandidates))
+      setShuffledCandidates(shuffleArray(uniqueCandidates))
     }
   }, [allCandidates, shuffledCandidates.length])
 
