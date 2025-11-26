@@ -64,6 +64,8 @@ export const candidateImages: Record<string, string> = {
   "3-peace-et-influence-femi": "/dancers/3-peace.jpeg",
 };
 
-export function getCandidateImage(candidateId: string): string {
-  return candidateImages[candidateId] || "/dancers/placeholder.svg";
+export function getCandidateImage(candidateId: string, baseId?: string): string {
+  // Use baseId if provided (for denormalized structure), otherwise use candidateId
+  const lookupId = baseId || candidateId;
+  return candidateImages[lookupId] || "/dancers/placeholder.svg";
 }

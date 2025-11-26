@@ -121,7 +121,7 @@ export function subscribeToCandidates(callback: (data: any) => void) {
             ...candidate,
             categoryId: categoryId || 'unknown',
             category: category ? category.name : 'Unknown Category',
-            image: getCandidateImage(candidate.id)
+            image: getCandidateImage(candidate.id, candidate.baseId)
           }
         })
 
@@ -311,7 +311,7 @@ export function subscribeToLeaderboard(callback: (data: any) => void, limit: num
             ...candidate,
             categoryId: categoryId || 'unknown',
             category: category ? category.name : 'Unknown Category',
-            image: getCandidateImage(candidate.id)
+            image: getCandidateImage(candidate.id, candidate.baseId)
           }
         })
 
