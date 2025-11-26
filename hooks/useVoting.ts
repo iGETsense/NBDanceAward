@@ -34,6 +34,8 @@ export function useVoting() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'pending' | 'completed' | 'failed'>('idle');
 
   /**
    * Submit a vote and initiate payment
@@ -41,6 +43,8 @@ export function useVoting() {
   const submitVote = useCallback(async (params: SubmitVoteParams): Promise<VoteSubmissionResult> => {
     setIsSubmitting(true);
     setError(null);
+    setSuccess(false);
+    setPaymentStatus('idle');
 
     try {
       const submitVoteFunction = httpsCallable<SubmitVoteParams, VoteSubmissionResult>(
@@ -52,12 +56,16 @@ export function useVoting() {
 
       if (!result.data.success) {
         setError(result.data.error || 'Vote submission failed');
+        setPaymentStatus('failed');
+      } else {
+        setPaymentStatus('pending');
       }
 
       return result.data;
     } catch (err: any) {
       const errorMessage = err.message || 'An error occurred while submitting vote';
       setError(errorMessage);
+      setPaymentStatus('failed');
       return {
         success: false,
         error: errorMessage,
@@ -107,14 +115,21 @@ export function useVoting() {
     maxAttempts: number = 30,
     intervalMs: number = 2000
   ): Promise<PaymentVerificationResult> => {
+    setPaymentStatus('pending');
+
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const result = await verifyPayment(transactionId);
 
       if (result.success && result.status === 'completed') {
+        setPaymentStatus('completed');
+        setSuccess(true);
+        setError(null);
         return result;
       }
 
       if (result.error) {
+        setPaymentStatus('failed');
+        setError(result.error);
         return result;
       }
 
@@ -122,19 +137,36 @@ export function useVoting() {
       await new Promise(resolve => setTimeout(resolve, intervalMs));
     }
 
+    setPaymentStatus('failed');
+    const timeoutError = 'Payment verification timed out. Please check back later.';
+    setError(timeoutError);
     return {
       success: false,
       status: 'pending',
-      error: 'Payment verification timed out. Please check back later.',
+      error: timeoutError,
     };
   }, [verifyPayment]);
+
+  /**
+   * Reset all states
+   */
+  const resetState = useCallback(() => {
+    setError(null);
+    setSuccess(false);
+    setPaymentStatus('idle');
+    setIsSubmitting(false);
+    setIsVerifying(false);
+  }, []);
 
   return {
     submitVote,
     verifyPayment,
     pollPaymentStatus,
+    resetState,
     isSubmitting,
     isVerifying,
     error,
+    success,
+    paymentStatus,
   };
 }
