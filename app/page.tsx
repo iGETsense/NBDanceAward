@@ -1487,24 +1487,28 @@ export default function NBDanceAwardPage() {
                 </div>
               </div>
 
-              {/* Phone Number */}
-              <div className="mb-6 md:mb-8">
-                <label className="mb-1.5 md:mb-2 block text-xs md:text-sm font-medium text-white">Numéro de Téléphone</label>
-                <div className="relative">
-                  <div className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 md:gap-2">
-                    <span className="text-lg md:text-xl">🇨🇲</span>
-                    <span className="text-xs md:text-sm text-zinc-400">+237</span>
+              {/* Phone Number - Only show after payment method selected */}
+              {selectedPaymentMethod && (
+                <div className="mb-6 md:mb-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <h3 className="mb-3 text-base md:text-lg font-semibold text-white">
+                    {selectedPaymentMethod === 'mobile' ? 'Entrez votre numéro MTN' : 'Entrez votre numéro Orange'}
+                  </h3>
+                  <div className="relative">
+                    <div className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 md:gap-2">
+                      <span className="text-lg md:text-xl">🇨🇲</span>
+                      <span className="text-xs md:text-sm text-zinc-400">+237</span>
+                    </div>
+                    <Input
+                      type="tel"
+                      placeholder="6xx xxx xxx"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      className="w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-20 md:pl-24 pr-10 md:pr-12 py-4 md:py-5 text-sm md:text-base text-white placeholder:text-zinc-500 focus:border-yellow-500"
+                    />
+                    <Lock className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-zinc-500" />
                   </div>
-                  <Input
-                    type="tel"
-                    placeholder="6xx xxx xxx"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-20 md:pl-24 pr-10 md:pr-12 py-4 md:py-5 text-sm md:text-base text-white placeholder:text-zinc-500 focus:border-yellow-500"
-                  />
-                  <Lock className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-zinc-500" />
                 </div>
-              </div>
+              )}
 
               {/* Error/Success Messages */}
               {voteError && (

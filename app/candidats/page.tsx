@@ -1350,9 +1350,9 @@ export default function CandidatsPage() {
               {/* Phone Number - Only show after payment method selected */}
               {selectedPaymentMethod && (
                 <div className="mb-6 md:mb-8 animate-in fade-in slide-in-from-top-2 duration-300">
-                  <label className="mb-1.5 md:mb-2 block text-xs md:text-sm font-medium text-white">
-                    Numéro de Téléphone {selectedPaymentMethod === 'mobile' ? 'MTN' : 'Orange'}
-                  </label>
+                  <h3 className="mb-3 text-base md:text-lg font-semibold text-white">
+                    {selectedPaymentMethod === 'mobile' ? 'Entrez votre numéro MTN' : 'Entrez votre numéro Orange'}
+                  </h3>
                   <div className="relative">
                     <div className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 md:gap-2">
                       <span className="text-lg md:text-xl">🇨🇲</span>
@@ -1364,10 +1364,10 @@ export default function CandidatsPage() {
                       onChange={handlePhoneChange}
                       placeholder="6xx xxx xxx"
                       className={`w-full rounded-lg border ${phoneError
-                          ? 'border-red-500 focus:border-red-500'
-                          : detectedOperator !== 'unknown' && !phoneError
-                            ? 'border-green-500 focus:border-green-500'
-                            : 'border-zinc-700 focus:border-yellow-500'
+                        ? 'border-red-500 focus:border-red-500'
+                        : detectedOperator !== 'unknown' && !phoneError
+                          ? 'border-green-500 focus:border-green-500'
+                          : 'border-zinc-700 focus:border-yellow-500'
                         } bg-zinc-800 pl-20 md:pl-24 pr-10 md:pr-12 py-4 md:py-5 text-sm md:text-base text-white placeholder:text-zinc-500`}
                     />
                     {detectedOperator !== 'unknown' && !phoneError ? (
@@ -1383,8 +1383,8 @@ export default function CandidatsPage() {
                   {detectedOperator !== 'unknown' && (
                     <div className="mt-2 flex items-center gap-2">
                       <span className={`text-xs font-medium ${detectedOperator === 'mtn' ? 'text-yellow-500' :
-                          detectedOperator === 'orange' ? 'text-orange-500' :
-                            'text-green-500'
+                        detectedOperator === 'orange' ? 'text-orange-500' :
+                          'text-green-500'
                         }`}>
                         {getOperatorName(detectedOperator)} détecté
                       </span>
