@@ -33,9 +33,6 @@ export default function AdminPage() {
   // Security: Rate limiter for login attempts
   const loginLimiter = new RateLimiter(5, 300000) // 5 attempts per 5 minutes
 
-  // Mock admin password (in production, use proper authentication)
-  const ADMIN_PASSWORD = "NB2024Admin"
-
   useEffect(() => {
     const stored = localStorage.getItem("nbAdminAuth")
     if (stored) {
@@ -43,7 +40,7 @@ export default function AdminPage() {
     }
   }, [])
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Security: Check rate limiting
     if (isLocked) {
       const now = Date.now()
@@ -61,29 +58,41 @@ export default function AdminPage() {
     // Security: Sanitize input
     const sanitizedPassword = sanitizeInput(passwordInput)
 
-    // Security: Constant-time comparison to prevent timing attacks
-    const isValidPassword = passwordInput === ADMIN_PASSWORD
+    try {
+      // Security: Verify password via secure API (server-side)
+      const response = await fetch('/api/verify-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: passwordInput })
+      })
 
-    if (isValidPassword) {
-      setIsAuthenticated(true)
-      localStorage.setItem("nbAdminAuth", "true")
-      localStorage.setItem("nbAdminLoginTime", Date.now().toString())
-      setPasswordInput("")
-      setLoginAttempts(0)
-      setSecurityError("")
-    } else {
-      // Security: Track failed attempts
-      const newAttempts = loginAttempts + 1
-      setLoginAttempts(newAttempts)
+      const data = await response.json()
+      const isValidPassword = data.success
 
-      if (newAttempts >= 5) {
-        setIsLocked(true)
-        setLockTime(Date.now() + 300000) // Lock for 5 minutes
-        setSecurityError("Trop de tentatives. Compte verrouillé pour 5 minutes.")
-        console.warn(`[SECURITY] Admin login locked after ${newAttempts} failed attempts`)
+      if (isValidPassword) {
+        setIsAuthenticated(true)
+        localStorage.setItem("nbAdminAuth", "true")
+        localStorage.setItem("nbAdminLoginTime", Date.now().toString())
+        setPasswordInput("")
+        setLoginAttempts(0)
+        setSecurityError("")
       } else {
-        setSecurityError(`Mot de passe incorrect. ${5 - newAttempts} tentatives restantes.`)
+        // Security: Track failed attempts
+        const newAttempts = loginAttempts + 1
+        setLoginAttempts(newAttempts)
+
+        if (newAttempts >= 5) {
+          setIsLocked(true)
+          setLockTime(Date.now() + 300000) // Lock for 5 minutes
+          setSecurityError("Trop de tentatives. Compte verrouillé pour 5 minutes.")
+          console.warn(`[SECURITY] Admin login locked after ${newAttempts} failed attempts`)
+        } else {
+          setSecurityError(`Mot de passe incorrect. ${5 - newAttempts} tentatives restantes.`)
+        }
       }
+    } catch (error) {
+      setSecurityError("Erreur de connexion. Réessayez.")
+      console.error('[ERROR] Login failed:', error)
     }
   }
 

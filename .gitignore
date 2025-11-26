@@ -1,1 +1,9 @@
 node_modules
+
+# Environment variables (contains sensitive data)
+.env.local
+.env*.local
+
+# Firebase
+.firebase/
+dataconnect/.dataconnect/

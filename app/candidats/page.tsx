@@ -945,12 +945,19 @@ export default function CandidatsPage() {
   const incrementVotes = () => setVoteCount((prev) => prev + 1)
   const decrementVotes = () => setVoteCount((prev) => Math.max(1, prev - 1))
 
-  // Filter candidates without re-shuffling
-  const filteredCandidates = shuffledCandidates.filter((candidate) => {
-    const matchesSearch = (candidate?.name || '').toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory = selectedCategory === "Toutes les catégories" || (candidate?.category || '') === selectedCategory
-    return matchesSearch && matchesCategory
-  })
+  // Filter candidates - use full list for specific categories, deduplicated for "All"
+  const filteredCandidates = (() => {
+    // When a specific category is selected, use ALL candidates (no deduplication)
+    const candidatesToFilter = selectedCategory === "Toutes les catégories"
+      ? shuffledCandidates  // Deduplicated list for "All Categories"
+      : allCandidates       // Full list with duplicates for specific categories
+
+    return candidatesToFilter.filter((candidate) => {
+      const matchesSearch = (candidate?.name || '').toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesCategory = selectedCategory === "Toutes les catégories" || (candidate?.category || '') === selectedCategory
+      return matchesSearch && matchesCategory
+    })
+  })()
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
