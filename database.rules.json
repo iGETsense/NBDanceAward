@@ -1,0 +1,26 @@
+{
+    "rules": {
+        ".read": "auth == null",
+        ".write": "auth == null",
+        "candidates": {
+            ".read": true,
+            ".write": false,
+            "$candidateId": {
+                "votes": {
+                    ".write": true
+                },
+                "percentage": {
+                    ".write": true
+                }
+            }
+        },
+        "categories": {
+            ".read": true,
+            ".write": false
+        },
+        "candidateCategories": {
+            ".read": true,
+            ".write": false
+        }
+    }
+}

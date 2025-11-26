@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, Menu, Lock, Shield, User, Mail, Minus, Plus, ChevronDown, Smartphone, CheckCircle2 } from 'lucide-react'
+import { Search, Menu, Lock, Shield, User, Mail, Minus, Plus, ChevronDown, Smartphone, CheckCircle2, AlertCircle } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -12,6 +12,7 @@ import Link from "next/link"
 import { CountdownPopup } from "@/components/CountdownPopup"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
+import { validatePhoneNumber, formatPhoneNumber, detectOperator, getOperatorName, type MobileOperator } from "@/lib/phoneValidation"
 
 // Keep old data for reference (commented out)
 const oldStaticCandidates = [
@@ -884,6 +885,9 @@ export default function CandidatsPage() {
   const [showBanner, setShowBanner] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [shuffledCandidates, setShuffledCandidates] = useState<any[]>([])
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [phoneError, setPhoneError] = useState("")
+  const [detectedOperator, setDetectedOperator] = useState<MobileOperator>('unknown')
 
   // Scroll animations
   const pageTitle = useScrollAnimation()
@@ -939,7 +943,24 @@ export default function CandidatsPage() {
   const handleCandidateClick = (candidate: (typeof allCandidates)[0]) => {
     setSelectedCandidate(candidate)
     setVoteCount(1)
+    setPhoneNumber("")
+    setPhoneError("")
+    setDetectedOperator('unknown')
     setIsVotingModalOpen(true)
+  }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    const formatted = formatPhoneNumber(value)
+    setPhoneNumber(formatted)
+
+    // Detect operator in real-time
+    const operator = detectOperator(value)
+    setDetectedOperator(operator)
+
+    // Validate against selected payment method
+    const validation = validatePhoneNumber(value, selectedPaymentMethod)
+    setPhoneError(validation.warning || validation.suggestion || '')
   }
 
   const incrementVotes = () => setVoteCount((prev) => prev + 1)
@@ -1326,22 +1347,59 @@ export default function CandidatsPage() {
                 </div>
               </div>
 
-              {/* Phone Number */}
-              <div className="mb-6 md:mb-8">
-                <label className="mb-1.5 md:mb-2 block text-xs md:text-sm font-medium text-white">Numéro de Téléphone</label>
-                <div className="relative">
-                  <div className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 md:gap-2">
-                    <span className="text-lg md:text-xl">🇨🇲</span>
-                    <span className="text-xs md:text-sm text-zinc-400">+237</span>
+              {/* Phone Number - Only show after payment method selected */}
+              {selectedPaymentMethod && (
+                <div className="mb-6 md:mb-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <label className="mb-1.5 md:mb-2 block text-xs md:text-sm font-medium text-white">
+                    Numéro de Téléphone {selectedPaymentMethod === 'mobile' ? 'MTN' : 'Orange'}
+                  </label>
+                  <div className="relative">
+                    <div className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5 md:gap-2">
+                      <span className="text-lg md:text-xl">🇨🇲</span>
+                      <span className="text-xs md:text-sm text-zinc-400">+237</span>
+                    </div>
+                    <Input
+                      type="tel"
+                      value={phoneNumber}
+                      onChange={handlePhoneChange}
+                      placeholder="6xx xxx xxx"
+                      className={`w-full rounded-lg border ${phoneError
+                          ? 'border-red-500 focus:border-red-500'
+                          : detectedOperator !== 'unknown' && !phoneError
+                            ? 'border-green-500 focus:border-green-500'
+                            : 'border-zinc-700 focus:border-yellow-500'
+                        } bg-zinc-800 pl-20 md:pl-24 pr-10 md:pr-12 py-4 md:py-5 text-sm md:text-base text-white placeholder:text-zinc-500`}
+                    />
+                    {detectedOperator !== 'unknown' && !phoneError ? (
+                      <CheckCircle2 className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-green-500" />
+                    ) : phoneError ? (
+                      <AlertCircle className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-red-500" />
+                    ) : (
+                      <Lock className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-zinc-500" />
+                    )}
                   </div>
-                  <Input
-                    type="tel"
-                    placeholder="6xx xxx xxx"
-                    className="w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-20 md:pl-24 pr-10 md:pr-12 py-4 md:py-5 text-sm md:text-base text-white placeholder:text-zinc-500 focus:border-yellow-500"
-                  />
-                  <Lock className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-zinc-500" />
+
+                  {/* Operator Badge */}
+                  {detectedOperator !== 'unknown' && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className={`text-xs font-medium ${detectedOperator === 'mtn' ? 'text-yellow-500' :
+                          detectedOperator === 'orange' ? 'text-orange-500' :
+                            'text-green-500'
+                        }`}>
+                        {getOperatorName(detectedOperator)} détecté
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Error/Warning Message */}
+                  {phoneError && (
+                    <div className="mt-2 flex items-start gap-2 text-xs text-red-400">
+                      <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                      <span>{phoneError}</span>
+                    </div>
+                  )}
                 </div>
-              </div>
+              )}
 
               {/* Security Badges */}
               <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs text-zinc-400">
