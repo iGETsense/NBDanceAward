@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { Input } from "@/components/ui/input"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { sanitizeInput, validateNumeric, validateWithdrawalData, RateLimiter } from "@/lib/security"
+import { AdminStats, TransactionsList } from "@/components/AdminDashboard"
 
 export default function AdminPage() {
   const [showBanner, setShowBanner] = useState(true)
@@ -305,52 +306,12 @@ export default function AdminPage() {
       {/* Main Content */}
       <main className="pt-24 md:pt-28 pb-12">
         <div className="container mx-auto px-4 md:px-6">
-          {/* KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            {/* Total Votes */}
-            <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-lg p-6 hover:border-yellow-500/50 transition-colors">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <p className="text-zinc-400 text-sm mb-1">Total des Votes</p>
-                  <h3 className="text-3xl md:text-4xl font-bold text-white">{(totalVotes || 0).toLocaleString()}</h3>
-                </div>
-                <div className="bg-yellow-500/20 p-3 rounded-lg">
-                  <TrendingUp className="h-6 w-6 text-yellow-500" />
-                </div>
-              </div>
-              <div className="flex items-center gap-2 text-green-400 text-sm">
-                <ArrowUpRight className="h-4 w-4" />
-                <span>En temps réel</span>
-              </div>
-            </div>
+          {/* Enhanced KPI Cards with Real-time Transaction Data */}
+          <AdminStats />
 
-            {/* Total Revenue */}
-            <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-lg p-6 hover:border-yellow-500/50 transition-colors">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <p className="text-zinc-400 text-sm mb-1">Revenu Total</p>
-                  <h3 className="text-3xl md:text-4xl font-bold text-white">{(totalRevenue || 0).toLocaleString()} XAF</h3>
-                </div>
-                <div className="bg-green-500/20 p-3 rounded-lg">
-                  <DollarSign className="h-6 w-6 text-green-500" />
-                </div>
-              </div>
-              <p className="text-zinc-400 text-xs">5 XAF par vote</p>
-            </div>
-
-            {/* Total Candidates */}
-            <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-lg p-6 hover:border-yellow-500/50 transition-colors">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <p className="text-zinc-400 text-sm mb-1">Candidats</p>
-                  <h3 className="text-3xl md:text-4xl font-bold text-white">{candidates.length}</h3>
-                </div>
-                <div className="bg-blue-500/20 p-3 rounded-lg">
-                  <Users className="h-6 w-6 text-blue-500" />
-                </div>
-              </div>
-              <p className="text-zinc-400 text-xs">Actifs</p>
-            </div>
+          {/* Real-time Transactions List */}
+          <div className="mb-8">
+            <TransactionsList />
           </div>
 
 
