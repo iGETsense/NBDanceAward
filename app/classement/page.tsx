@@ -320,14 +320,14 @@ const mainCategories = [
   "Meilleure artiste danseuse mbolé",
   "Meilleur artiste jeune danseur/danseuse",
   "Meilleur Performance web",
-  "Meilleur Groupe de danse",
-  "Meilleur artiste danseur Afro Coupé décalé",
-  "Meilleur artiste danseur masculin",
-  "meilleurs artiste danseurs mbolé",
-  "meilleur artiste danse au rythme folklorique",
-  "meilleurs danseur de l'année",
-  "Meilleurs artiste chorégraphes",
-  "meilleure artiste danseuse de l'année",
+  "Meilleur groupe de danse",
+  "Meilleur artiste danseur afro coupé décalé",
+  "Meilleur artiste danseur - masculin",
+  "Meilleur artiste danseur mbolé",
+  "Meilleur artiste danseur au rythme folklorique",
+  "Meilleur artiste danseur de l'année",
+  "Meilleur artiste Chorégraphe",
+  "Meilleure artiste danseuse de l'année",
   "Meilleur collaboration duo",
 ]
 
@@ -363,7 +363,19 @@ export default function ClassementPage() {
   }, [])
 
   const getCandidatesByCategory = (category: string) => {
-    return rankedCandidates.filter((c: any) => c.category === category).sort((a: any, b: any) => b.votes - a.votes)
+    // For specific categories, remove duplicates by keeping only unique candidate IDs
+    const filtered = rankedCandidates.filter((c: any) => c.category === category)
+
+    // Remove duplicates by candidate ID (keep first occurrence with highest votes)
+    const uniqueCandidates = filtered.reduce((acc: any[], current: any) => {
+      const exists = acc.find((item: any) => item.id === current.id)
+      if (!exists) {
+        acc.push(current)
+      }
+      return acc
+    }, [])
+
+    return uniqueCandidates.sort((a: any, b: any) => (b.votes || 0) - (a.votes || 0))
   }
 
   const formatVotes = (votes: number | undefined) => {
