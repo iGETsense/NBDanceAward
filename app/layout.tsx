@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     telephone: false,
     address: false,
   },
-  
+
   // Verification
   verification: {
     google: "T9gNRa6AunqtE10YM_eXms2E8edTX7KAe-jAoRORYbc",
@@ -115,6 +115,43 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="theme-color" content="#0a0a0a" />
+        <link rel="manifest" href="/manifest.json" />
+
+        {/* Structured Data for Google */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "NB Dance Awards",
+              "url": "https://nb-dance-award.vercel.app",
+              "logo": "https://nb-dance-award.vercel.app/logo.png",
+              "description": "NB Dance Awards - Première Édition - Élection de la Superstar de danse africaine",
+              "sameAs": [
+                "https://www.facebook.com/NBDanceAwards",
+                "https://twitter.com/NBDanceAwards"
+              ]
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "NB Dance Awards",
+              "url": "https://nb-dance-award.vercel.app",
+              "description": "Votez pour votre danseur préféré parmi les meilleurs talents de danse africaine",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://nb-dance-award.vercel.app/candidats?search={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            })
+          }}
+        />
       </head>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
         <Suspense fallback={null}>{children}</Suspense>
