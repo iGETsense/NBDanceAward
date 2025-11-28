@@ -10,10 +10,21 @@ import * as functions from 'firebase-functions';
 export function getMesombClient() {
     const config = functions.config();
 
+    const applicationKey = config.mesomb?.application_key || process.env.MESOMB_APPLICATION_KEY;
+    const accessKey = config.mesomb?.access_key || process.env.MESOMB_ACCESS_KEY;
+    const secretKey = config.mesomb?.secret_key || process.env.MESOMB_SECRET_KEY;
+
+    // Validate all required credentials are present
+    if (!applicationKey || !accessKey || !secretKey) {
+        throw new Error(
+            'Mesomb credentials are not configured. Please set Firebase config or environment variables.'
+        );
+    }
+
     return new PaymentOperation({
-        applicationKey: config.mesomb?.application_key || process.env.MESOMB_APPLICATION_KEY,
-        accessKey: config.mesomb?.access_key || process.env.MESOMB_ACCESS_KEY,
-        secretKey: config.mesomb?.secret_key || process.env.MESOMB_SECRET_KEY,
+        applicationKey,
+        accessKey,
+        secretKey,
     });
 }
 
@@ -54,6 +65,15 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
         };
     } catch (error: any) {
         console.error('Mesomb payment error:', error);
+
+        // Check if it's a credential configuration error
+        if (error.message?.includes('credentials are not configured')) {
+            return {
+                success: false,
+                error: 'Payment system is not configured. Please contact support.',
+            };
+        }
+
         return {
             success: false,
             error: error.message || 'Payment initiation failed',

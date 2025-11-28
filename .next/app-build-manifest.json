@@ -10,11 +10,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/page.js"
-    ],
-    "/api/vote/submit/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/vote/submit/route.js"
     ]
   }
 }

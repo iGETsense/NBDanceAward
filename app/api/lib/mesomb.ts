@@ -7,10 +7,22 @@ import { PaymentOperation } from '@hachther/mesomb';
 
 // Initialize Mesomb client
 export function getMesombClient() {
+    const applicationKey = process.env.MESOMB_APPLICATION_KEY;
+    const accessKey = process.env.MESOMB_ACCESS_KEY;
+    const secretKey = process.env.MESOMB_SECRET_KEY;
+
+    // Validate all required credentials are present
+    if (!applicationKey || !accessKey || !secretKey) {
+        throw new Error(
+            'Mesomb credentials are not configured. Please set MESOMB_APPLICATION_KEY, ' +
+            'MESOMB_ACCESS_KEY, and MESOMB_SECRET_KEY in your .env.local file.'
+        );
+    }
+
     return new PaymentOperation({
-        applicationKey: process.env.MESOMB_APPLICATION_KEY!,
-        accessKey: process.env.MESOMB_ACCESS_KEY!,
-        secretKey: process.env.MESOMB_SECRET_KEY!,
+        applicationKey,
+        accessKey,
+        secretKey,
     });
 }
 
@@ -51,6 +63,15 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
         };
     } catch (error: any) {
         console.error('Mesomb payment error:', error);
+
+        // Check if it's a credential configuration error
+        if (error.message?.includes('credentials are not configured')) {
+            return {
+                success: false,
+                error: 'Payment system is not configured. Please contact support.',
+            };
+        }
+
         return {
             success: false,
             error: error.message || 'Payment initiation failed',
@@ -66,12 +87,13 @@ export async function checkPaymentStatus(reference: string): Promise<PaymentResu
         const payment = getMesombClient();
 
         // Fetch transaction using Mesomb reference
-        const transactions = await payment.getTransactions([reference], 'MESOMB');
+        const transactions = await payment.getTransactions([reference]);
 
         if (!transactions || transactions.length === 0) {
+            // Transaction not found yet - might still be processing
             return {
                 success: false,
-                error: 'Transaction not found',
+                error: 'Payment is still processing',
             };
         }
 
@@ -81,13 +103,16 @@ export async function checkPaymentStatus(reference: string): Promise<PaymentResu
         return {
             success: isSuccess,
             reference: reference,
-            message: isSuccess ? 'Payment confirmed' : 'Payment pending or failed',
+            message: isSuccess ? 'Payment confirmed' : `Payment status: ${transaction.status}`,
         };
     } catch (error: any) {
         console.error('Mesomb status check error:', error);
+
+        // Treat API errors as pending state (transaction might not be ready yet)
+        // This is normal for newly initiated payments
         return {
             success: false,
-            error: error.message || 'Status check failed',
+            error: 'Payment is still processing. Please wait...',
         };
     }
 }

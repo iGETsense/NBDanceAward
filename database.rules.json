@@ -21,6 +21,17 @@
         "candidateCategories": {
             ".read": true,
             ".write": false
+        },
+        "transactions": {
+            ".read": true,
+            ".write": true,
+            "$transactionId": {
+                ".validate": "newData.hasChildren(['id', 'candidateId', 'voteCount', 'phoneNumber', 'paymentMethod', 'operator', 'amount', 'status'])"
+            }
+        },
+        "votes": {
+            ".read": true,
+            ".write": true
         }
     }
 }
