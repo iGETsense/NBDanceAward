@@ -1,8 +1,8 @@
 {
   "version": 1,
   "functions": {
-    "/api/vote/submit": {},
+    "/api/admin-7f8a9b/withdraw": {},
     "/api/vote/verify": {},
-    "/api/admin/withdraw": {}
+    "/api/vote/submit": {}
   }
 }

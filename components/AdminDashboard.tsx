@@ -19,11 +19,15 @@ import {
 import { useTransactions } from '@/hooks/useTransactions';
 import { useBackendCandidates } from '@/hooks/useBackendCandidates';
 
+
+import { useWithdrawalStats } from '@/hooks/useWithdrawals';
+
 export function AdminStats() {
     const { stats, loading: txLoading } = useTransactions();
     const { candidates, loading: candidatesLoading } = useBackendCandidates();
+    const { totalWithdrawn, loading: withdrawalLoading } = useWithdrawalStats();
 
-    if (txLoading || candidatesLoading) {
+    if (txLoading || candidatesLoading || withdrawalLoading) {
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 {[...Array(4)].map((_, i) => (
@@ -36,25 +40,27 @@ export function AdminStats() {
     }
 
     const totalVotes = candidates.reduce((sum, c) => sum + (c.votes || 0), 0);
+    const currentBalance = stats.totalRevenue - totalWithdrawn;
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {/* Total Revenue */}
+            {/* Current Balance (Revenue - Withdrawals) */}
             <div className="bg-gradient-to-br from-green-900/20 to-green-800/10 border border-green-700/50 rounded-lg p-6 hover:border-green-500/50 transition-colors">
                 <div className="flex items-start justify-between mb-4">
                     <div>
-                        <p className="text-zinc-400 text-sm mb-1">Revenu Total</p>
+                        <p className="text-zinc-400 text-sm mb-1">Solde Actuel</p>
                         <h3 className="text-3xl font-bold text-white">
-                            {stats.totalRevenue.toLocaleString()} <span className="text-lg text-zinc-400">XAF</span>
+                            {currentBalance.toLocaleString()} <span className="text-lg text-zinc-400">XAF</span>
                         </h3>
                     </div>
                     <div className="bg-green-500/20 p-3 rounded-lg">
                         <DollarSign className="h-6 w-6 text-green-500" />
                     </div>
                 </div>
-                <p className="text-sm text-zinc-400">
-                    {stats.completedTransactions} transactions complétées
-                </p>
+                <div className="flex flex-col gap-1 text-xs text-zinc-400">
+                    <span>Revenu Total: {stats.totalRevenue.toLocaleString()} XAF</span>
+                    <span>Retiré: {totalWithdrawn.toLocaleString()} XAF</span>
+                </div>
             </div>
 
             {/* Total Votes */}
@@ -146,8 +152,8 @@ export function TransactionsList() {
                     <button
                         onClick={() => setFilter('all')}
                         className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${filter === 'all'
-                                ? 'bg-yellow-500 text-black'
-                                : 'bg-zinc-800 text-zinc-400 hover:text-white'
+                            ? 'bg-yellow-500 text-black'
+                            : 'bg-zinc-800 text-zinc-400 hover:text-white'
                             }`}
                     >
                         Toutes
@@ -155,8 +161,8 @@ export function TransactionsList() {
                     <button
                         onClick={() => setFilter('completed')}
                         className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${filter === 'completed'
-                                ? 'bg-green-500 text-black'
-                                : 'bg-zinc-800 text-zinc-400 hover:text-white'
+                            ? 'bg-green-500 text-black'
+                            : 'bg-zinc-800 text-zinc-400 hover:text-white'
                             }`}
                     >
                         Complétées
@@ -164,8 +170,8 @@ export function TransactionsList() {
                     <button
                         onClick={() => setFilter('pending')}
                         className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${filter === 'pending'
-                                ? 'bg-yellow-500 text-black'
-                                : 'bg-zinc-800 text-zinc-400 hover:text-white'
+                            ? 'bg-yellow-500 text-black'
+                            : 'bg-zinc-800 text-zinc-400 hover:text-white'
                             }`}
                     >
                         En attente
@@ -211,8 +217,8 @@ export function TransactionsList() {
                                     </td>
                                     <td className="py-4 px-4">
                                         <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${tx.operator === 'MTN'
-                                                ? 'bg-yellow-500/20 text-yellow-400'
-                                                : 'bg-orange-500/20 text-orange-400'
+                                            ? 'bg-yellow-500/20 text-yellow-400'
+                                            : 'bg-orange-500/20 text-orange-400'
                                             }`}>
                                             {tx.operator}
                                         </span>

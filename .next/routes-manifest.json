@@ -63,10 +63,10 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
-      "page": "/admin",
-      "regex": "^/admin(?:/)?$",
+      "page": "/admin-7f8a9b",
+      "regex": "^/admin\\-7f8a9b(?:/)?$",
       "routeKeys": {},
-      "namedRegex": "^/admin(?:/)?$"
+      "namedRegex": "^/admin\\-7f8a9b(?:/)?$"
     },
     {
       "page": "/apple-icon.png",
