@@ -1,11 +1,9 @@
 /**
  * Custom Hook for Voting Operations
- * Handles vote submission and payment verification using Firebase Cloud Functions
+ * Handles vote submission and payment verification using Vercel API Routes
  */
 
 import { useState, useCallback } from 'react';
-import { httpsCallable } from 'firebase/functions';
-import { functions } from '@/lib/firebase';
 
 export interface SubmitVoteParams {
   candidateId: string;
@@ -47,21 +45,24 @@ export function useVoting() {
     setPaymentStatus('idle');
 
     try {
-      const submitVoteFunction = httpsCallable<SubmitVoteParams, VoteSubmissionResult>(
-        functions,
-        'submitVote'
-      );
+      const response = await fetch('/api/vote/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+      });
 
-      const result = await submitVoteFunction(params);
+      const result = await response.json();
 
-      if (!result.data.success) {
-        setError(result.data.error || 'Vote submission failed');
+      if (!result.success) {
+        setError(result.error || 'Vote submission failed');
         setPaymentStatus('failed');
       } else {
         setPaymentStatus('pending');
       }
 
-      return result.data;
+      return result;
     } catch (err: any) {
       const errorMessage = err.message || 'An error occurred while submitting vote';
       setError(errorMessage);
@@ -83,18 +84,21 @@ export function useVoting() {
     setError(null);
 
     try {
-      const verifyPaymentFunction = httpsCallable<{ transactionId: string }, PaymentVerificationResult>(
-        functions,
-        'verifyPayment'
-      );
+      const response = await fetch('/api/vote/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ transactionId }),
+      });
 
-      const result = await verifyPaymentFunction({ transactionId });
+      const result = await response.json();
 
-      if (!result.data.success && result.data.status !== 'pending') {
-        setError(result.data.error || 'Payment verification failed');
+      if (!result.success && result.status !== 'pending') {
+        setError(result.error || 'Payment verification failed');
       }
 
-      return result.data;
+      return result;
     } catch (err: any) {
       const errorMessage = err.message || 'An error occurred while verifying payment';
       setError(errorMessage);
