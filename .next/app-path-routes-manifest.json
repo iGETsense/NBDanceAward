@@ -1,0 +1,22 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/candidates/route": "/api/candidates",
+  "/api/verify-admin/route": "/api/verify-admin",
+  "/api/webhook/payment/route": "/api/webhook/payment",
+  "/apple-icon.png/route": "/apple-icon.png",
+  "/icon1.png/route": "/icon1.png",
+  "/manifest.json/route": "/manifest.json",
+  "/robots.txt/route": "/robots.txt",
+  "/sitemap.xml/route": "/sitemap.xml",
+  "/favicon.ico/route": "/favicon.ico",
+  "/api/admin/withdraw/route": "/api/admin/withdraw",
+  "/api/vote/verify/route": "/api/vote/verify",
+  "/api/vote/submit/route": "/api/vote/submit",
+  "/admin/page": "/admin",
+  "/candidats/page": "/candidats",
+  "/page": "/",
+  "/regles/page": "/regles",
+  "/classement/page": "/classement",
+  "/seo/page": "/seo",
+  "/icon0.svg/route": "/icon0.svg"
+}

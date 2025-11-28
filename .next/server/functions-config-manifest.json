@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "functions": {
+    "/api/admin/withdraw": {},
+    "/api/vote/verify": {},
+    "/api/vote/submit": {}
+  }
+}

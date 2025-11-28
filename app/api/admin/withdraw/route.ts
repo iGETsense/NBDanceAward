@@ -18,11 +18,11 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const { phoneNumber, amount, adminPassword } = body;
 
-        // Simple admin authentication (you should use proper auth in production)
-        const expectedPassword = process.env.ADMIN_WITHDRAWAL_PASSWORD;
-        if (!expectedPassword || adminPassword !== expectedPassword) {
+        // Admin authentication - uses same password as admin login
+        const expectedPassword = 'NB2024Admin'; // Same as admin login password
+        if (adminPassword !== expectedPassword) {
             return NextResponse.json(
-                { success: false, error: 'Unauthorized' },
+                { success: false, error: 'Unauthorized - Invalid admin password' },
                 { status: 401 }
             );
         }
