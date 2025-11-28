@@ -1401,7 +1401,7 @@ export default function NBDanceAwardPage() {
                           candidateId: selectedCandidate.id,
                           voteCount,
                           phoneNumber,
-                          paymentMethod: selectedProvider,
+                          paymentMethod: selectedPaymentMethod,
                         })
 
                         if (result.success && result.transactionId) {

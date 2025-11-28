@@ -13,6 +13,7 @@ import { CountdownPopup } from "@/components/CountdownPopup"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import { validatePhoneNumber, formatPhoneNumber, detectOperator, getOperatorName, type MobileOperator } from "@/lib/phoneValidation"
+import { useVoting } from "@/hooks/useVoting"
 
 // Keep old data for reference (commented out)
 const oldStaticCandidates = [
@@ -874,6 +875,8 @@ const customImagePositioning: { [key: string]: string } = {
 export default function CandidatsPage() {
   // Firebase hook
   const { candidates: allCandidates, loading: candidatesLoading } = useCandidates()
+  const { submitVote, pollPaymentStatus, isSubmitting, isVerifying, error: voteError, success: voteSuccess, paymentStatus, resetState } = useVoting()
+  const [transactionId, setTransactionId] = useState<string | null>(null)
 
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories")
@@ -1287,8 +1290,39 @@ export default function CandidatsPage() {
                     </div>
                   </div>
 
-                  <Button className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-bold py-4 md:py-5 text-sm md:text-base rounded-full uppercase">
-                    Proceed to payment
+                  <Button
+                    onClick={async () => {
+                      if (!selectedCandidate || !phoneNumber) return
+
+                      try {
+                        const result = await submitVote({
+                          candidateId: selectedCandidate.id,
+                          voteCount,
+                          phoneNumber,
+                          paymentMethod: selectedPaymentMethod,
+                        })
+
+                        if (result.success && result.transactionId) {
+                          setTransactionId(result.transactionId)
+                          const paymentResult = await pollPaymentStatus(result.transactionId)
+
+                          if (paymentResult.success && paymentResult.status === 'completed') {
+                            setTimeout(() => {
+                              setIsVotingModalOpen(false)
+                              setPhoneNumber("")
+                              setVoteCount(1)
+                              setTransactionId(null)
+                              resetState()
+                            }, 2000)
+                          }
+                        }
+                      } catch (error) {
+                        console.error('Voting error:', error)
+                      }
+                    }}
+                    disabled={isSubmitting || isVerifying || !phoneNumber || phoneNumber.length < 9}
+                    className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 md:py-5 text-sm md:text-base rounded-full uppercase">
+                    {isSubmitting ? 'Submitting Vote...' : isVerifying ? 'Verifying Payment...' : 'Proceed to Payment'}
                   </Button>
                 </>
               )}
@@ -1400,6 +1434,61 @@ export default function CandidatsPage() {
                   )}
                 </div>
               )}
+
+              {/* Error/Success Messages */}
+              {voteError && (
+                <div className="mb-4 md:mb-6 flex items-center gap-2 rounded-lg bg-red-500/10 border border-red-500/50 p-3 md:p-4">
+                  <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-red-500 flex-shrink-0" />
+                  <p className="text-xs md:text-sm text-red-500">{voteError}</p>
+                </div>
+              )}
+              {voteSuccess && (
+                <div className="mb-4 md:mb-6 flex items-center gap-2 rounded-lg bg-green-500/10 border border-green-500/50 p-3 md:p-4">
+                  <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
+                  <p className="text-xs md:text-sm text-green-500">Vote submitted successfully! Closing...</p>
+                </div>
+              )}
+
+              {/* Payment Status Polling UI */}
+              {paymentStatus === 'pending' && transactionId && (
+                <div className="mb-4 md:mb-6 rounded-lg bg-blue-500/10 border border-blue-500/50 p-3 md:p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="h-4 w-4 md:h-5 md:w-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-xs md:text-sm text-blue-500 font-semibold">Verifying Payment...</p>
+                  </div>
+                  <p className="text-[10px] md:text-xs text-blue-400">
+                    Please complete the payment on your phone. Transaction ID: {transactionId.slice(0, 8)}...
+                  </p>
+                  <p className="text-[10px] md:text-xs text-blue-300 mt-1">
+                    This may take up to 60 seconds. Do not close this window.
+                  </p>
+                </div>
+              )}
+
+              {paymentStatus === 'completed' && (
+                <div className="mb-4 md:mb-6 rounded-lg bg-green-500/10 border border-green-500/50 p-3 md:p-4">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
+                    <p className="text-xs md:text-sm text-green-500 font-semibold">Payment Confirmed!</p>
+                  </div>
+                  <p className="text-[10px] md:text-xs text-green-400 mt-1">
+                    Your votes have been successfully added. Thank you for your support!
+                  </p>
+                </div>
+              )}
+
+              {paymentStatus === 'failed' && (
+                <div className="mb-4 md:mb-6 rounded-lg bg-red-500/10 border border-red-500/50 p-3 md:p-4">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-red-500 flex-shrink-0" />
+                    <p className="text-xs md:text-sm text-red-500 font-semibold">Payment Failed</p>
+                  </div>
+                  <p className="text-[10px] md:text-xs text-red-400 mt-1">
+                    The payment could not be completed. Please try again or contact support.
+                  </p>
+                </div>
+              )}
+
 
               {/* Security Badges */}
               <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs text-zinc-400">
