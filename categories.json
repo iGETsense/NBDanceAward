@@ -1,0 +1,56 @@
+{
+    "categories": [
+        {
+            "id": "female-dancer",
+            "name": "Meilleure artiste danseuse féminine"
+        },
+        {
+            "id": "mbole-female-dancer",
+            "name": "Meilleure artiste danseuse mbolé"
+        },
+        {
+            "id": "young-dancer",
+            "name": "Meilleur artiste jeune danseur/danseuse"
+        },
+        {
+            "id": "web-performance",
+            "name": "Meilleur Performance web"
+        },
+        {
+            "id": "male-dancer",
+            "name": "Meilleur artiste danseur - masculin"
+        },
+        {
+            "id": "dance-group",
+            "name": "Meilleur groupe de danse"
+        },
+        {
+            "id": "duo-collaboration",
+            "name": "Meilleur collaboration duo"
+        },
+        {
+            "id": "choreographer",
+            "name": "Meilleur artiste Chorégraphe"
+        },
+        {
+            "id": "folkloric-dancer",
+            "name": "Meilleur artiste danseur au rythme folklorique"
+        },
+        {
+            "id": "afro-decale-dancer",
+            "name": "Meilleur artiste danseur afro coupé décalé"
+        },
+        {
+            "id": "mbole-male-dancer",
+            "name": "Meilleur artiste danseur mbolé"
+        },
+        {
+            "id": "male-dancer-year",
+            "name": "Meilleur artiste danseur de l'année"
+        },
+        {
+            "id": "female-dancer-year",
+            "name": "Meilleure artiste danseuse de l'année"
+        }
+    ]
+}

@@ -30,6 +30,7 @@ export const candidateImages: Record<string, string> = {
   "etat-nwar-dance": "/dancers/etat-nwar-dance.jpg",
   "team-escram": "/dancers/team-escram.jpeg",
   "mbole-dancing": "/dancers/mbole-dancing.jpeg",
+  "talented-afro": "/dancers/talented-afro.jpg",
   "ordinateur-baboue": "/dancers/ordinateur-baboue.jpeg",
   "shazam-le-vrai": "/dancers/shazam.jpeg",
   "xender": "/dancers/xender.jpeg",

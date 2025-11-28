@@ -864,6 +864,7 @@ const customImagePositioning: { [key: string]: string } = {
   "Chica bassa": "center",
   "Influence Femi": "center",
   "Jessi 237": "center",
+  "Talented Afro": "top",
 }
 
 const honoraryPrizes = [
@@ -1481,9 +1482,12 @@ export default function NBDanceAwardPage() {
               </div>
 
               {/* Total Votes */}
-              <div className="mb-4 md:mb-6">
+              <div className="mb-4 md:mb-6 space-y-2">
                 <div className="rounded-lg bg-zinc-800 px-3 py-2 md:px-4 md:py-3 text-center text-xs md:text-sm font-medium text-white">
                   Total Votes: {voteCount}
+                </div>
+                <div className="rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 px-3 py-2 md:px-4 md:py-3 text-center text-sm md:text-base font-bold text-black">
+                  Prix Total: {(voteCount * 105).toLocaleString()} XAF
                 </div>
               </div>
 

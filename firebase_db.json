@@ -738,18 +738,6 @@
       "category": "Meilleur artiste danseur mbolé",
       "categoryId": "mbole-male-dancer"
     },
-    "nyanga-boy-mbole-male-dancer": {
-      "id": "nyanga-boy-mbole-male-dancer",
-      "baseId": "nyanga-boy",
-      "name": "Nyanga Boy",
-      "title": "Nyanga Boy",
-      "image": "/dancers/placeholder.svg",
-      "votes": 0,
-      "badge": null,
-      "percentage": 0,
-      "category": "Meilleur artiste danseur mbolé",
-      "categoryId": "mbole-male-dancer"
-    },
     "tresor-brown-mbole-male-dancer": {
       "id": "tresor-brown-mbole-male-dancer",
       "baseId": "tresor-brown",
@@ -1121,6 +1109,42 @@
       "percentage": 0,
       "category": "Meilleur collaboration duo",
       "categoryId": "duo-collaboration"
+    },
+    "talented-afro-dance-group": {
+      "id": "talented-afro-dance-group",
+      "baseId": "talented-afro",
+      "name": "Talented Afro",
+      "title": "Talented Afro",
+      "image": "/dancers/talented-afro.jpg",
+      "votes": 0,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur groupe de danse",
+      "categoryId": "dance-group"
+    },
+    "nyanga-boy-male-dancer": {
+      "id": "nyanga-boy-male-dancer",
+      "baseId": "nyanga-boy",
+      "name": "Nyanga Boy",
+      "title": "Nyanga Boy",
+      "image": "/dancers/placeholder.svg",
+      "votes": 0,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur artiste danseur - masculin",
+      "categoryId": "male-dancer"
+    },
+    "nounours-et-lysiane-duo-collaboration": {
+      "id": "nounours-et-lysiane-duo-collaboration",
+      "baseId": "nounours-et-lysiane",
+      "name": "Nounours et Lysiane",
+      "title": "Nounours et Lysiane",
+      "image": "/dancers/placeholder.svg",
+      "votes": 0,
+      "badge": null,
+      "percentage": 0,
+      "category": "Meilleur collaboration duo",
+      "categoryId": "duo-collaboration"
     }
   },
   "candidateCategories": [
@@ -1353,10 +1377,6 @@
       "categoryId": "mbole-male-dancer"
     },
     {
-      "candidateId": "nyanga-boy-mbole-male-dancer",
-      "categoryId": "mbole-male-dancer"
-    },
-    {
       "candidateId": "tresor-brown-mbole-male-dancer",
       "categoryId": "mbole-male-dancer"
     },
@@ -1478,6 +1498,18 @@
     },
     {
       "candidateId": "jumeaux-de-la-capitale-duo-collaboration",
+      "categoryId": "duo-collaboration"
+    },
+    {
+      "candidateId": "talented-afro-dance-group",
+      "categoryId": "dance-group"
+    },
+    {
+      "candidateId": "nyanga-boy-male-dancer",
+      "categoryId": "male-dancer"
+    },
+    {
+      "candidateId": "nounours-et-lysiane-duo-collaboration",
       "categoryId": "duo-collaboration"
     }
   ]

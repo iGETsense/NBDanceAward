@@ -341,6 +341,7 @@ const customImagePositioning: { [key: string]: string } = {
   "Chica bassa": "center",
   "Influence Femi": "center",
   "Jessi 237": "center",
+  "Talented Afro": "top",
 }
 
 export default function ClassementPage() {
