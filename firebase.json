@@ -19,7 +19,6 @@
       "source": "functions"
     },
     {
-      "source": "nbdance",
       "codebase": "nbdance",
       "disallowLegacyRuntimeConfig": true,
       "ignore": [
@@ -29,7 +28,23 @@
         "firebase-debug.*.log",
         "*.local"
       ],
+      "source": "nbdance",
       "runtime": "python313"
+    },
+    {
+      "source": "nb",
+      "codebase": "nb",
+      "disallowLegacyRuntimeConfig": true,
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
     }
   ]
 }
