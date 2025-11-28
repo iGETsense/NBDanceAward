@@ -54,6 +54,7 @@ font-weight: 100 900;
     --color-yellow-900: oklch(42.1% 0.095 57.708);
     --color-green-400: oklch(79.2% 0.209 151.711);
     --color-green-500: oklch(72.3% 0.219 149.579);
+    --color-green-600: oklch(62.7% 0.194 149.214);
     --color-green-700: oklch(52.7% 0.154 150.069);
     --color-green-800: oklch(44.8% 0.119 151.328);
     --color-green-900: oklch(39.3% 0.095 152.535);
@@ -2478,6 +2479,11 @@ font-weight: 100 900;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  .placeholder-zinc-500 {
+    &::placeholder {
+      color: var(--color-zinc-500);
+    }
+  }
   .opacity-0 {
     opacity: 0%;
   }
@@ -3319,6 +3325,13 @@ font-weight: 100 900;
       }
     }
   }
+  .hover\:bg-green-600 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-green-600);
+      }
+    }
+  }
   .hover\:bg-muted {
     &:hover {
       @media (hover: hover) {
@@ -3865,6 +3878,16 @@ font-weight: 100 900;
   .disabled\:cursor-not-allowed {
     &:disabled {
       cursor: not-allowed;
+    }
+  }
+  .disabled\:bg-zinc-700 {
+    &:disabled {
+      background-color: var(--color-zinc-700);
+    }
+  }
+  .disabled\:text-zinc-500 {
+    &:disabled {
+      color: var(--color-zinc-500);
     }
   }
   .disabled\:opacity-50 {

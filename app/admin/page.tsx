@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { sanitizeInput, validateNumeric, validateWithdrawalData, RateLimiter } from "@/lib/security"
 import { AdminStats, TransactionsList } from "@/components/AdminDashboard"
+import { AdminWithdrawal } from "@/components/AdminWithdrawal"
 
 export default function AdminPage() {
   const [showBanner, setShowBanner] = useState(true)
@@ -20,10 +21,6 @@ export default function AdminPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories")
-  const [withdrawalAmount, setWithdrawalAmount] = useState("")
-  const [withdrawalMethod, setWithdrawalMethod] = useState("om")
-  const [showWithdrawalModal, setShowWithdrawalModal] = useState(false)
-  const [withdrawalHistory, setWithdrawalHistory] = useState<any[]>([])
   const [loginAttempts, setLoginAttempts] = useState(0)
   const [isLocked, setIsLocked] = useState(false)
   const [lockTime, setLockTime] = useState(0)
@@ -102,55 +99,7 @@ export default function AdminPage() {
     localStorage.removeItem("nbAdminAuth")
   }
 
-  const handleWithdrawal = () => {
-    // Security: Validate withdrawal data
-    const amount = parseFloat(withdrawalAmount)
 
-    if (!withdrawalAmount || !validateNumeric(amount)) {
-      setSecurityError("Montant invalide")
-      return
-    }
-
-    // Security: Validate withdrawal object
-    const withdrawalData = {
-      amount,
-      method: withdrawalMethod,
-    }
-
-    if (!validateWithdrawalData(withdrawalData)) {
-      setSecurityError("Données de retrait invalides")
-      console.warn("[SECURITY] Invalid withdrawal attempt:", withdrawalData)
-      return
-    }
-
-    // Security: Check maximum withdrawal limit
-    if (amount > 5000000) {
-      setSecurityError("Montant dépassant la limite maximale (5,000,000 XAF)")
-      console.warn(`[SECURITY] Withdrawal attempt exceeding limit: ${amount}`)
-      return
-    }
-
-    // Security: Sanitize method
-    const sanitizedMethod = sanitizeInput(withdrawalMethod)
-
-    const withdrawal = {
-      id: Date.now(),
-      amount,
-      method: withdrawalMethod,
-      date: new Date().toLocaleDateString("fr-FR"),
-      time: new Date().toLocaleTimeString("fr-FR"),
-      status: "Complété",
-      timestamp: Date.now(),
-    }
-
-    setWithdrawalHistory([withdrawal, ...withdrawalHistory])
-    setWithdrawalAmount("")
-    setShowWithdrawalModal(false)
-    setSecurityError("")
-
-    // Security: Log withdrawal for audit trail
-    console.log(`[AUDIT] Withdrawal processed: ${amount} XAF via ${withdrawalMethod}`)
-  }
 
 
   const totalVotes = candidates.reduce((sum, c) => sum + (c.votes || 0), 0)
@@ -315,40 +264,9 @@ export default function AdminPage() {
           </div>
 
 
-          {/* Withdrawal Section */}
-          <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-lg p-6 mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                <Wallet className="h-6 w-6 text-yellow-500" />
-                Gestion des Retraits
-              </h2>
-              <Button
-                onClick={() => setShowWithdrawalModal(true)}
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold px-6 py-2 rounded-lg transition-all"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Effectuer un Retrait
-              </Button>
-            </div>
-
-            {/* Withdrawal History */}
-            <div className="space-y-3">
-              {withdrawalHistory.length === 0 ? (
-                <p className="text-zinc-400 text-center py-8">Aucun retrait effectué</p>
-              ) : (
-                withdrawalHistory.map((withdrawal) => (
-                  <div key={withdrawal.id} className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4 flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold text-white">{(withdrawal?.amount || 0).toLocaleString()} XAF</p>
-                      <p className="text-sm text-zinc-400">
-                        {withdrawal.method === "om" ? "Orange Money" : "MTN MoMo"} • {withdrawal.date} {withdrawal.time}
-                      </p>
-                    </div>
-                    <span className="px-3 py-1 bg-green-500/20 text-green-400 text-sm rounded-full">{withdrawal.status}</span>
-                  </div>
-                ))
-              )}
-            </div>
+          {/* Withdrawal Section - New Component with Mesomb Integration */}
+          <div className="mb-8">
+            <AdminWithdrawal />
           </div>
 
           {/* Candidates Monitoring */}
@@ -436,61 +354,7 @@ export default function AdminPage() {
         </div>
       </main>
 
-      {/* Withdrawal Modal */}
-      {showWithdrawalModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-8 max-w-md w-full">
-            <h2 className="text-2xl font-bold text-white mb-6">Effectuer un Retrait</h2>
 
-            {securityError && (
-              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg flex items-start gap-2">
-                <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-red-400">{securityError}</p>
-              </div>
-            )}
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">Montant (XAF)</label>
-                <Input
-                  type="number"
-                  value={withdrawalAmount}
-                  onChange={(e) => setWithdrawalAmount(e.target.value)}
-                  placeholder="Entrez le montant"
-                  className="w-full bg-zinc-800 border-zinc-700 text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">Méthode de Retrait</label>
-                <select
-                  value={withdrawalMethod}
-                  onChange={(e) => setWithdrawalMethod(e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-2"
-                >
-                  <option value="om">Orange Money</option>
-                  <option value="momo">MTN MoMo</option>
-                </select>
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <Button
-                  onClick={() => setShowWithdrawalModal(false)}
-                  className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg py-2"
-                >
-                  Annuler
-                </Button>
-                <Button
-                  onClick={handleWithdrawal}
-                  className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold rounded-lg py-2"
-                >
-                  Confirmer
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
