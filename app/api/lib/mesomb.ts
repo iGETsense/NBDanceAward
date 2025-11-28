@@ -47,18 +47,48 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
     try {
         const payment = getMesombClient();
 
-        const transaction = await payment.makeCollect({
+        const response = await payment.makeCollect({
             amount: params.amount,
             service: params.service,
             payer: params.payer,
             nonce: params.nonce,
             country: 'CM', // Cameroon
             currency: 'XAF', // Central African Franc
+            customer: {
+                email: 'vote@nbdanceaward.com',
+                firstName: 'Voter',
+                lastName: 'NBDance',
+                town: 'Douala',
+                region: 'Littoral',
+                country: 'CM',
+                address: 'Cameroon',
+            },
+            location: {
+                town: 'Douala',
+                region: 'Littoral',
+                country: 'CM',
+            },
+            products: [
+                {
+                    name: 'Vote NBDance Award',
+                    category: 'Voting',
+                    quantity: params.amount / 100, // Number of votes (assuming 100 XAF per vote)
+                    amount: params.amount,
+                },
+            ],
         });
+
+        // Check if operation was successful
+        if (!response.isOperationSuccess()) {
+            return {
+                success: false,
+                error: 'Payment operation failed',
+            };
+        }
 
         return {
             success: true,
-            reference: transaction.reference,
+            reference: response.reference,
             message: 'Payment initiated successfully',
         };
     } catch (error: any) {
@@ -86,8 +116,8 @@ export async function checkPaymentStatus(reference: string): Promise<PaymentResu
     try {
         const payment = getMesombClient();
 
-        // Fetch transaction using Mesomb reference
-        const transactions = await payment.getTransactions([reference]);
+        // Fetch transaction using Mesomb reference with source type
+        const transactions = await payment.getTransactions([reference], 'MESOMB');
 
         if (!transactions || transactions.length === 0) {
             // Transaction not found yet - might still be processing
@@ -98,7 +128,9 @@ export async function checkPaymentStatus(reference: string): Promise<PaymentResu
         }
 
         const transaction = transactions[0];
-        const isSuccess = transaction.status === 'SUCCESS' || transaction.status === 'COMPLETED';
+
+        // Check transaction status - SUCCESS is the final successful state
+        const isSuccess = transaction.status === 'SUCCESS';
 
         return {
             success: isSuccess,
