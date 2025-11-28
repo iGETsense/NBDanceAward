@@ -7,11 +7,11 @@
 
 import { useState } from 'react';
 import { Wallet, ArrowDownToLine, Loader2 } from 'lucide-react';
+import { auth } from '@/lib/firebase';
 
 export function AdminWithdrawal() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [amount, setAmount] = useState('');
-    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -21,13 +21,26 @@ export function AdminWithdrawal() {
         setMessage(null);
 
         try {
+            // Get Firebase ID token
+            const user = auth.currentUser;
+            if (!user) {
+                setMessage({
+                    type: 'error',
+                    text: 'Vous devez être connecté pour effectuer un retrait.',
+                });
+                setLoading(false);
+                return;
+            }
+
+            const idToken = await user.getIdToken();
+
             const response = await fetch('/api/admin/withdraw', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     phoneNumber,
                     amount: parseInt(amount),
-                    adminPassword: password,
+                    firebaseToken: idToken,
                 }),
             });
 
@@ -36,21 +49,20 @@ export function AdminWithdrawal() {
             if (data.success) {
                 setMessage({
                     type: 'success',
-                    text: `Withdrawal successful! ${amount} XAF sent to ${phoneNumber}. Reference: ${data.reference}`,
+                    text: `Retrait réussi! ${amount} XAF envoyé au ${phoneNumber}. Référence: ${data.reference}`,
                 });
                 setPhoneNumber('');
                 setAmount('');
-                setPassword('');
             } else {
                 setMessage({
                     type: 'error',
-                    text: data.error || 'Withdrawal failed',
+                    text: data.error || 'Le retrait a échoué',
                 });
             }
         } catch (error) {
             setMessage({
                 type: 'error',
-                text: 'An error occurred. Please try again.',
+                text: 'Une erreur s\'est produite. Veuillez réessayer.',
             });
         } finally {
             setLoading(false);
@@ -104,27 +116,12 @@ export function AdminWithdrawal() {
                     <p className="text-xs text-zinc-500 mt-1">Minimum: 100 XAF, Maximum: 1,000,000 XAF</p>
                 </div>
 
-                {/* Admin Password */}
-                <div>
-                    <label className="block text-sm font-medium text-zinc-300 mb-2">
-                        Mot de Passe Admin
-                    </label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-green-500 transition-colors"
-                        required
-                    />
-                </div>
-
                 {/* Message */}
                 {message && (
                     <div
                         className={`p-4 rounded-lg ${message.type === 'success'
-                                ? 'bg-green-500/10 border border-green-500/50 text-green-400'
-                                : 'bg-red-500/10 border border-red-500/50 text-red-400'
+                            ? 'bg-green-500/10 border border-green-500/50 text-green-400'
+                            : 'bg-red-500/10 border border-red-500/50 text-red-400'
                             }`}
                     >
                         {message.text}

@@ -11,12 +11,15 @@ import { useCandidates } from "@/hooks/useFirebaseData"
 import { sanitizeInput, validateNumeric, validateWithdrawalData, RateLimiter } from "@/lib/security"
 import { AdminStats, TransactionsList } from "@/components/AdminDashboard"
 import { AdminWithdrawal } from "@/components/AdminWithdrawal"
+import { auth } from "@/lib/firebase"
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut, User } from "firebase/auth"
 
 export default function AdminPage() {
   const [showBanner, setShowBanner] = useState(true)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [adminPassword, setAdminPassword] = useState("")
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
+  const [emailInput, setEmailInput] = useState("")
   const [passwordInput, setPasswordInput] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
@@ -25,17 +28,39 @@ export default function AdminPage() {
   const [isLocked, setIsLocked] = useState(false)
   const [lockTime, setLockTime] = useState(0)
   const [securityError, setSecurityError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Authorized admin UID
+  const ADMIN_UID = "srufAfEDDUU13G2GuxYEPmibTxe2"
 
   const { candidates } = useCandidates()
 
   // Security: Rate limiter for login attempts
   const loginLimiter = new RateLimiter(5, 300000) // 5 attempts per 5 minutes
 
+  // Firebase Auth listener
   useEffect(() => {
-    const stored = localStorage.getItem("nbAdminAuth")
-    if (stored) {
-      setIsAuthenticated(true)
-    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.uid === ADMIN_UID) {
+        setCurrentUser(user)
+        setIsAuthenticated(true)
+        localStorage.setItem("nbAdminAuth", "true")
+        setSecurityError("")
+      } else if (user) {
+        // User is signed in but not authorized
+        setSecurityError("Accès non autorisé. Vous n'êtes pas administrateur.")
+        signOut(auth)
+        setIsAuthenticated(false)
+        setCurrentUser(null)
+      } else {
+        // User is signed out
+        setIsAuthenticated(false)
+        setCurrentUser(null)
+        localStorage.removeItem("nbAdminAuth")
+      }
+    })
+
+    return () => unsubscribe()
   }, [])
 
   const handleLogin = async () => {
@@ -53,50 +78,67 @@ export default function AdminPage() {
       }
     }
 
-    // Security: Sanitize input
-    const sanitizedPassword = sanitizeInput(passwordInput)
+    if (!emailInput || !passwordInput) {
+      setSecurityError("Veuillez entrer votre email et mot de passe")
+      return
+    }
+
+    setIsLoading(true)
+    setSecurityError("")
 
     try {
-      // Security: Verify password via secure API (server-side)
-      const response = await fetch('/api/verify-admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: passwordInput })
-      })
+      // Sign in with Firebase
+      const userCredential = await signInWithEmailAndPassword(auth, emailInput, passwordInput)
+      const user = userCredential.user
 
-      const data = await response.json()
-      const isValidPassword = data.success
-
-      if (isValidPassword) {
-        setIsAuthenticated(true)
-        localStorage.setItem("nbAdminAuth", "true")
-        localStorage.setItem("nbAdminLoginTime", Date.now().toString())
+      // Check if user is authorized admin
+      if (user.uid !== ADMIN_UID) {
+        setSecurityError("Accès non autorisé. Vous n'êtes pas administrateur.")
+        await signOut(auth)
+        setLoginAttempts(prev => prev + 1)
+      } else {
+        // Success - onAuthStateChanged will handle the rest
+        setEmailInput("")
         setPasswordInput("")
         setLoginAttempts(0)
-        setSecurityError("")
-      } else {
-        // Security: Track failed attempts
-        const newAttempts = loginAttempts + 1
-        setLoginAttempts(newAttempts)
+      }
+    } catch (error: any) {
+      // Track failed attempts
+      const newAttempts = loginAttempts + 1
+      setLoginAttempts(newAttempts)
 
-        if (newAttempts >= 5) {
-          setIsLocked(true)
-          setLockTime(Date.now() + 300000) // Lock for 5 minutes
-          setSecurityError("Trop de tentatives. Compte verrouillé pour 5 minutes.")
-          console.warn(`[SECURITY] Admin login locked after ${newAttempts} failed attempts`)
+      if (newAttempts >= 5) {
+        setIsLocked(true)
+        setLockTime(Date.now() + 300000) // Lock for 5 minutes
+        setSecurityError("Trop de tentatives. Compte verrouillé pour 5 minutes.")
+        console.warn(`[SECURITY] Admin login locked after ${newAttempts} failed attempts`)
+      } else {
+        // Firebase error messages
+        if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+          setSecurityError(`Email ou mot de passe incorrect. ${5 - newAttempts} tentatives restantes.`)
+        } else if (error.code === 'auth/user-not-found') {
+          setSecurityError(`Utilisateur non trouvé. ${5 - newAttempts} tentatives restantes.`)
+        } else if (error.code === 'auth/too-many-requests') {
+          setSecurityError("Trop de tentatives. Réessayez plus tard.")
         } else {
-          setSecurityError(`Mot de passe incorrect. ${5 - newAttempts} tentatives restantes.`)
+          setSecurityError(`Erreur de connexion: ${error.message}`)
         }
       }
-    } catch (error) {
-      setSecurityError("Erreur de connexion. Réessayez.")
-      console.error('[ERROR] Login failed:', error)
+      console.error('[ERROR] Firebase login failed:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  const handleLogout = () => {
-    setIsAuthenticated(false)
-    localStorage.removeItem("nbAdminAuth")
+  const handleLogout = async () => {
+    try {
+      await signOut(auth)
+      setIsAuthenticated(false)
+      setCurrentUser(null)
+      localStorage.removeItem("nbAdminAuth")
+    } catch (error) {
+      console.error('[ERROR] Logout failed:', error)
+    }
   }
 
 
@@ -141,6 +183,21 @@ export default function AdminPage() {
             )}
 
             <div className="space-y-4">
+              {/* Email Input */}
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">Email</label>
+                <Input
+                  type="email"
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && !isLocked && !isLoading && handleLogin()}
+                  placeholder="admin@example.com"
+                  className="w-full bg-zinc-800 border-zinc-700 text-white"
+                  disabled={isLocked || isLoading}
+                />
+              </div>
+
+              {/* Password Input */}
               <div>
                 <label className="block text-sm font-medium text-white mb-2">Mot de passe</label>
                 <div className="relative">
@@ -148,14 +205,16 @@ export default function AdminPage() {
                     type={showPassword ? "text" : "password"}
                     value={passwordInput}
                     onChange={(e) => setPasswordInput(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && !isLocked && handleLogin()}
-                    placeholder="Entrez le mot de passe"
+                    onKeyPress={(e) => e.key === "Enter" && !isLocked && !isLoading && handleLogin()}
+                    placeholder="••••••••"
                     className="w-full bg-zinc-800 border-zinc-700 text-white pr-10"
-                    disabled={isLocked}
+                    disabled={isLocked || isLoading}
                   />
                   <button
+                    type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                    aria-label="Toggle password visibility"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -164,10 +223,10 @@ export default function AdminPage() {
 
               <Button
                 onClick={handleLogin}
-                disabled={isLocked}
+                disabled={isLocked || isLoading}
                 className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold py-2 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLocked ? "Compte verrouillé" : "Connexion"}
+                {isLocked ? "Compte verrouillé" : isLoading ? "Connexion..." : "Connexion"}
               </Button>
             </div>
           </div>

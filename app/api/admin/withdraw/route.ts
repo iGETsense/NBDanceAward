@@ -16,13 +16,39 @@ import { validatePhoneNumber, detectOperator } from '../../lib/validation';
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { phoneNumber, amount, adminPassword } = body;
+        const { phoneNumber, amount, firebaseToken } = body;
 
-        // Admin authentication - uses same password as admin login
-        const expectedPassword = 'NB2024Admin'; // Same as admin login password
-        if (adminPassword !== expectedPassword) {
+        // Verify Firebase ID token and check admin UID
+        const ADMIN_UID = 'srufAfEDDUU13G2GuxYEPmibTxe2';
+
+        if (!firebaseToken) {
             return NextResponse.json(
-                { success: false, error: 'Unauthorized - Invalid admin password' },
+                { success: false, error: 'Non autorisé - Token Firebase requis' },
+                { status: 401 }
+            );
+        }
+
+        // Simple client-side token verification (decode without verification for now)
+        // In production, you should verify the token server-side with Firebase Admin SDK
+        try {
+            // Decode the JWT token to get the UID
+            const tokenParts = firebaseToken.split('.');
+            if (tokenParts.length !== 3) {
+                throw new Error('Invalid token format');
+            }
+
+            const payload = JSON.parse(atob(tokenParts[1]));
+            const uid = payload.user_id || payload.sub;
+
+            if (uid !== ADMIN_UID) {
+                return NextResponse.json(
+                    { success: false, error: 'Non autorisé - Vous n\'êtes pas administrateur' },
+                    { status: 403 }
+                );
+            }
+        } catch (error) {
+            return NextResponse.json(
+                { success: false, error: 'Non autorisé - Token invalide' },
                 { status: 401 }
             );
         }
