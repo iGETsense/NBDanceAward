@@ -3,6 +3,10 @@
  * POST /api/vote/submit
  */
 
+// Force Node.js runtime to avoid Edge Runtime header restrictions
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
 import { ref, set, serverTimestamp } from 'firebase/database';

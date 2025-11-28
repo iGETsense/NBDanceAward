@@ -1,22 +1,13 @@
 /**
- * Mesomb Payment Service for Vercel - Fixed Version
- * Handles all payment operations using Mesomb API with header fix for serverless
+ * Mesomb Payment Service for Vercel
+ * Handles all payment operations using Mesomb API
  */
 
-import { PaymentOperation } from '@hachther/mesomb';
+// Force Node.js runtime instead of Edge to avoid header restrictions
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-// Patch the Headers.append method to handle Mesomb's authentication header
-if (typeof globalThis !== 'undefined' && typeof Headers !== 'undefined') {
-    const originalAppend = Headers.prototype.append;
-    Headers.prototype.append = function (name: string, value: string) {
-        // Fix for Mesomb authentication header - remove extra spaces
-        if (name.toLowerCase() === 'authorization' && value.includes('HMAC-SHA1')) {
-            // Clean up the header value by removing extra spaces
-            value = value.replace(/\s+/g, ' ').trim();
-        }
-        return originalAppend.call(this, name, value);
-    };
-}
+import { PaymentOperation } from '@hachther/mesomb';
 
 // Initialize Mesomb client
 export function getMesombClient() {
