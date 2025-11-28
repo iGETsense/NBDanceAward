@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@dataconnect/generated': link:src/dataconnect-generated
+
 importers:
 
   .:

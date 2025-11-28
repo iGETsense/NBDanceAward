@@ -4,43 +4,27 @@
  */
 
 const { PaymentOperation } = require('@hachther/mesomb');
-const fs = require('fs');
-const path = require('path');
 
-// Manually load .env.local
-const envPath = path.join(__dirname, '.env.local');
-if (fs.existsSync(envPath)) {
-    const envContent = fs.readFileSync(envPath, 'utf8');
-    envContent.split('\n').forEach(line => {
-        const match = line.match(/^([^=:#]+)=(.*)$/);
-        if (match) {
-            const key = match[1].trim();
-            const value = match[2].trim();
-            process.env[key] = value;
-        }
-    });
-}
+// Hardcoded Mesomb API credentials
+const MESOMB_APPLICATION_KEY = 'a4120748a7093365013b04a8f42bdd24f299936b';
+const MESOMB_ACCESS_KEY = 'f6c26b42-24de-4ec6-8b1b-7a808052e335';
+const MESOMB_SECRET_KEY = 'e45b1545-1b5a-49c4-aadf-ba4cf700a8dc';
 
 async function testMesombPayment() {
     console.log('Testing Mesomb Payment Integration...\n');
 
-    // Check environment variables
-    console.log('Environment variables:');
-    console.log('MESOMB_APPLICATION_KEY:', process.env.MESOMB_APPLICATION_KEY ? '✓ Set' : '✗ Missing');
-    console.log('MESOMB_ACCESS_KEY:', process.env.MESOMB_ACCESS_KEY ? '✓ Set' : '✗ Missing');
-    console.log('MESOMB_SECRET_KEY:', process.env.MESOMB_SECRET_KEY ? '✓ Set' : '✗ Missing');
+    // Display credentials being used
+    console.log('Using hardcoded credentials:');
+    console.log('APPLICATION_KEY:', MESOMB_APPLICATION_KEY);
+    console.log('ACCESS_KEY:', MESOMB_ACCESS_KEY);
+    console.log('SECRET_KEY:', MESOMB_SECRET_KEY);
     console.log('');
-
-    if (!process.env.MESOMB_APPLICATION_KEY || !process.env.MESOMB_ACCESS_KEY || !process.env.MESOMB_SECRET_KEY) {
-        console.error('ERROR: Missing Mesomb credentials in .env.local');
-        process.exit(1);
-    }
 
     try {
         const client = new PaymentOperation({
-            applicationKey: process.env.MESOMB_APPLICATION_KEY,
-            accessKey: process.env.MESOMB_ACCESS_KEY,
-            secretKey: process.env.MESOMB_SECRET_KEY,
+            applicationKey: MESOMB_APPLICATION_KEY,
+            accessKey: MESOMB_ACCESS_KEY,
+            secretKey: MESOMB_SECRET_KEY,
         });
 
         console.log('Mesomb client created successfully\n');

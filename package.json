@@ -11,7 +11,7 @@
     "seed-db": "npx tsx scripts/seedDatabase.ts"
   },
   "dependencies": {
-    "@dataconnect/generated": "link:src/dataconnect-generated",
+    "@dataconnect/generated": "file:src/dataconnect-generated",
     "@hachther/mesomb": "^2.0.1",
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "latest",

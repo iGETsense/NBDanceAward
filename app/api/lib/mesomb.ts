@@ -1,6 +1,6 @@
 /**
  * Mesomb Payment Service for Vercel
- * Uses SDK with fetch wrapper to fix header issues
+ * Direct SDK integration without fetch wrapper
  */
 
 export const runtime = 'nodejs';
@@ -8,49 +8,14 @@ export const dynamic = 'force-dynamic';
 
 import { PaymentOperation } from '@hachther/mesomb';
 
-// Store original fetch
-const originalFetch = global.fetch;
-
-// Patch fetch to sanitize headers
-global.fetch = function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-    if (init?.headers) {
-        const headers = new Headers(init.headers);
-        const authHeader = headers.get('authorization');
-
-        if (authHeader && authHeader.includes('HMAC-SHA1')) {
-            // Remove the problematic Authorization header
-            headers.delete('authorization');
-
-            // Extract components from the auth header
-            const credMatch = authHeader.match(/Credential=([^\s,]+)/);
-            const sigMatch = authHeader.match(/Signature=([^\s,]+)/);
-
-            if (credMatch && sigMatch) {
-                // Use X-MeSomb headers instead
-                headers.set('X-MeSomb-Credential', credMatch[1]);
-                headers.set('X-MeSomb-Signature', sigMatch[2]);
-            }
-
-            init.headers = headers;
-        }
-    }
-
-    return originalFetch(input, init);
-} as typeof fetch;
-
-// Initialize Mesomb client
+// Initialize Mesomb client with hardcoded credentials
 export function getMesombClient() {
-    const applicationKey = process.env.MESOMB_APPLICATION_KEY;
-    const accessKey = process.env.MESOMB_ACCESS_KEY;
-    const secretKey = process.env.MESOMB_SECRET_KEY;
+    // Hardcoded Mesomb API credentials
+    const applicationKey = 'a4120748a7093365013b04a8f42bdd24f299936b';
+    const accessKey = 'f6c26b42-24de-4ec6-8b1b-7a808052e335';
+    const secretKey = 'e45b1545-1b5a-49c4-aadf-ba4cf700a8dc';
 
-    if (!applicationKey || !accessKey || !secretKey) {
-        throw new Error(
-            'Mesomb credentials are not configured. Please set MESOMB_APPLICATION_KEY, ' +
-            'MESOMB_ACCESS_KEY, and MESOMB_SECRET_KEY in your environment variables.'
-        );
-    }
-
+    // Create PaymentOperation instance with object parameter
     return new PaymentOperation({
         applicationKey,
         accessKey,

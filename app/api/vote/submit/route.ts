@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Calculate payment amount
-        const votePrice = parseInt(process.env.NEXT_PUBLIC_VOTE_PRICE || '100');
+        const votePrice = parseInt(process.env.NEXT_PUBLIC_VOTE_PRICE || '105');
         const totalAmount = voteCount * votePrice;
 
         // Detect operator and map to Mesomb service
