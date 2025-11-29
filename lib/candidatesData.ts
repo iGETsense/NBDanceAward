@@ -385,7 +385,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "meilleurs artiste danseurs mbolé",
+    category: "Meilleur artiste danseur mbolé",
   },
   {
     name: "Tks officiel",
@@ -394,7 +394,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "meilleurs artiste danseurs mbolé",
+    category: "Meilleur artiste danseur mbolé",
   },
   {
     name: "4 peace",
@@ -403,7 +403,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "meilleurs artiste danseurs mbolé",
+    category: "Meilleur artiste danseur mbolé",
   },
   {
     name: "Nyanga Boy",
@@ -412,7 +412,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "meilleurs artiste danseurs mbolé",
+    category: "Meilleur artiste danseur mbolé",
   },
   {
     name: "Trésor brown",
@@ -421,7 +421,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "meilleurs artiste danseurs mbolé",
+    category: "Meilleur artiste danseur mbolé",
   },
   {
     name: "Ayi ventilateur",
@@ -553,6 +553,15 @@ export const allCandidatesData = [
     name: "3 peace et Influence femi",
     title: "Duo",
     image: "/dancers/3-peace.jpeg",
+    votes: 0,
+    badge: null,
+    percentage: 0,
+    category: "Meilleur collaboration duo",
+  },
+  {
+    name: "Nounours et Lysiane",
+    title: "Duo",
+    image: "/dancers/nounours.jpeg",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -709,7 +718,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "meilleurs artiste danseurs mbolé",
+    category: "Meilleur artiste danseur mbolé",
   },
   {
     name: "El fally du 237",
@@ -718,7 +727,7 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "meilleurs artiste danseurs mbolé",
+    category: "Meilleur artiste danseur mbolé",
   },
   {
     name: "Echantillon 1er",
@@ -727,16 +736,16 @@ export const allCandidatesData = [
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "meilleurs artiste danseurs mbolé",
+    category: "Meilleur artiste danseur mbolé",
   },
   {
     name: "Yvan 10",
     title: "Mbolé Dancer",
-    image: "/dancers/yvan-10.jpg",
+    image: "/dancers/yvan-10.jpeg",
     votes: 0,
     badge: null,
     percentage: 0,
-    category: "meilleurs artiste danseurs mbolé",
+    category: "Meilleur artiste danseur mbolé",
   },
   {
     name: "Maguy merine",

@@ -3,6 +3,12 @@ node_modules
 # Environment variables (contains sensitive data)
 .env.local
 .env*.local
+.env
+
+# Telegram files
+Telegram/
+telegram.tar.xz
+*.tar.xz
 
 # Firebase
 .firebase/

@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
         const { firebaseToken } = await request.json()
 
         // Admin UID
-        const ADMIN_UID = 'srufAfEDDUU13G2GuxYEPmibTxe2'
+        const ADMIN_UID = 'He7g6275fIV459UbdKySfa5v5zJ3'
 
         if (!firebaseToken) {
             return NextResponse.json(

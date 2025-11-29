@@ -5,6 +5,7 @@ import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import "../styles/globals.css"
+import "./candidate-images.css"
 
 
 export const metadata: Metadata = {

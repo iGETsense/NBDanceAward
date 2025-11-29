@@ -31,7 +31,7 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false)
 
   // Authorized admin UID
-  const ADMIN_UID = "srufAfEDDUU13G2GuxYEPmibTxe2"
+  const ADMIN_UID = "He7g6275fIV459UbdKySfa5v5zJ3"
 
   const { candidates } = useCandidates()
 
@@ -312,8 +312,8 @@ export default function AdminPage() {
       </header>
 
       {/* Main Content */}
-      <main className="pt-24 md:pt-28 pb-12">
-        <div className="container mx-auto px-4 md:px-6">
+      <main className="pt-20 sm:pt-24 md:pt-28 pb-8 sm:pb-12">
+        <div className="container mx-auto px-3 sm:px-4 md:px-6">
           {/* Enhanced KPI Cards with Real-time Transaction Data */}
           <AdminStats />
 
@@ -329,26 +329,26 @@ export default function AdminPage() {
           </div>
 
           {/* Candidates Monitoring */}
-          <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-lg p-6">
-            <h2 className="text-2xl font-bold text-white mb-6">Suivi des Votes par Candidat</h2>
+          <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-lg p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Suivi des Votes par Candidat</h2>
 
             {/* Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
                 <Input
                   type="text"
-                  placeholder="Rechercher un candidat..."
+                  placeholder="Rechercher..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 bg-zinc-800 border-zinc-700 text-white"
+                  className="w-full pl-10 bg-zinc-800 border-zinc-700 text-white text-sm"
                 />
               </div>
 
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-2 focus:border-yellow-500 focus:outline-none"
+                className="bg-zinc-800 border border-zinc-700 text-white rounded-lg px-3 sm:px-4 py-2 text-sm focus:border-yellow-500 focus:outline-none"
               >
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>
@@ -359,51 +359,55 @@ export default function AdminPage() {
             </div>
 
             {/* Candidates Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-zinc-700">
-                    <th className="text-left py-3 px-4 text-zinc-400 font-semibold">Candidat</th>
-                    <th className="text-left py-3 px-4 text-zinc-400 font-semibold">Catégorie</th>
-                    <th className="text-right py-3 px-4 text-zinc-400 font-semibold">Votes</th>
-                    <th className="text-right py-3 px-4 text-zinc-400 font-semibold">%</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredCandidates.map((candidate, index) => (
-                    <tr key={index} className="border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors">
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="relative h-10 w-10 rounded-full overflow-hidden border border-yellow-500/50">
-                            <Image
-                              src={candidate.image || "/placeholder.svg"}
-                              alt={candidate.name}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                          <span className="font-medium text-white">{candidate.name}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-4 text-zinc-400 text-sm">{candidate.category}</td>
-                      <td className="py-4 px-4 text-right">
-                        <span className="font-bold text-yellow-500">{candidate.votes || 0}</span>
-                      </td>
-                      <td className="py-4 px-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <div className="w-16 h-2 bg-zinc-700 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-yellow-500 to-yellow-600 transition-all"
-                              style={{ width: `${candidate.percentage || 0}%` }}
-                            />
-                          </div>
-                          <span className="text-sm text-zinc-400 w-8 text-right">{candidate.percentage || 0}%</span>
-                        </div>
-                      </td>
+            <div className="overflow-x-auto -mx-4 sm:mx-0 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-zinc-900">
+              <div className="inline-block min-w-full align-middle">
+                <table className="min-w-full">
+                  <thead>
+                    <tr className="border-b border-zinc-700">
+                      <th className="text-left py-3 px-3 sm:px-4 text-zinc-400 font-semibold text-xs sm:text-sm whitespace-nowrap">Candidat</th>
+                      <th className="text-left py-3 px-3 sm:px-4 text-zinc-400 font-semibold text-xs sm:text-sm whitespace-nowrap">Catégorie</th>
+                      <th className="text-right py-3 px-3 sm:px-4 text-zinc-400 font-semibold text-xs sm:text-sm whitespace-nowrap">Votes</th>
+                      <th className="text-right py-3 px-3 sm:px-4 text-zinc-400 font-semibold text-xs sm:text-sm whitespace-nowrap">%</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {filteredCandidates.map((candidate, index) => (
+                      <tr key={index} className="border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors">
+                        <td className="py-3 sm:py-4 px-3 sm:px-4">
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-full overflow-hidden border border-yellow-500/50 flex-shrink-0">
+                              <Image
+                                src={candidate.image || "/placeholder.svg"}
+                                alt={candidate.name}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <span className="font-medium text-white text-xs sm:text-sm whitespace-nowrap">{candidate.name}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 sm:py-4 px-3 sm:px-4 text-zinc-400 text-xs sm:text-sm">
+                          <span className="line-clamp-2">{candidate.category}</span>
+                        </td>
+                        <td className="py-3 sm:py-4 px-3 sm:px-4 text-right">
+                          <span className="font-bold text-yellow-500 text-xs sm:text-sm whitespace-nowrap">{candidate.votes || 0}</span>
+                        </td>
+                        <td className="py-3 sm:py-4 px-3 sm:px-4 text-right">
+                          <div className="flex items-center justify-end gap-1 sm:gap-2">
+                            <div className="w-12 sm:w-16 h-2 bg-zinc-700 rounded-full overflow-hidden flex-shrink-0">
+                              <div
+                                className="h-full bg-gradient-to-r from-yellow-500 to-yellow-600 transition-all"
+                                style={{ width: `${candidate.percentage || 0}%` }}
+                              />
+                            </div>
+                            <span className="text-xs sm:text-sm text-zinc-400 w-6 sm:w-8 text-right whitespace-nowrap">{candidate.percentage || 0}%</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

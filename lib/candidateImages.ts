@@ -63,6 +63,7 @@ export const candidateImages: Record<string, string> = {
   "el-fally-du-237-et-davia-off": "/dancers/el-fally-du-237.jpg",
   "o-konor-celeste-et-katiaeg": "/dancers/okonor-celeste.jpeg",
   "3-peace-et-influence-femi": "/dancers/3-peace.jpeg",
+  "nounours-et-lysiane": "/dancers/nounours.jpeg",
 };
 
 export function getCandidateImage(candidateId: string, baseId?: string): string {
