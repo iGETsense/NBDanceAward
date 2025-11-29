@@ -154,7 +154,7 @@ export const allCandidatesData = [
     category: "Meilleur Performance web",
   },
   {
-    name: "El fally 237",
+    name: "El fally du 237",
     title: "Web Artist",
     image: "/dancers/el-fally-du-237.jpg",
     votes: 0,
@@ -334,7 +334,7 @@ export const allCandidatesData = [
     category: "Meilleur artiste danseur - masculin",
   },
   {
-    name: "El Fally du 237",
+    name: "El fally du 237",
     title: "Male Dancer",
     image: "/dancers/el-fally-du-237.jpg",
     votes: 0,
@@ -577,7 +577,7 @@ export const allCandidatesData = [
     category: "Meilleur artiste Chorégraphe",
   },
   {
-    name: "El Fally du 237",
+    name: "El fally du 237",
     title: "Dancer of the Year",
     image: "/dancers/el-fally-du-237.jpg",
     votes: 0,
