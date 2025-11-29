@@ -58,8 +58,9 @@ export function AdminStats() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-1 text-xs text-zinc-400">
-                    <span className="truncate">Revenu: {stats.totalRevenue.toLocaleString()} XAF</span>
+                    <span className="truncate">Revenu net: {stats.totalRevenue.toLocaleString()} XAF</span>
                     <span className="truncate">Retiré: {totalWithdrawn.toLocaleString()} XAF</span>
+                    <span className="truncate text-[10px] opacity-70">(Après frais 5%)</span>
                 </div>
             </div>
 

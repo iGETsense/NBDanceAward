@@ -62,28 +62,38 @@ export function useTransactions(limit: number = 100) {
 
                     if (data) {
                         // Convert to array and sort by newest first
-                        const txArray = Object.values(data) as Transaction[];
-                        txArray.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                        const txArray = Object.entries(data).map(([id, tx]) => ({
+                            id,
+                            ...(tx as Omit<Transaction, 'id'>),
+                        }));
 
-                        setTransactions(txArray);
+                        // Sort by creation date (newest first)
+                        txArray.sort((a, b) => b.createdAt - a.createdAt);
 
                         // Calculate statistics
                         const completed = txArray.filter(tx => tx.status === 'completed');
                         const pending = txArray.filter(tx => tx.status === 'pending');
                         const failed = txArray.filter(tx => tx.status === 'failed');
 
-                        const totalRevenue = completed.reduce((sum, tx) => sum + (tx.amount || 0), 0);
-                        const totalVotes = completed.reduce((sum, tx) => sum + (tx.voteCount || 0), 0);
-                        const avgValue = completed.length > 0 ? totalRevenue / completed.length : 0;
+                        // Calculate gross revenue from completed transactions
+                        const grossRevenue = completed.reduce((sum, tx) => sum + tx.amount, 0);
 
+                        // Deduct 5% platform fee to get net revenue
+                        const netRevenue = grossRevenue * 0.95;
+
+                        const totalVotes = completed.reduce((sum, tx) => sum + tx.voteCount, 0);
+
+                        setTransactions(txArray);
                         setStats({
                             totalTransactions: txArray.length,
                             completedTransactions: completed.length,
                             pendingTransactions: pending.length,
                             failedTransactions: failed.length,
-                            totalRevenue,
+                            totalRevenue: Math.round(netRevenue), // Net revenue after 5% fee
                             totalVotes,
-                            averageTransactionValue: avgValue,
+                            averageTransactionValue: completed.length > 0
+                                ? Math.round(netRevenue / completed.length)
+                                : 0,
                         });
                     } else {
                         setTransactions([]);
