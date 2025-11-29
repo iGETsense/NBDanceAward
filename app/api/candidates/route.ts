@@ -4,18 +4,39 @@ import { sanitizeInput } from '@/lib/security'
 
 /**
  * GET /api/candidates
- * Get all candidates
+ * Get all candidates with fallback to static data
  */
 export async function GET() {
   try {
-    const candidates = await getCandidates()
-    return NextResponse.json({ success: true, candidates })
+    let candidates = await getCandidates();
+
+    // If Firebase returns empty (network blocked), use static data
+    if (!candidates || Object.keys(candidates).length === 0) {
+      console.log('Using static candidate data as fallback');
+      // Import static data
+      const { allCandidatesData } = await import('@/lib/candidatesData');
+
+      // Convert array to object format expected by frontend
+      candidates = allCandidatesData.reduce((acc: any, candidate: any, index: number) => {
+        const id = candidate.name.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '') + `-${index}`;
+        acc[id] = {
+          ...candidate,
+          id,
+          baseId: id,
+          votes: 0,
+          percentage: 0
+        };
+        return acc;
+      }, {});
+    }
+
+    return NextResponse.json({ success: true, candidates });
   } catch (error) {
-    console.error('Error fetching candidates:', error)
+    console.error('Error in candidates API:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch candidates' },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -26,7 +47,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    
+
     // Extract and sanitize data
     const {
       id,
@@ -89,7 +110,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    
+
     const {
       id,
       name,

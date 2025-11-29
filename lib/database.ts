@@ -33,16 +33,49 @@ export function subscribeToCategories(callback: (data: any) => void) {
 
 // ============ CANDIDATES ============
 
+// Helper function to retry Firebase calls with exponential backoff
+async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  initialDelay: number = 1000
+): Promise<T> {
+  let lastError: any;
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
+      if (i < maxRetries - 1) {
+        const delay = initialDelay * Math.pow(2, i);
+        console.log(`Retry attempt ${i + 1}/${maxRetries} after ${delay}ms`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError;
+}
+
 export async function getCandidates() {
   try {
-    const snapshot = await get(ref(database, 'candidates'))
-    if (snapshot.exists()) {
-      return snapshot.val()
-    }
-    return {}
+    // Try to fetch from Firebase with retry logic
+    const result = await retryWithBackoff(async () => {
+      const snapshot = await get(ref(database, 'candidates'));
+      if (snapshot.exists()) {
+        return snapshot.val();
+      }
+      return {};
+    }, 3, 1000);
+
+    return result;
   } catch (error) {
-    console.error('Error fetching candidates:', error)
-    return {}
+    console.error('Error fetching candidates from Firebase:', error);
+    console.log('Falling back to static candidate data...');
+
+    // Fallback: Return empty object - the API will use static data
+    // This allows the frontend to continue working even if Firebase is blocked
+    return {};
   }
 }
 
@@ -146,9 +179,19 @@ export function subscribeToCandidates(callback: (data: any) => void) {
 export async function addCandidate(candidateId: string, candidateData: any) {
   try {
     await set(ref(database, `candidates/${candidateId}`), candidateData)
-    return { success: true }
+    return { success: true, candidateId }
   } catch (error) {
     console.error('Error adding candidate:', error)
+    return { success: false, error }
+  }
+}
+
+export async function updateCandidate(candidateId: string, candidateData: any) {
+  try {
+    await update(ref(database, `candidates/${candidateId}`), candidateData)
+    return { success: true, candidateId }
+  } catch (error) {
+    console.error('Error updating candidate:', error)
     return { success: false, error }
   }
 }
