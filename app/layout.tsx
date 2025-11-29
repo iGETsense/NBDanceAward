@@ -53,14 +53,14 @@ export const metadata: Metadata = {
     siteName: "NB Dance Awards",
     images: [
       {
-        url: "/logo.png",
+        url: "https://nb-dance-award.vercel.app/logo.png",
         width: 1200,
         height: 630,
         alt: "NB Dance Awards Logo",
         type: "image/png",
       },
       {
-        url: "/logo.png",
+        url: "https://nb-dance-award.vercel.app/logo.png",
         width: 800,
         height: 600,
         alt: "NB Dance Awards",
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NB Dance Awards - Élection de la Superstar",
     description: "Votez pour votre danseur préféré - Classement en temps réel",
-    images: ["/logo.png"],
+    images: ["https://nb-dance-award.vercel.app/logo.png"],
     creator: "@NBDanceAwards",
   },
 
@@ -127,7 +127,13 @@ export default function RootLayout({
               "@type": "Organization",
               "name": "NB Dance Awards",
               "url": "https://nb-dance-award.vercel.app",
-              "logo": "https://nb-dance-award.vercel.app/logo.png",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://nb-dance-award.vercel.app/logo.png",
+                "width": 1200,
+                "height": 630
+              },
+              "image": "https://nb-dance-award.vercel.app/logo.png",
               "description": "NB Dance Awards - Première Édition - Élection de la Superstar de danse africaine",
               "sameAs": [
                 "https://www.facebook.com/NBDanceAwards",
