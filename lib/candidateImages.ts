@@ -58,7 +58,7 @@ export const candidateImages: Record<string, string> = {
   "le-hempe": "/dancers/le-hempe.jpg",
   "deboy-le-monstre-et-maguy-merine": "/dancers/deboy-le-monstre.jpeg",
   "4-peace-et-rachel-elegance": "/dancers/4-peace.jpeg",
-  "chica-bassa-et-kendi": "/dancers/kendi.jpeg",
+  "chica-bassa-et-kendi": "/dancers/chica-bassa.jpeg",
   "tks-officiel-et-tresor-brown": "/dancers/tks-officiel.jpg",
   "el-fally-du-237-et-davia-off": "/dancers/el-fally-du-237.jpg",
   "o-konor-celeste-et-katiaeg": "/dancers/okonor-celeste.jpeg",
