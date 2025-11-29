@@ -97,6 +97,15 @@ export function useTransactions(limit: number = 100) {
                         });
                     } else {
                         setTransactions([]);
+                        setStats({
+                            totalTransactions: 0,
+                            completedTransactions: 0,
+                            pendingTransactions: 0,
+                            failedTransactions: 0,
+                            totalRevenue: 0,
+                            totalVotes: 0,
+                            averageTransactionValue: 0,
+                        });
                     }
 
                     setLoading(false);
