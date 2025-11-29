@@ -27,18 +27,7 @@ export function AdminStats() {
     const { candidates, loading: candidatesLoading } = useBackendCandidates();
     const { totalWithdrawn, loading: withdrawalLoading } = useWithdrawalStats();
 
-    if (txLoading || candidatesLoading || withdrawalLoading) {
-        return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
-                {[...Array(4)].map((_, i) => (
-                    <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 sm:p-6 min-h-[140px] animate-pulse">
-                        <div className="h-20 bg-zinc-800 rounded"></div>
-                    </div>
-                ))}
-            </div>
-        );
-    }
-
+    // Calculate total votes from candidates
     const totalVotes = candidates.reduce((sum, c) => sum + (c.votes || 0), 0);
     const currentBalance = stats.totalRevenue - totalWithdrawn;
 
