@@ -57,23 +57,22 @@ async function retryWithBackoff<T>(
   throw lastError;
 }
 
-export async function getCandidates() {
-  try {
-    // Try to fetch from Firebase with retry logic
-    const result = await retryWithBackoff(async () => {
-      const snapshot = await get(ref(database, 'candidates'));
-      if (snapshot.exists()) {
-        return snapshot.val();
-      }
-      return {};
-    }, 3, 1000);
+import { getAppwriteCandidates, isAppwriteConfigured } from './appwrite';
 
-    return result;
-  } catch (error) {
-    console.error('Error fetching candidates from Firebase:', error);
-    // Try proxy API as fallback
+export async function getCandidates() {
+  // Define the Firebase fetch promise
+  const firebasePromise = retryWithBackoff(async () => {
+    const snapshot = await get(ref(database, 'candidates'));
+    if (snapshot.exists()) {
+      return snapshot.val();
+    }
+    return {};
+  }, 3, 1000);
+
+  // Define the Fallback (Proxy -> Appwrite) promise
+  const fallbackPromise = async () => {
+    // 1. Try Proxy first (Server-side Firebase)
     try {
-      // Use internal API route as proxy
       const proxyUrl = '/api/proxy/firebase?path=candidates';
       const proxyResponse = await fetch(proxyUrl, {
         method: 'GET',
@@ -86,18 +85,39 @@ export async function getCandidates() {
       if (proxyResponse.ok) {
         const proxyData = await proxyResponse.json();
         if (proxyData.success && proxyData.data) {
-          // console.log('Successfully fetched candidates via proxy');
           return proxyData.data;
         }
       }
     } catch (proxyError) {
-      // console.error('Proxy API also failed:', proxyError);
+      // Proxy failed, continue to Appwrite
     }
 
-    // console.log('All methods failed, falling back to static candidate data...');
-    // Fallback: Return empty object - the API will use static data
-    // This allows the frontend to continue working even if Firebase is blocked
+    // 2. Try Appwrite
+    if (isAppwriteConfigured()) {
+      try {
+        // Use env vars for IDs, with defaults
+        const dbId = process.env.NEXT_PUBLIC_APPWRITE_DB_ID || 'candidates_db';
+        const collId = process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID || 'candidates';
+        return await getAppwriteCandidates(dbId, collId);
+      } catch (appwriteError) {
+        // Appwrite failed
+      }
+    }
+
     return {};
+  };
+
+  // Race logic: If Firebase takes > 2.5s, switch to fallback
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Firebase timeout')), 2500)
+  );
+
+  try {
+    // Try Firebase with a timeout race
+    return await Promise.race([firebasePromise, timeoutPromise]);
+  } catch (error) {
+    // If timeout or error, switch to fallback
+    return await fallbackPromise();
   }
 }
 
