@@ -121,7 +121,7 @@ export function formatPhoneNumber(phone: string): string {
 /**
  * Validate phone number with flexible, pan-African approach
  * ONLY accepts MTN and Orange (payment aggregator limitation)
- * Auto-suggests correct payment method
+ * NOTE: Payment aggregator (Mesomb) auto-detects operator, so no need to match payment method
  */
 export function validatePhoneNumber(
     phone: string,
@@ -173,26 +173,7 @@ export function validatePhoneNumber(
         }
     }
 
-    // Provide suggestion if operator doesn't match selection
-    if (selectedPaymentMethod && detectedOperator !== 'unknown' && detectedOperator !== 'other') {
-        const operatorMatch =
-            (selectedPaymentMethod === 'mobile' && detectedOperator === 'mtn') ||
-            (selectedPaymentMethod === 'orange' && detectedOperator === 'orange')
-
-        if (!operatorMatch) {
-            const detectedName = detectedOperator === 'mtn' ? 'MTN' : 'Orange'
-            const suggestedMethod = detectedOperator === 'mtn' ? 'MTN MoMo' : 'Orange Money'
-
-            return {
-                isValid: true,
-                operator: detectedOperator,
-                formattedNumber: formatPhoneNumber(phone),
-                suggestion: `Ce numéro est ${detectedName}. Cliquez sur ${suggestedMethod} pour continuer.`
-            }
-        }
-    }
-
-    // All good!
+    // All good! Mesomb will auto-detect the operator
     return {
         isValid: true,
         operator: detectedOperator,

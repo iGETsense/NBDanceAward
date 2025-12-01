@@ -13,7 +13,6 @@ import { ref, set, serverTimestamp } from 'firebase/database';
 import { collectPayment } from '../../lib/mesomb';
 import {
     validatePhoneNumber,
-    validatePaymentMethod,
     validateVoteCount,
     validateCandidateExists,
     detectOperator,
@@ -37,14 +36,6 @@ export async function POST(request: NextRequest) {
         if (!voteValidation.valid) {
             return NextResponse.json(
                 { success: false, error: voteValidation.error },
-                { status: 400 }
-            );
-        }
-
-        const paymentValidation = validatePaymentMethod(phoneNumber, paymentMethod);
-        if (!paymentValidation.valid) {
-            return NextResponse.json(
-                { success: false, error: paymentValidation.error },
                 { status: 400 }
             );
         }
