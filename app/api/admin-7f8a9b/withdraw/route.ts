@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
-import { ref, push, serverTimestamp } from 'firebase/database';
+import { ref, push } from 'firebase/database';
 import { makeWithdrawal } from '../../lib/mesomb';
 import { validatePhoneNumber, detectOperator } from '../../lib/validation';
 
@@ -104,14 +104,14 @@ export async function POST(request: NextRequest) {
 
         // Log withdrawal in Firebase
         const withdrawalsRef = ref(database, 'withdrawals');
-        await push(withdrawalsRef, {
+        const newWithdrawalRef = await push(withdrawalsRef, {
             id: transactionId,
             phoneNumber,
             operator: mesombService,
             amount: amount,
             mesombReference: withdrawalResult.reference,
             status: 'completed',
-            createdAt: serverTimestamp(),
+            createdAt: Date.now(), // Use timestamp instead of serverTimestamp for compatibility
         });
 
         return NextResponse.json({
