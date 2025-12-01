@@ -39,9 +39,11 @@ export interface WithdrawalParams {
 
 export interface PaymentResult {
     success: boolean;
+    status: 'SUCCESS' | 'FAILED' | 'PENDING';
     reference?: string;
     message?: string;
     error?: string;
+    transactionId?: string;
 }
 
 export async function collectPayment(params: CollectPaymentParams): Promise<PaymentResult> {
@@ -79,48 +81,119 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
             ],
         });
 
-        if (process.env.NODE_ENV === 'development') {
-            console.log('Mesomb response:', {
-                success: response.success,
-                status: response.status,
-                message: response.message,
-                reference: response.reference,
-            });
-        }
+        // CRITICAL: Log full Mesomb response for debugging
+        console.log('[Mesomb] Payment collection response:', {
+            nonce: params.nonce,
+            amount: params.amount,
+            service: params.service,
+            payer: params.payer,
+            success: response.success,
+            status: response.status,
+            message: response.message,
+            reference: response.reference,
+            transactionPk: response.transaction?.pk,
+            transactionStatus: response.transaction?.status,
+        });
 
+        // Check if operation failed at API level
         if (typeof response.isOperationSuccess === 'function' && !response.isOperationSuccess()) {
+            console.error('[Mesomb] Operation failed:', {
+                message: response.message,
+                status: response.status,
+                nonce: params.nonce,
+            });
             return {
                 success: false,
-                error: response.message || 'Payment operation failed',
+                status: 'FAILED',
+                error: response.message || 'Payment operation failed. Please try again.',
             };
         }
 
-        if (typeof response.isTransactionSuccess === 'function' && !response.isTransactionSuccess()) {
+        // Check transaction success status
+        if (typeof response.isTransactionSuccess === 'function') {
+            const transactionSuccess = response.isTransactionSuccess();
+
+            if (!transactionSuccess) {
+                // Transaction explicitly failed
+                console.error('[Mesomb] Transaction failed:', {
+                    message: response.message,
+                    status: response.status,
+                    transactionStatus: response.transaction?.status,
+                    nonce: params.nonce,
+                });
+                return {
+                    success: false,
+                    status: 'FAILED',
+                    error: response.message || 'Payment was rejected. Please check your balance and try again.',
+                };
+            }
+        }
+
+        // Check for explicit success indicators
+        const reference = response.reference || response.transaction?.pk;
+        if (!reference) {
+            console.error('[Mesomb] No reference returned:', {
+                response: response,
+                nonce: params.nonce,
+            });
             return {
-                success: true,
-                reference: response.reference || response.transaction?.pk,
-                message: 'Payment initiated. Please complete on your phone.',
+                success: false,
+                status: 'FAILED',
+                error: 'Payment initiation failed - no transaction reference received.',
             };
         }
+
+        // Payment successfully initiated
+        console.log('[Mesomb] Payment initiated successfully:', {
+            reference: reference,
+            nonce: params.nonce,
+            amount: params.amount,
+        });
 
         return {
             success: true,
-            reference: response.reference || response.transaction?.pk,
-            message: 'Payment initiated successfully',
+            status: 'PENDING',
+            reference: reference,
+            message: 'Payment initiated successfully. Please complete payment on your phone.',
         };
     } catch (error: any) {
-        console.error('Mesomb payment error:', error);
+        console.error('[Mesomb] Payment error:', {
+            error: error.message,
+            stack: error.stack,
+            nonce: params.nonce,
+            amount: params.amount,
+            service: params.service,
+        });
 
         if (error.message?.includes('credentials are not configured')) {
             return {
                 success: false,
+                status: 'FAILED',
                 error: 'Payment system is not configured. Please contact support.',
+            };
+        }
+
+        // Check for common Mesomb errors
+        if (error.message?.includes('insufficient')) {
+            return {
+                success: false,
+                status: 'FAILED',
+                error: 'Insufficient balance. Please top up your mobile money account and try again.',
+            };
+        }
+
+        if (error.message?.includes('invalid')) {
+            return {
+                success: false,
+                status: 'FAILED',
+                error: 'Invalid phone number or payment details. Please check and try again.',
             };
         }
 
         return {
             success: false,
-            error: error.message || 'Payment initiation failed',
+            status: 'FAILED',
+            error: error.message || 'Payment initiation failed. Please try again.',
         };
     }
 }
@@ -130,25 +203,62 @@ export async function checkPaymentStatus(reference: string): Promise<PaymentResu
         const payment = getMesombClient();
         const transactions = await payment.getTransactions([reference], 'MESOMB');
 
+        console.log('[Mesomb] Check payment status:', {
+            reference,
+            transactionsFound: transactions?.length || 0,
+        });
+
         if (!transactions || transactions.length === 0) {
+            console.warn('[Mesomb] No transaction found for reference:', reference);
             return {
                 success: false,
+                status: 'PENDING',
                 error: 'Payment is still processing',
             };
         }
 
         const transaction = transactions[0];
         const isSuccess = transaction.status === 'SUCCESS';
+        const isFailed = transaction.status === 'FAILED';
 
-        return {
-            success: isSuccess,
-            reference: reference,
-            message: isSuccess ? 'Payment confirmed' : `Payment status: ${transaction.status}`,
-        };
+        console.log('[Mesomb] Transaction status:', {
+            reference,
+            status: transaction.status,
+            isSuccess,
+        });
+
+        if (isSuccess) {
+            return {
+                success: true,
+                status: 'SUCCESS',
+                reference: reference,
+                message: 'Payment confirmed',
+                transactionId: transaction.pk
+            };
+        } else if (isFailed) {
+            return {
+                success: false,
+                status: 'FAILED',
+                reference: reference,
+                message: 'Payment failed',
+                error: transaction.message || 'Payment failed'
+            };
+        } else {
+            return {
+                success: false,
+                status: 'PENDING',
+                reference: reference,
+                message: `Payment status: ${transaction.status}`,
+            };
+        }
     } catch (error: any) {
-        console.error('Mesomb status check error:', error);
+        console.error('[Mesomb] Status check error:', {
+            reference,
+            error: error.message,
+        });
         return {
             success: false,
+            status: 'PENDING',
             error: 'Payment is still processing. Please wait...',
         };
     }
@@ -192,6 +302,7 @@ export async function makeWithdrawal(params: WithdrawalParams): Promise<PaymentR
         if (typeof response.isOperationSuccess === 'function' && !response.isOperationSuccess()) {
             return {
                 success: false,
+                status: 'FAILED',
                 error: response.message || 'Withdrawal operation failed',
             };
         }
@@ -199,6 +310,7 @@ export async function makeWithdrawal(params: WithdrawalParams): Promise<PaymentR
         if (typeof response.isTransactionSuccess === 'function' && !response.isTransactionSuccess()) {
             return {
                 success: true,
+                status: 'PENDING',
                 reference: response.reference || response.transaction?.pk,
                 message: 'Withdrawal initiated. Processing...',
             };
@@ -206,6 +318,7 @@ export async function makeWithdrawal(params: WithdrawalParams): Promise<PaymentR
 
         return {
             success: true,
+            status: 'SUCCESS',
             reference: response.reference || response.transaction?.pk,
             message: 'Withdrawal completed successfully',
         };
@@ -213,6 +326,7 @@ export async function makeWithdrawal(params: WithdrawalParams): Promise<PaymentR
         console.error('Mesomb withdrawal error:', error);
         return {
             success: false,
+            status: 'FAILED',
             error: error.message || 'Withdrawal failed',
         };
     }

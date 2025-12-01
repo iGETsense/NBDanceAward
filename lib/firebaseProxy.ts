@@ -5,7 +5,7 @@
  */
 
 // Proxy configuration
-const PROXY_URL = process.env.NEXT_PUBLIC_FIREBASE_PROXY_URL || 'https://35.222.208.69:3000';
+const PROXY_URL = process.env.NEXT_PUBLIC_FIREBASE_PROXY_URL || '/api/proxy/firebase';
 const ENABLE_PROXY = process.env.NEXT_PUBLIC_ENABLE_PROXY !== 'false';
 
 /**
@@ -22,7 +22,7 @@ export async function detectOrangeNetwork(): Promise<boolean> {
         if (connection) {
             // If on cellular network, assume it might be Orange
             if (connection.type === 'cellular') {
-                console.log('📱 Detected cellular network');
+                // console.log('📱 Detected cellular network');
                 return true;
             }
         }
@@ -31,7 +31,7 @@ export async function detectOrangeNetwork(): Promise<boolean> {
         // If Firebase is blocked, we're likely on Orange network
         const isFirebaseBlocked = await testFirebaseConnectivity();
         if (isFirebaseBlocked) {
-            console.log('🚫 Firebase appears blocked - likely Orange network');
+            // console.log('🚫 Firebase appears blocked - likely Orange network');
             return true;
         }
 
@@ -81,7 +81,7 @@ export async function getDatabaseURL(): Promise<string> {
     const shouldUseProxy = await detectOrangeNetwork();
 
     if (shouldUseProxy) {
-        console.log('🔄 Using proxy for Firebase requests:', PROXY_URL);
+        // console.log('🔄 Using proxy for Firebase requests:', PROXY_URL);
         return PROXY_URL;
     }
 
@@ -107,7 +107,7 @@ export function createProxiedFetch(useProxy: boolean = false) {
                     PROXY_URL
                 );
 
-                console.log('🔄 Proxying Firebase request:', proxiedUrl);
+                // console.log('🔄 Proxying Firebase request:', proxiedUrl);
 
                 return fetch(proxiedUrl, {
                     ...init,

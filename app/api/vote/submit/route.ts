@@ -87,12 +87,30 @@ export async function POST(request: NextRequest) {
             operator: mesombService,
             amount: totalAmount,
             mesombReference: paymentResult.reference,
-            status: 'pending',
+            status: paymentResult.status === 'FAILED' ? 'failed' : 'pending',
             createdAt: serverTimestamp(),
+            // Enhanced fields for debugging and reconciliation
+            mesombResponse: {
+                success: paymentResult.success,
+                status: paymentResult.status,
+                message: paymentResult.message,
+                reference: paymentResult.reference,
+            },
+            errorDetails: paymentResult.error || null,
+            reconciliationStatus: paymentResult.status === 'FAILED' ? 'confirmed_failed' : null,
         };
 
         const transactionRef = ref(database, `transactions/${transactionId}`);
         await set(transactionRef, transactionData);
+
+        // Log transaction creation
+        console.log('[Vote] Transaction created:', {
+            transactionId,
+            candidateId,
+            amount: totalAmount,
+            operator: mesombService,
+            reference: paymentResult.reference,
+        });
 
         return NextResponse.json({
             success: true,

@@ -235,10 +235,17 @@ export function TransactionsList() {
                                                     </>
                                                 )}
                                                 {tx.status === 'failed' && (
-                                                    <>
-                                                        <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-500 flex-shrink-0" />
-                                                        <span className="text-red-400 text-xs sm:text-sm whitespace-nowrap hidden sm:inline">Échoué</span>
-                                                    </>
+                                                    <div className="flex flex-col items-end">
+                                                        <div className="flex items-center gap-1 sm:gap-2">
+                                                            <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-500 flex-shrink-0" />
+                                                            <span className="text-red-400 text-xs sm:text-sm whitespace-nowrap hidden sm:inline">Échoué</span>
+                                                        </div>
+                                                        {tx.failureReason && (
+                                                            <span className="text-[10px] text-red-400/70 max-w-[100px] truncate" title={tx.failureReason}>
+                                                                {tx.failureReason}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 )}
                                             </div>
                                         </td>

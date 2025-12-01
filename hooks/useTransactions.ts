@@ -19,6 +19,16 @@ export interface Transaction {
     status: 'pending' | 'completed' | 'failed';
     createdAt: number;
     completedAt?: number;
+    failedAt?: number;
+    // Enhanced fields for debugging and reconciliation
+    mesombResponse?: {
+        success: boolean;
+        message?: string;
+        reference?: string;
+    };
+    errorDetails?: string | null;
+    reconciliationStatus?: 'needs_review' | null;
+    failureReason?: string;
 }
 
 export interface TransactionStats {

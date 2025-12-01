@@ -1,4 +1,23 @@
 {
-  "/page": "app/page.js",
-  "/admin-7f8a9b/page": "app/admin-7f8a9b/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/verify-admin/route": "app/api/verify-admin/route.js",
+  "/api/candidates/route": "app/api/candidates/route.js",
+  "/api/webhook/payment/route": "app/api/webhook/payment/route.js",
+  "/apple-icon.png/route": "app/apple-icon.png/route.js",
+  "/icon0.svg/route": "app/icon0.svg/route.js",
+  "/icon1.png/route": "app/icon1.png/route.js",
+  "/manifest.json/route": "app/manifest.json/route.js",
+  "/robots.txt/route": "app/robots.txt/route.js",
+  "/sitemap.xml/route": "app/sitemap.xml/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/api/vote/submit/route": "app/api/vote/submit/route.js",
+  "/api/vote/verify/route": "app/api/vote/verify/route.js",
+  "/api/admin-7f8a9b/withdraw/route": "app/api/admin-7f8a9b/withdraw/route.js",
+  "/api/proxy/firebase/route": "app/api/proxy/firebase/route.js",
+  "/seo/page": "app/seo/page.js",
+  "/candidats/page": "app/candidats/page.js",
+  "/classement/page": "app/classement/page.js",
+  "/regles/page": "app/regles/page.js",
+  "/admin-7f8a9b/page": "app/admin-7f8a9b/page.js",
+  "/page": "app/page.js"
 }

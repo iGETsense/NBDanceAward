@@ -71,12 +71,10 @@ export async function getCandidates() {
     return result;
   } catch (error) {
     console.error('Error fetching candidates from Firebase:', error);
-    console.log('Attempting to use proxy API...');
-
     // Try proxy API as fallback
     try {
-      // Hardcoded proxy URL for production
-      const proxyUrl = 'https://35.222.208.69:3000/api/proxy/firebase?path=candidates';
+      // Use internal API route as proxy
+      const proxyUrl = '/api/proxy/firebase?path=candidates';
       const proxyResponse = await fetch(proxyUrl, {
         method: 'GET',
         headers: {
@@ -88,15 +86,15 @@ export async function getCandidates() {
       if (proxyResponse.ok) {
         const proxyData = await proxyResponse.json();
         if (proxyData.success && proxyData.data) {
-          console.log('Successfully fetched candidates via proxy');
+          // console.log('Successfully fetched candidates via proxy');
           return proxyData.data;
         }
       }
     } catch (proxyError) {
-      console.error('Proxy API also failed:', proxyError);
+      // console.error('Proxy API also failed:', proxyError);
     }
 
-    console.log('All methods failed, falling back to static candidate data...');
+    // console.log('All methods failed, falling back to static candidate data...');
     // Fallback: Return empty object - the API will use static data
     // This allows the frontend to continue working even if Firebase is blocked
     return {};

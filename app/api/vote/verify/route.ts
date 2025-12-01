@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
         // Check payment status with Mesomb
         const paymentStatus = await checkPaymentStatus(transaction.mesombReference);
 
-        if (paymentStatus.success) {
+        if (paymentStatus.success && paymentStatus.status === 'SUCCESS') {
             // Payment confirmed - update votes
             await updateVotesAfterPayment(transaction);
 
@@ -57,6 +57,16 @@ export async function POST(request: NextRequest) {
             await update(transactionRef, {
                 status: 'completed',
                 completedAt: serverTimestamp(),
+                mesombResponse: {
+                    ...transaction.mesombResponse,
+                    finalStatus: 'SUCCESS',
+                    verifiedAt: serverTimestamp()
+                }
+            });
+
+            console.log('[Verify] Payment confirmed:', {
+                transactionId,
+                reference: transaction.mesombReference,
             });
 
             return NextResponse.json({
@@ -64,7 +74,68 @@ export async function POST(request: NextRequest) {
                 status: 'completed',
                 message: 'Payment confirmed! Votes have been added.',
             });
+        } else if (paymentStatus.status === 'FAILED') {
+            // Explicit failure from Mesomb
+            await update(transactionRef, {
+                status: 'failed',
+                reconciliationStatus: 'confirmed_failed',
+                failedAt: serverTimestamp(),
+                failureReason: paymentStatus.error || 'Payment failed at provider',
+                mesombResponse: {
+                    ...transaction.mesombResponse,
+                    finalStatus: 'FAILED',
+                    error: paymentStatus.error,
+                    verifiedAt: serverTimestamp()
+                }
+            });
+
+            console.warn('[Verify] Payment failed:', {
+                transactionId,
+                reference: transaction.mesombReference,
+                error: paymentStatus.error
+            });
+
+            return NextResponse.json({
+                success: false,
+                status: 'failed',
+                message: paymentStatus.error || 'Payment failed. Please try again.',
+            });
         } else {
+            // Check if transaction is too old (more than 10 minutes)
+            const createdAt = transaction.createdAt;
+            const now = Date.now();
+            const tenMinutes = 10 * 60 * 1000;
+
+            if (createdAt && (now - createdAt > tenMinutes)) {
+                // Transaction timed out - mark for review
+                await update(transactionRef, {
+                    status: 'failed',
+                    reconciliationStatus: 'needs_review',
+                    failedAt: serverTimestamp(),
+                    failureReason: 'Timeout - payment not confirmed within 10 minutes',
+                });
+
+                console.warn('[Verify] Transaction timed out:', {
+                    transactionId,
+                    reference: transaction.mesombReference,
+                    age: now - createdAt,
+                });
+
+                return NextResponse.json({
+                    success: false,
+                    status: 'failed',
+                    message: 'Payment verification timed out. If you were charged, please contact support with this reference: ' + transactionId,
+                });
+            }
+
+            // Still pending
+            console.log('[Verify] Payment still pending:', {
+                transactionId,
+                reference: transaction.mesombReference,
+                status: paymentStatus.status,
+                error: paymentStatus.error,
+            });
+
             return NextResponse.json({
                 success: false,
                 status: 'pending',

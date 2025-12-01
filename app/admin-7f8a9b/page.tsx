@@ -11,6 +11,7 @@ import { useCandidates } from "@/hooks/useFirebaseData"
 import { sanitizeInput, validateNumeric, validateWithdrawalData, RateLimiter } from "@/lib/security"
 import { AdminStats, TransactionsList } from "@/components/AdminDashboard"
 import { AdminWithdrawal } from "@/components/AdminWithdrawal"
+import { FailedTransactions } from "@/components/FailedTransactions"
 import { auth } from "@/lib/firebase"
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut, User } from "firebase/auth"
 
@@ -322,6 +323,10 @@ export default function AdminPage() {
             <TransactionsList />
           </div>
 
+          {/* Failed Transactions - Need Review */}
+          <div className="mb-8">
+            <FailedTransactions />
+          </div>
 
           {/* Withdrawal Section - New Component with Mesomb Integration */}
           <div className="mb-8">
