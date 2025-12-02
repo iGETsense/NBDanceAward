@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
 import { ref, set, serverTimestamp } from 'firebase/database';
 import { collectPayment } from '../../lib/mesomb';
+import { paymentQueue } from '@/lib/paymentQueue';
 import {
     validatePhoneNumber,
     validateVoteCount,
@@ -59,13 +60,21 @@ export async function POST(request: NextRequest) {
         // Generate unique transaction ID
         const transactionId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-        // Initiate payment with Mesomb
-        const paymentResult = await collectPayment({
-            amount: totalAmount,
-            service: mesombService,
-            payer: phoneNumber.replace(/\s/g, '').replace(/^\+237/, ''),
-            nonce: transactionId,
+        console.log('[Submit] Processing payment via queue:', {
+            transactionId,
+            queueLength: paymentQueue.getQueueLength(),
+            activeRequests: paymentQueue.getActiveRequests(),
         });
+
+        // Initiate payment with Mesomb via queue (handles concurrency + retries)
+        const paymentResult = await paymentQueue.add(() =>
+            collectPayment({
+                amount: totalAmount,
+                service: mesombService,
+                payer: phoneNumber.replace(/\s/g, '').replace(/^\+237/, ''),
+                nonce: transactionId,
+            })
+        );
 
         if (!paymentResult.success) {
             return NextResponse.json(
