@@ -1,6 +1,6 @@
 "use client"
 
-import { Menu, X, ChevronDown, ChevronUp, Plus, Minus, Lock, AlertCircle, CheckCircle, CheckCircle2, Loader2, Share2, Smartphone, Search } from "lucide-react"
+import { Menu, X, ChevronDown, ChevronUp, Plus, Minus, Lock, AlertCircle, CheckCircle, CheckCircle2, Loader2, Share2, Smartphone, Search, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
