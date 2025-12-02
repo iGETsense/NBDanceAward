@@ -1305,21 +1305,21 @@ export default function CandidatsPage() {
                     </div>
                   </div>
 
-                  <div className="mb-6">
-                    <h3 className="text-base md:text-lg font-semibold mb-3 text-white">Nombre de Votes</h3>
-                    <div className="flex items-center justify-center gap-4 md:gap-6 mb-4">
+                  <div className="mb-4">
+                    <h3 className="text-sm md:text-base font-semibold mb-2 text-white">Nombre de Votes</h3>
+                    <div className="flex items-center justify-center gap-3 md:gap-4 mb-2">
                       <button
                         onClick={decrementVotes}
-                        className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border-2 border-zinc-700 hover:border-yellow-500 transition-colors text-white"
+                        className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full border-2 border-zinc-700 hover:border-yellow-500 transition-colors text-white"
                       >
-                        <Minus className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                        <Minus className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </button>
-                      <div className="text-3xl md:text-4xl font-bold w-16 md:w-20 text-center text-white">{voteCount}</div>
+                      <div className="text-2xl md:text-3xl font-bold w-12 md:w-16 text-center text-white">{voteCount}</div>
                       <button
                         onClick={incrementVotes}
-                        className="flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border-2 border-zinc-700 hover:border-yellow-500 transition-colors text-white"
+                        className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full border-2 border-zinc-700 hover:border-yellow-500 transition-colors text-white"
                       >
-                        <Plus className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                        <Plus className="h-3 w-3 md:h-4 md:w-4 text-white" />
                       </button>
                     </div>
 
