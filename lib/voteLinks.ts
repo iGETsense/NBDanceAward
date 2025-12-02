@@ -7,12 +7,20 @@
  * Encode a candidate ID into a URL-safe format
  * Uses Base64 encoding for obfuscation
  */
+/**
+ * Encode a candidate ID into a URL-safe format
+ * Uses Base64 encoding for obfuscation (Universal)
+ */
 export function encodeVoteLink(candidateId: string): string {
     if (!candidateId) return '';
 
     try {
-        // Convert to Base64 and make URL-safe
-        const encoded = Buffer.from(candidateId).toString('base64')
+        // Universal Base64 encoding
+        const base64 = typeof window === 'undefined'
+            ? Buffer.from(candidateId).toString('base64')
+            : btoa(candidateId);
+
+        const encoded = base64
             .replace(/\+/g, '-')
             .replace(/\//g, '_')
             .replace(/=/g, '');
@@ -26,7 +34,7 @@ export function encodeVoteLink(candidateId: string): string {
 
 /**
  * Decode a vote link parameter back to candidate ID
- * Returns null if invalid
+ * Returns null if invalid (Universal)
  */
 export function decodeVoteLink(encoded: string): string | null {
     if (!encoded) return null;
@@ -42,8 +50,10 @@ export function decodeVoteLink(encoded: string): string | null {
             base64 += '=';
         }
 
-        // Decode from Base64
-        const decoded = Buffer.from(base64, 'base64').toString('utf-8');
+        // Universal Base64 decoding
+        const decoded = typeof window === 'undefined'
+            ? Buffer.from(base64, 'base64').toString('utf-8')
+            : atob(base64);
 
         // Basic validation: should be alphanumeric with hyphens
         if (!/^[a-zA-Z0-9-_]+$/.test(decoded)) {
