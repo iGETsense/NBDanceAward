@@ -72,6 +72,16 @@ tmp/
 temp/
 *.tmp
 
+# Test files
+test-*.js
+test-*.ts
+*.test.local.js
+
+# Unused project directories
+nb/
+nbdance/
+src/dataconnect-generated/
+
 # Large media files (uncomment if needed)
 # *.mp4
 # *.mov
