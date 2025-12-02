@@ -1,6 +1,6 @@
 "use client"
 
-import { Smartphone, CreditCard, Award, Menu, Minus, Plus, Lock, Shield, CheckCircle2, User, Mail, ChevronDown, ChevronUp, AlertCircle, CheckCircle } from 'lucide-react'
+import { Menu, X, ChevronDown, ChevronUp, Plus, Minus, Lock, AlertCircle, CheckCircle, Loader2, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
@@ -15,7 +15,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { useCandidates, useLeaderboard } from "@/hooks/useFirebaseData"
 import { useVoting } from "@/hooks/useVoting"
 import { CountdownPopup } from "@/components/CountdownPopup"
-import { decodeVoteLinkClient } from "@/lib/voteLinks"
+import { decodeVoteLinkClient, encodeVoteLinkClient } from "@/lib/voteLinks"
 
 
 const staticCandidates = [
@@ -1385,8 +1385,25 @@ export default function NBDanceAwardPage() {
                       </div>
                     </div>
 
-                    <h3 className="text-lg md:text-xl font-bold mb-1 text-white">{selectedCandidate.name}</h3>
-                    <p className="text-white text-xs md:text-sm">{selectedCandidate.title}</p>
+                    <div className="flex items-center justify-center gap-3">
+                      <h3 className="text-lg md:text-xl font-bold text-white">{selectedCandidate.name}</h3>
+                      <button
+                        onClick={() => {
+                          const voteLink = `${window.location.origin}/?vote=${encodeVoteLinkClient(selectedCandidate.id || selectedCandidate.baseId)}`
+                          navigator.clipboard.writeText(voteLink)
+                          // Show toast notification
+                          const toast = document.createElement('div')
+                          toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in fade-in slide-in-from-top-2'
+                          toast.textContent = 'Lien copié!'
+                          document.body.appendChild(toast)
+                          setTimeout(() => toast.remove(), 2000)
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors text-black text-xs font-semibold"
+                      >
+                        <Share2 className="h-3.5 w-3.5" />
+                        Partager
+                      </button>
+                    </div>
                   </div>
 
                   <div className="mb-6">
@@ -1500,10 +1517,10 @@ export default function NBDanceAwardPage() {
                   : "Orange Money"}
               </div>
 
-              {/* Total Votes */}
+              {/* Vote Count and Total Price */}
               <div className="mb-4 md:mb-6 space-y-2">
                 <div className="rounded-lg bg-zinc-800 px-3 py-2 md:px-4 md:py-3 text-center text-xs md:text-sm font-medium text-white">
-                  Total Votes: {voteCount}
+                  Nombre de votes: {voteCount}
                 </div>
                 <div className="rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 px-3 py-2 md:px-4 md:py-3 text-center text-sm md:text-base font-bold text-black">
                   Prix Total: {(voteCount * 105).toLocaleString()} XAF
