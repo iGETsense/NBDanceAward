@@ -1517,11 +1517,8 @@ export default function NBDanceAwardPage() {
                   : "Orange Money"}
               </div>
 
-              {/* Vote Count and Total Price */}
-              <div className="mb-4 md:mb-6 space-y-2">
-                <div className="rounded-lg bg-zinc-800 px-3 py-2 md:px-4 md:py-3 text-center text-xs md:text-sm font-medium text-white">
-                  Nombre de votes: {voteCount}
-                </div>
+              {/* Total Price */}
+              <div className="mb-4 md:mb-6">
                 <div className="rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 px-3 py-2 md:px-4 md:py-3 text-center text-sm md:text-base font-bold text-black">
                   Prix Total: {(voteCount * 105).toLocaleString()} XAF
                 </div>
