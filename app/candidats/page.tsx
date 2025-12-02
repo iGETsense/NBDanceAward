@@ -6,13 +6,15 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
-import ImageWithFallback from "@/components/ImageWithFallback"
+import { ImageWithFallback } from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { CountdownPopup } from "@/components/CountdownPopup"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import { validatePhoneNumber, formatPhoneNumber, detectOperator, getOperatorName, type MobileOperator } from "@/lib/phoneValidation"
+import { decodeVoteLinkClient } from "@/lib/voteLinks"
 import { useVoting } from "@/hooks/useVoting"
 
 // Keep old data for reference (commented out)
@@ -878,6 +880,7 @@ export default function CandidatsPage() {
   const { candidates: allCandidates, loading: candidatesLoading } = useCandidates()
   const { submitVote, pollPaymentStatus, isSubmitting, isVerifying, error: voteError, success: voteSuccess, paymentStatus, resetState } = useVoting()
   const [transactionId, setTransactionId] = useState<string | null>(null)
+  const searchParams = useSearchParams()
 
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("Toutes les catégories")
@@ -943,6 +946,25 @@ export default function CandidatsPage() {
       setSelectedProvider("orange-money-cameroon")
     }
   }, [selectedPaymentMethod])
+
+  // Handle direct vote links from URL params
+  useEffect(() => {
+    const voteParam = searchParams?.get('vote')
+    if (voteParam && allCandidates.length > 0 && !selectedCandidate) {
+      const candidateId = decodeVoteLinkClient(voteParam)
+      if (candidateId) {
+        const candidate = allCandidates.find(c => c.id === candidateId || c.baseId === candidateId)
+        if (candidate) {
+          setSelectedCandidate(candidate)
+          setVoteCount(1)
+          setPhoneNumber("")
+          setPhoneError("")
+          setDetectedOperator('unknown')
+          setIsVotingModalOpen(true)
+        }
+      }
+    }
+  }, [searchParams, allCandidates, selectedCandidate])
 
   const handleCandidateClick = (candidate: (typeof allCandidates)[0]) => {
     setSelectedCandidate(candidate)

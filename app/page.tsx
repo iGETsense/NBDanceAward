@@ -8,12 +8,14 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import ImageWithFallback from "@/components/ImageWithFallback"
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import PartnersCarousel from "@/components/PartnersCarousel"
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 import { useCandidates, useLeaderboard } from "@/hooks/useFirebaseData"
 import { useVoting } from "@/hooks/useVoting"
 import { CountdownPopup } from "@/components/CountdownPopup"
+import { decodeVoteLinkClient } from "@/lib/voteLinks"
 
 
 const staticCandidates = [
@@ -877,6 +879,7 @@ export default function NBDanceAwardPage() {
   // Firebase hook
   const { candidates, loading: candidatesLoading } = useCandidates()
   const { leaderboard } = useLeaderboard(10)
+  const searchParams = useSearchParams()
 
   const [showBanner, setShowBanner] = useState(true)
   const [isVotingModalOpen, setIsVotingModalOpen] = useState(false)
@@ -954,6 +957,22 @@ export default function NBDanceAwardPage() {
       setSelectedProvider("orange-money-cameroon")
     }
   }, [selectedPaymentMethod])
+
+  // Handle direct vote links from URL params
+  useEffect(() => {
+    const voteParam = searchParams?.get('vote')
+    if (voteParam && candidates.length > 0 && !selectedCandidate) {
+      const candidateId = decodeVoteLinkClient(voteParam)
+      if (candidateId) {
+        const candidate = candidates.find(c => c.id === candidateId || c.baseId === candidateId)
+        if (candidate) {
+          setSelectedCandidate(candidate)
+          setVoteCount(1)
+          setIsVotingModalOpen(true)
+        }
+      }
+    }
+  }, [searchParams, candidates, selectedCandidate])
 
   const handleCandidateClick = (candidate: (typeof candidates)[0]) => {
     setSelectedCandidate(candidate)
