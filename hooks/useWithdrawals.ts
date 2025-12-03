@@ -22,57 +22,40 @@ export function useWithdrawals(limit: number = 50) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
+    const fetchWithdrawals = async () => {
+        setLoading(true); // Set loading to true before fetching
         try {
-            const withdrawalsRef = ref(database, 'withdrawals');
-            const withdrawalsQuery = query(
-                withdrawalsRef,
-                orderByChild('createdAt'),
-                limitToLast(limit)
-            );
+            const response = await fetch('/api/admin-7f8a9b/withdrawals');
+            const data = await response.json();
 
-            const unsubscribe = onValue(
-                withdrawalsQuery,
-                (snapshot) => {
-                    const data = snapshot.val();
-
-                    console.log('[useWithdrawals] Raw Firebase data:', data);
-
-                    if (data) {
-                        // Convert to array and sort by newest first
-                        const withdrawalArray = Object.values(data) as Withdrawal[];
-                        console.log('[useWithdrawals] Withdrawal array:', withdrawalArray);
-                        console.log('[useWithdrawals] Array length:', withdrawalArray.length);
-
-                        withdrawalArray.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-                        setWithdrawals(withdrawalArray);
-                    } else {
-                        console.log('[useWithdrawals] No withdrawal data found');
-                        setWithdrawals([]);
-                    }
-
-                    setLoading(false);
-                },
-                (err) => {
-                    console.error('Error fetching withdrawals:', err);
-                    setError('Failed to load withdrawals');
-                    setLoading(false);
-                }
-            );
-
-            return () => unsubscribe();
+            if (data.success) {
+                // Assuming the API returns withdrawals sorted by createdAt descending
+                setWithdrawals(data.withdrawals);
+                setError(null);
+            } else {
+                setError(data.error || 'Failed to load withdrawals');
+            }
         } catch (err: any) {
-            console.error('Error setting up withdrawal listener:', err);
+            console.error('Error fetching withdrawals:', err);
             setError(err.message);
+        } finally {
             setLoading(false);
         }
-    }, [limit]);
+    };
+
+    useEffect(() => {
+        fetchWithdrawals();
+
+        // Poll every 30 seconds to keep updated
+        const interval = setInterval(fetchWithdrawals, 30000);
+        return () => clearInterval(interval);
+    }, []); // Removed 'limit' from dependency array as it's not used in the new fetch logic
 
     return {
         withdrawals,
         loading,
         error,
+        refresh: fetchWithdrawals
     };
 }
 
@@ -81,30 +64,27 @@ export function useWithdrawalStats() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const withdrawalsRef = ref(database, 'withdrawals');
-        // Fetch all withdrawals to calculate total
-        const unsubscribe = onValue(withdrawalsRef, (snapshot) => {
-            const data = snapshot.val();
-            console.log('[useWithdrawalStats] Raw data:', data);
+        const fetchStats = async () => {
+            try {
+                const response = await fetch('/api/admin-7f8a9b/withdrawals');
+                const data = await response.json();
 
-            if (data) {
-                const withdrawalArray = Object.values(data) as Withdrawal[];
-                console.log('[useWithdrawalStats] Total withdrawals:', withdrawalArray.length);
-
-                const total = withdrawalArray
-                    .filter(w => w.status === 'completed')
-                    .reduce((sum, w) => sum + (w.amount || 0), 0);
-
-                console.log('[useWithdrawalStats] Total withdrawn (completed only):', total);
-                setTotalWithdrawn(total);
-            } else {
-                console.log('[useWithdrawalStats] No withdrawal data');
-                setTotalWithdrawn(0);
+                if (data.success && data.withdrawals) {
+                    const total = data.withdrawals
+                        .filter((w: Withdrawal) => w.status === 'completed')
+                        .reduce((sum: number, w: Withdrawal) => sum + (w.amount || 0), 0);
+                    setTotalWithdrawn(total);
+                }
+            } catch (err) {
+                console.error('Error fetching withdrawal stats:', err);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
-        });
+        };
 
-        return () => unsubscribe();
+        fetchStats();
+        const interval = setInterval(fetchStats, 30000);
+        return () => clearInterval(interval);
     }, []);
 
     return { totalWithdrawn, loading };
