@@ -98,7 +98,8 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({
                 success: false,
                 status: 'failed',
-                message: paymentStatus.error || 'Payment failed. Please try again.',
+                message: 'Erreur de paiement: votre vote n\'est pas passé',
+                details: paymentStatus.error || 'Payment failed. Please try again.',
             });
         } else {
             // Check if transaction is too old (more than 10 minutes)

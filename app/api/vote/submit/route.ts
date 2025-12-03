@@ -80,7 +80,8 @@ export async function POST(request: NextRequest) {
             return NextResponse.json(
                 {
                     success: false,
-                    error: paymentResult.error || 'Payment initiation failed',
+                    error: 'Erreur de paiement: votre vote n\'est pas passé',
+                    details: paymentResult.error || 'Payment initiation failed',
                 },
                 { status: 500 }
             );
