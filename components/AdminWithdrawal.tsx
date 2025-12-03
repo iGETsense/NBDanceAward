@@ -18,7 +18,14 @@ export function AdminWithdrawal() {
     const [amount, setAmount] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-    const { withdrawals, loading: historyLoading } = useWithdrawals();
+    const { withdrawals: firebaseWithdrawals, loading: historyLoading } = useWithdrawals();
+    const [optimisticWithdrawals, setOptimisticWithdrawals] = useState<any[]>([]);
+
+    // Merge optimistic withdrawals with Firebase withdrawals, avoiding duplicates
+    const withdrawals = [
+        ...optimisticWithdrawals,
+        ...firebaseWithdrawals.filter(fw => !optimisticWithdrawals.some(ow => ow.id === fw.id))
+    ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     const handleWithdraw = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,6 +46,18 @@ export function AdminWithdrawal() {
 
             const idToken = await user.getIdToken();
 
+            // Optimistic update object
+            const tempId = `temp-${Date.now()}`;
+            const optimisticWithdrawal = {
+                id: tempId,
+                phoneNumber,
+                amount: parseInt(amount),
+                operator: ['69', '67', '65', '68'].some(prefix => phoneNumber.startsWith(prefix)) ? 'MTN' : 'ORANGE',
+                status: 'pending',
+                createdAt: Date.now(),
+                mesombReference: 'Traitement...',
+            };
+
             const response = await fetch('/api/admin-7f8a9b/withdraw', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -56,6 +75,13 @@ export function AdminWithdrawal() {
                     type: 'success',
                     text: `Retrait réussi! ${amount} XAF envoyé au ${phoneNumber}. Référence: ${data.reference}`,
                 });
+
+                // Update optimistic withdrawal with success details
+                setOptimisticWithdrawals(prev => [
+                    { ...optimisticWithdrawal, status: 'completed', mesombReference: data.reference, id: data.id || tempId },
+                    ...prev
+                ]);
+
                 setPhoneNumber('');
                 setAmount('');
             } else {
