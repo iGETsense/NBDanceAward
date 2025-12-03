@@ -55,58 +55,85 @@ export function useTransactions(limit: number = 100) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchTransactions = async () => {
+    useEffect(() => {
         try {
-            const response = await fetch('/api/admin-7f8a9b/transactions');
-            const data = await response.json();
+            // Listen to all transactions
+            const transactionsRef = ref(database, 'transactions');
+            const transactionsQuery = query(
+                transactionsRef,
+                orderByChild('createdAt'),
+                limitToLast(limit)
+            );
 
-            if (data.success) {
-                const txArray = data.transactions;
+            const unsubscribe = onValue(
+                transactionsQuery,
+                (snapshot) => {
+                    const data = snapshot.val();
 
-                // Calculate statistics
-                const completed = txArray.filter((tx: Transaction) => tx.status === 'completed');
-                const pending = txArray.filter((tx: Transaction) => tx.status === 'pending');
-                const failed = txArray.filter((tx: Transaction) => tx.status === 'failed');
+                    if (data) {
+                        // Convert to array and sort by newest first
+                        const txArray = Object.entries(data).map(([id, tx]) => ({
+                            id,
+                            ...(tx as Omit<Transaction, 'id'>),
+                        }));
 
-                // Calculate gross revenue from completed transactions
-                const grossRevenue = completed.reduce((sum: number, tx: Transaction) => sum + (tx.amount || 0), 0);
+                        // Sort by creation date (newest first)
+                        txArray.sort((a, b) => b.createdAt - a.createdAt);
 
-                // Deduct 5% platform fee to get net revenue
-                const netRevenue = grossRevenue * 0.95;
+                        // Calculate statistics
+                        const completed = txArray.filter(tx => tx.status === 'completed');
+                        const pending = txArray.filter(tx => tx.status === 'pending');
+                        const failed = txArray.filter(tx => tx.status === 'failed');
 
-                const totalVotes = completed.reduce((sum: number, tx: Transaction) => sum + (tx.voteCount || 0), 0);
+                        // Calculate gross revenue from completed transactions
+                        const grossRevenue = completed.reduce((sum, tx) => sum + tx.amount, 0);
 
-                setTransactions(txArray);
-                setStats({
-                    totalTransactions: txArray.length,
-                    completedTransactions: completed.length,
-                    pendingTransactions: pending.length,
-                    failedTransactions: failed.length,
-                    totalRevenue: Math.round(netRevenue), // Net revenue after 5% fee
-                    totalVotes,
-                    averageTransactionValue: completed.length > 0
-                        ? Math.round(netRevenue / completed.length)
-                        : 0,
-                });
-                setError(null);
-            } else {
-                setError(data.error || 'Failed to load transactions');
-            }
+                        // Deduct 5% platform fee to get net revenue
+                        const netRevenue = grossRevenue * 0.95;
+
+                        const totalVotes = completed.reduce((sum, tx) => sum + tx.voteCount, 0);
+
+                        setTransactions(txArray);
+                        setStats({
+                            totalTransactions: txArray.length,
+                            completedTransactions: completed.length,
+                            pendingTransactions: pending.length,
+                            failedTransactions: failed.length,
+                            totalRevenue: Math.round(netRevenue), // Net revenue after 5% fee
+                            totalVotes,
+                            averageTransactionValue: completed.length > 0
+                                ? Math.round(netRevenue / completed.length)
+                                : 0,
+                        });
+                    } else {
+                        setTransactions([]);
+                        setStats({
+                            totalTransactions: 0,
+                            completedTransactions: 0,
+                            pendingTransactions: 0,
+                            failedTransactions: 0,
+                            totalRevenue: 0,
+                            totalVotes: 0,
+                            averageTransactionValue: 0,
+                        });
+                    }
+
+                    setLoading(false);
+                },
+                (err) => {
+                    console.error('Error fetching transactions:', err);
+                    setError('Failed to load transactions');
+                    setLoading(false);
+                }
+            );
+
+            return () => unsubscribe();
         } catch (err: any) {
-            console.error('Error fetching transactions:', err);
+            console.error('Error setting up transaction listener:', err);
             setError(err.message);
-        } finally {
             setLoading(false);
         }
-    };
-
-    useEffect(() => {
-        fetchTransactions();
-
-        // Poll every 30 seconds
-        const interval = setInterval(fetchTransactions, 30000);
-        return () => clearInterval(interval);
-    }, []);
+    }, [limit]);
 
     return {
         transactions,
