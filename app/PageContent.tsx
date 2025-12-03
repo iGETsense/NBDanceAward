@@ -1021,7 +1021,7 @@ export default function NBDanceAwardPage() {
         <div className="container mx-auto flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
           <div className="flex items-center gap-2 md:gap-3">
             <div className="relative h-10 w-10 md:h-12 md:w-12">
-              <Image src="/logo.webp" alt="NB Dance Award" fill className="object-contain" priority quality={90} sizes="(max-width: 768px) 40px, 48px" />
+              <Image src="/logo.png" alt="NB Dance Award" fill className="object-contain" priority quality={90} sizes="(max-width: 768px) 40px, 48px" />
             </div>
             <div className="flex flex-col md:flex-row md:items-center md:gap-1">
               <span className="text-xs font-bold leading-tight text-white md:hidden">
@@ -1046,7 +1046,7 @@ export default function NBDanceAwardPage() {
               <SheetHeader className="mb-8">
                 <div className="flex items-center gap-3">
                   <div className="relative h-12 w-12">
-                    <Image src="/logo.webp" alt="NB Dance Award" fill className="object-contain" quality={90} sizes="48px" />
+                    <Image src="/logo.png" alt="NB Dance Award" fill className="object-contain" quality={90} sizes="48px" />
                   </div>
                   <SheetTitle className="text-left">
                     <div className="flex flex-col">
@@ -1116,7 +1116,7 @@ export default function NBDanceAwardPage() {
         {/* Hero Section */}
         <section className="relative overflow-hidden">
           <div className="relative h-[400px] md:h-[500px]">
-            <Image src="/banner-dancers.webp" alt="Dancers performing on stage" fill className="object-cover animate-fade-in-up" priority quality={85} sizes="100vw" />
+            <Image src="/banner-dancers.jpg" alt="Dancers performing on stage" fill className="object-cover animate-fade-in-up" priority quality={85} sizes="100vw" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent animate-fade-in-down" />
 
             <div className="container relative mx-auto flex h-full flex-col justify-end px-4 pb-8 md:px-6 md:pb-12">
@@ -1147,14 +1147,14 @@ export default function NBDanceAwardPage() {
         <div ref={partnersSection.ref as any} className={`transition-all duration-700 ${partnersSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <PartnersCarousel
             partners={[
-              { name: "LOGOGGG", logo: "/partners/LOGOGGG.webp" },
-              { name: "WhatsApp Image 1", logo: "/partners/WhatsApp Image 2025-10-07 à 17.22.43_94d52ea3.webp" },
-              { name: "WhatsApp Image 2", logo: "/partners/WhatsApp Image 2025-11-10 à 07.19.11_8ab8bff9.webp" },
-              { name: "WhatsApp Image 3", logo: "/partners/WhatsApp Image 2025-11-13 à 22.31.35_9f132a8b.webp" },
-              { name: "NB", logo: "/partners/nb.webp" },
-              { name: "IGS", logo: "/partners/igs.webp" },
-              { name: "Partenaire Officiel", logo: "/partners/partenaire officiel.webp" },
-              { name: "Photo Partner", logo: "/partners/photo_2025-08-18_12-32-07.webp" },
+              { name: "LOGOGGG", logo: "/partners/LOGOGGG.png" },
+              { name: "WhatsApp Image 1", logo: "/partners/WhatsApp Image 2025-10-07 à 17.22.43_94d52ea3.jpg" },
+              { name: "WhatsApp Image 2", logo: "/partners/WhatsApp Image 2025-11-10 à 07.19.11_8ab8bff9.jpg" },
+              { name: "WhatsApp Image 3", logo: "/partners/WhatsApp Image 2025-11-13 à 22.31.35_9f132a8b.jpg" },
+              { name: "NB", logo: "/partners/nb.png" },
+              { name: "IGS", logo: "/partners/igs.png" },
+              { name: "Partenaire Officiel", logo: "/partners/partenaire officiel.jpg" },
+              { name: "Photo Partner", logo: "/partners/photo_2025-08-18_12-32-07.png" },
             ]}
             autoPlay={true}
             autoPlayInterval={4000}
