@@ -30,7 +30,12 @@ export async function GET() {
       }, {});
     }
 
-    return NextResponse.json({ success: true, candidates });
+    // Convert object to array if needed
+    const candidatesArray = Array.isArray(candidates)
+      ? candidates
+      : Object.values(candidates || {});
+
+    return NextResponse.json({ success: true, candidates: candidatesArray });
   } catch (error) {
     console.error('Error in candidates API:', error);
     return NextResponse.json(
