@@ -3,7 +3,7 @@ export const allCandidatesData = [
   {
     name: "Maguy merine",
     title: "Dance Star",
-    image: "/dancers/maguy-merine.jpeg",
+    image: "/dancers/maguy-merine.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -12,7 +12,7 @@ export const allCandidatesData = [
   {
     name: "Kendi",
     title: "Dance Performer",
-    image: "/dancers/kendi.jpeg",
+    image: "/dancers/kendi.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -21,7 +21,7 @@ export const allCandidatesData = [
   {
     name: "Beb's velina",
     title: "Talented Dancer",
-    image: "/dancers/bebs-velina.jpeg",
+    image: "/dancers/bebs-velina.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -30,7 +30,7 @@ export const allCandidatesData = [
   {
     name: "Katia eg",
     title: "Professional Artist",
-    image: "/dancers/katia-eg.png",
+    image: "/dancers/katia-eg.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -39,7 +39,7 @@ export const allCandidatesData = [
   {
     name: "Stella officielle3",
     title: "Star Dancer",
-    image: "/dancers/stella-officielle3.jpeg",
+    image: "/dancers/stella-officielle3.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -48,7 +48,7 @@ export const allCandidatesData = [
   {
     name: "Nounours",
     title: "Performer",
-    image: "/dancers/nounours.jpeg",
+    image: "/dancers/nounours.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -57,7 +57,7 @@ export const allCandidatesData = [
   {
     name: "O'konor Céleste",
     title: "Dancer",
-    image: "/dancers/okonor-celeste.jpeg",
+    image: "/dancers/okonor-celeste.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -66,7 +66,7 @@ export const allCandidatesData = [
   {
     name: "Nelly Dora",
     title: "Mbolé Dancer",
-    image: "/dancers/nelly-dora.jpeg",
+    image: "/dancers/nelly-dora.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -75,7 +75,7 @@ export const allCandidatesData = [
   {
     name: "Chica bassa",
     title: "Mbolé Artist",
-    image: "/dancers/chica-bassa.jpeg",
+    image: "/dancers/chica-bassa.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -84,7 +84,7 @@ export const allCandidatesData = [
   {
     name: "LMN ponce Off",
     title: "Dancer",
-    image: "/dancers/lmn-ponce-off.jpeg",
+    image: "/dancers/lmn-ponce-off.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -93,7 +93,7 @@ export const allCandidatesData = [
   {
     name: "Influence Femi",
     title: "Performer",
-    image: "/dancers/influence-femi.jpeg",
+    image: "/dancers/influence-femi.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -102,7 +102,7 @@ export const allCandidatesData = [
   {
     name: "Jessi 237",
     title: "Dancer",
-    image: "/dancers/jessi-237.jpeg",
+    image: "/dancers/jessi-237.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -111,7 +111,7 @@ export const allCandidatesData = [
   {
     name: "Maxime la vitesse",
     title: "Young Dancer",
-    image: "/dancers/maxime-la-vitesse.jpg",
+    image: "/dancers/maxime-la-vitesse.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -120,7 +120,7 @@ export const allCandidatesData = [
   {
     name: "Kloe la machine",
     title: "Young Artist",
-    image: "/dancers/kloe-la-machine.jpg",
+    image: "/dancers/kloe-la-machine.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -129,7 +129,7 @@ export const allCandidatesData = [
   {
     name: "Meldjess peace",
     title: "Young Performer",
-    image: "/dancers/meldjess-peace.jpeg",
+    image: "/dancers/meldjess-peace.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -138,7 +138,7 @@ export const allCandidatesData = [
   {
     name: "Jumeaux de la capitale",
     title: "Twin Stars",
-    image: "/dancers/jumeaux-capitale.jpg",
+    image: "/dancers/jumeaux-capitale.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -147,7 +147,7 @@ export const allCandidatesData = [
   {
     name: "Déboy le monstre",
     title: "Web Performer",
-    image: "/dancers/deboy-le-monstre.jpeg",
+    image: "/dancers/deboy-le-monstre.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -156,7 +156,7 @@ export const allCandidatesData = [
   {
     name: "El fally du 237",
     title: "Web Artist",
-    image: "/dancers/el-fally-du-237.jpg",
+    image: "/dancers/el-fally-du-237.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -165,7 +165,7 @@ export const allCandidatesData = [
   {
     name: "Jkaxel",
     title: "Web Dancer",
-    image: "/dancers/jkaxel.jpg",
+    image: "/dancers/jkaxel.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -174,7 +174,7 @@ export const allCandidatesData = [
   {
     name: "Étienne kampos",
     title: "Web Performer",
-    image: "/dancers/etienne-kampos.jpg",
+    image: "/dancers/etienne-kampos.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -183,7 +183,7 @@ export const allCandidatesData = [
   {
     name: "AFU Dance académie",
     title: "Dance Group",
-    image: "/dancers/afu-dance-academy.jpeg",
+    image: "/dancers/afu-dance-academy.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -192,7 +192,7 @@ export const allCandidatesData = [
   {
     name: "Etat NWAR dance",
     title: "Dance Group",
-    image: "/dancers/etat-nwar-dance.jpg",
+    image: "/dancers/etat-nwar-dance.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -201,7 +201,7 @@ export const allCandidatesData = [
   {
     name: "Team Escram",
     title: "Dance Group",
-    image: "/dancers/team-escram.jpeg",
+    image: "/dancers/team-escram.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -210,7 +210,7 @@ export const allCandidatesData = [
   {
     name: "Mbolé Dancing",
     title: "Dance Group",
-    image: "/dancers/mbole-dancing.jpeg",
+    image: "/dancers/mbole-dancing.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -219,7 +219,7 @@ export const allCandidatesData = [
   {
     name: "Ordinateur baboué",
     title: "Afro Coupé Décalé",
-    image: "/dancers/ordinateur-baboue.jpeg",
+    image: "/dancers/ordinateur-baboue.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -228,7 +228,7 @@ export const allCandidatesData = [
   {
     name: "Shazam le vrai",
     title: "Afro Coupé Décalé",
-    image: "/dancers/shazam.jpeg",
+    image: "/dancers/shazam.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -237,7 +237,7 @@ export const allCandidatesData = [
   {
     name: "Xender",
     title: "Afro Coupé Décalé",
-    image: "/dancers/xender.jpeg",
+    image: "/dancers/xender.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -246,7 +246,7 @@ export const allCandidatesData = [
   {
     name: "BB Super l'elu",
     title: "Afro Coupé Décalé",
-    image: "/dancers/bb-super-lelu.jpeg",
+    image: "/dancers/bb-super-lelu.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -255,7 +255,7 @@ export const allCandidatesData = [
   {
     name: "Vinny magicien",
     title: "Afro Coupé Décalé",
-    image: "/dancers/vinny-magicien.jpg",
+    image: "/dancers/vinny-magicien.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -264,7 +264,7 @@ export const allCandidatesData = [
   {
     name: "Smobar Le Balthazar",
     title: "Afro Coupé Décalé",
-    image: "/dancers/smobar-le-balthazar.jpg",
+    image: "/dancers/smobar-le-balthazar.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -273,7 +273,7 @@ export const allCandidatesData = [
   {
     name: "Authentik",
     title: "Afro Coupé Décalé",
-    image: "/dancers/authentik.jpg",
+    image: "/dancers/authentik.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -282,7 +282,7 @@ export const allCandidatesData = [
   {
     name: "Pikan pointu",
     title: "Afro Coupé Décalé",
-    image: "/dancers/pikan-pointu.jpeg",
+    image: "/dancers/pikan-pointu.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -291,7 +291,7 @@ export const allCandidatesData = [
   {
     name: "Wenjel Avataro",
     title: "Afro Coupé Décalé",
-    image: "/dancers/wenjel-avataro.jpeg",
+    image: "/dancers/wenjel-avataro.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -300,7 +300,7 @@ export const allCandidatesData = [
   {
     name: "Jesus saotao",
     title: "Afro Coupé Décalé",
-    image: "/dancers/jesus-saotao.jpeg",
+    image: "/dancers/jesus-saotao.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -309,7 +309,7 @@ export const allCandidatesData = [
   {
     name: "Étienne kampos",
     title: "Male Dancer",
-    image: "/dancers/etienne-kampos.jpg",
+    image: "/dancers/etienne-kampos.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -318,7 +318,7 @@ export const allCandidatesData = [
   {
     name: "De Flow",
     title: "Male Dancer",
-    image: "/dancers/de-flow.jpeg",
+    image: "/dancers/de-flow.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -327,7 +327,7 @@ export const allCandidatesData = [
   {
     name: "Pascal métaphore",
     title: "Male Dancer",
-    image: "/dancers/pascal-metaphore.jpeg",
+    image: "/dancers/pascal-metaphore.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -336,7 +336,7 @@ export const allCandidatesData = [
   {
     name: "El fally du 237",
     title: "Male Dancer",
-    image: "/dancers/el-fally-du-237.jpg",
+    image: "/dancers/el-fally-du-237.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -345,7 +345,7 @@ export const allCandidatesData = [
   {
     name: "Escram shuwingum",
     title: "Male Dancer",
-    image: "/dancers/escram.jpeg",
+    image: "/dancers/escram.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -354,7 +354,7 @@ export const allCandidatesData = [
   {
     name: "Petit tchakap",
     title: "Male Dancer",
-    image: "/dancers/petit-tchakap.jpg",
+    image: "/dancers/petit-tchakap.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -363,7 +363,7 @@ export const allCandidatesData = [
   {
     name: "3 peace",
     title: "Male Dancer",
-    image: "/dancers/3-peace.jpeg",
+    image: "/dancers/3-peace.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -372,7 +372,7 @@ export const allCandidatesData = [
   {
     name: "Jkaxel",
     title: "Male Dancer",
-    image: "/dancers/jkaxel.jpg",
+    image: "/dancers/jkaxel.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -381,7 +381,7 @@ export const allCandidatesData = [
   {
     name: "Déboy le monstre",
     title: "Mbolé Dancer",
-    image: "/dancers/deboy-le-monstre.jpeg",
+    image: "/dancers/deboy-le-monstre.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -390,7 +390,7 @@ export const allCandidatesData = [
   {
     name: "Tks officiel",
     title: "Mbolé Dancer",
-    image: "/dancers/tks-officiel.jpg",
+    image: "/dancers/tks-officiel.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -399,7 +399,7 @@ export const allCandidatesData = [
   {
     name: "4 peace",
     title: "Mbolé Dancer",
-    image: "/dancers/4-peace.jpeg",
+    image: "/dancers/4-peace.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -408,7 +408,7 @@ export const allCandidatesData = [
   {
     name: "Nyanga Boy",
     title: "Mbolé Dancer",
-    image: "/dancers/nyanga-boy.jpeg",
+    image: "/dancers/nyanga-boy.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -417,7 +417,7 @@ export const allCandidatesData = [
   {
     name: "Trésor brown",
     title: "Mbolé Dancer",
-    image: "/dancers/tresor-brown.jpeg",
+    image: "/dancers/tresor-brown.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -426,7 +426,7 @@ export const allCandidatesData = [
   {
     name: "Ayi ventilateur",
     title: "Folklorique Dancer",
-    image: "/dancers/ayi-ventilateur.png",
+    image: "/dancers/ayi-ventilateur.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -435,7 +435,7 @@ export const allCandidatesData = [
   {
     name: "Nounours traditionnel",
     title: "Folklorique Dancer",
-    image: "/dancers/nounours-traditionnel.jpeg",
+    image: "/dancers/nounours-traditionnel.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -444,7 +444,7 @@ export const allCandidatesData = [
   {
     name: "Arcadien fureur",
     title: "Folklorique Dancer",
-    image: "/dancers/accadien-fureur.jpeg",
+    image: "/dancers/accadien-fureur.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -453,7 +453,7 @@ export const allCandidatesData = [
   {
     name: "Kibong adoube",
     title: "Folklorique Dancer",
-    image: "/dancers/kibong-adoube.jpeg",
+    image: "/dancers/kibong-adoube.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -462,7 +462,7 @@ export const allCandidatesData = [
   {
     name: "Goldy lastar",
     title: "Choreographer",
-    image: "/dancers/goldy-lastar.jpeg",
+    image: "/dancers/goldy-lastar.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -471,7 +471,7 @@ export const allCandidatesData = [
   {
     name: "Garçon déterminé",
     title: "Choreographer",
-    image: "/dancers/garcon-determine.jpg",
+    image: "/dancers/garcon-determine.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -480,7 +480,7 @@ export const allCandidatesData = [
   {
     name: "La religion noire",
     title: "Choreographer",
-    image: "/dancers/religion-noir.jpg",
+    image: "/dancers/religion-noir.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -489,7 +489,7 @@ export const allCandidatesData = [
   {
     name: "Le Hempe",
     title: "Choreographer",
-    image: "/dancers/le-hempe.jpg",
+    image: "/dancers/le-hempe.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -498,7 +498,7 @@ export const allCandidatesData = [
   {
     name: "Déboy le monstre et Maguy merine",
     title: "Duo",
-    image: "/dancers/deboy-le-monstre.jpeg",
+    image: "/dancers/deboy-le-monstre.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -507,7 +507,7 @@ export const allCandidatesData = [
   {
     name: "4 peace et Rachel élégance",
     title: "Duo",
-    image: "/dancers/4-peace.jpeg",
+    image: "/dancers/4-peace.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -516,7 +516,7 @@ export const allCandidatesData = [
   {
     name: "Chica bassa et kendi",
     title: "Duo",
-    image: "/dancers/chica-bassa.jpeg",
+    image: "/dancers/chica-bassa.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -525,7 +525,7 @@ export const allCandidatesData = [
   {
     name: "Tks officiel et Trésor brown",
     title: "Duo",
-    image: "/dancers/tks-officiel.jpg",
+    image: "/dancers/tks-officiel.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -534,7 +534,7 @@ export const allCandidatesData = [
   {
     name: "El fally du 237 et davia off",
     title: "Duo",
-    image: "/dancers/el-fally-du-237.jpg",
+    image: "/dancers/el-fally-du-237.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -543,7 +543,7 @@ export const allCandidatesData = [
   {
     name: "O'konor Celeste et Katia_eg",
     title: "Duo",
-    image: "/dancers/okonor-celeste.jpeg",
+    image: "/dancers/okonor-celeste.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -552,7 +552,7 @@ export const allCandidatesData = [
   {
     name: "3 peace et Influence femi",
     title: "Duo",
-    image: "/dancers/3-peace.jpeg",
+    image: "/dancers/3-peace.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -561,7 +561,7 @@ export const allCandidatesData = [
   {
     name: "Nounours et Lysiane",
     title: "Duo",
-    image: "/dancers/nounours.jpeg",
+    image: "/dancers/nounours.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -570,7 +570,7 @@ export const allCandidatesData = [
   {
     name: "Accadien fureur",
     title: "Choreographer",
-    image: "/dancers/accadien-fureur.jpeg",
+    image: "/dancers/accadien-fureur.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -579,7 +579,7 @@ export const allCandidatesData = [
   {
     name: "El fally du 237",
     title: "Dancer of the Year",
-    image: "/dancers/el-fally-du-237.jpg",
+    image: "/dancers/el-fally-du-237.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -588,7 +588,7 @@ export const allCandidatesData = [
   {
     name: "BB Super l'elu",
     title: "Dancer of the Year",
-    image: "/dancers/bb-super-lelu.jpeg",
+    image: "/dancers/bb-super-lelu.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -597,7 +597,7 @@ export const allCandidatesData = [
   {
     name: "Déboy le monstre",
     title: "Dancer of the Year",
-    image: "/dancers/deboy-le-monstre.jpeg",
+    image: "/dancers/deboy-le-monstre.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -606,7 +606,7 @@ export const allCandidatesData = [
   {
     name: "Escram shuwingum",
     title: "Dancer of the Year",
-    image: "/dancers/escram.jpeg",
+    image: "/dancers/escram.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -615,7 +615,7 @@ export const allCandidatesData = [
   {
     name: "Shazam le vrai",
     title: "Dancer of the Year",
-    image: "/dancers/shazam.jpeg",
+    image: "/dancers/shazam.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -624,7 +624,7 @@ export const allCandidatesData = [
   {
     name: "Kibong adoube",
     title: "Dancer of the Year",
-    image: "/dancers/kibong-adoube.jpeg",
+    image: "/dancers/kibong-adoube.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -633,7 +633,7 @@ export const allCandidatesData = [
   {
     name: "Katia eg",
     title: "Female Dancer of the Year",
-    image: "/dancers/katia-eg.png",
+    image: "/dancers/katia-eg.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -642,7 +642,7 @@ export const allCandidatesData = [
   {
     name: "Kendi",
     title: "Female Dancer of the Year",
-    image: "/dancers/kendi.jpeg",
+    image: "/dancers/kendi.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -651,7 +651,7 @@ export const allCandidatesData = [
   {
     name: "Beb's velina",
     title: "Female Dancer of the Year",
-    image: "/dancers/bebs-velina.jpeg",
+    image: "/dancers/bebs-velina.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -660,7 +660,7 @@ export const allCandidatesData = [
   {
     name: "Maguy merine",
     title: "Female Dancer of the Year",
-    image: "/dancers/maguy-merine.jpeg",
+    image: "/dancers/maguy-merine.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -669,7 +669,7 @@ export const allCandidatesData = [
   {
     name: "O'konor Céleste",
     title: "Female Dancer of the Year",
-    image: "/dancers/okonor-celeste.jpeg",
+    image: "/dancers/okonor-celeste.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -678,7 +678,7 @@ export const allCandidatesData = [
   {
     name: "Nelly Dora",
     title: "Web Performer",
-    image: "/dancers/nelly-dora.jpeg",
+    image: "/dancers/nelly-dora.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -687,7 +687,7 @@ export const allCandidatesData = [
   {
     name: "Chica bassa",
     title: "Web Performer",
-    image: "/dancers/chica-bassa.jpeg",
+    image: "/dancers/chica-bassa.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -696,7 +696,7 @@ export const allCandidatesData = [
   {
     name: "Maguy merine",
     title: "Web Performer",
-    image: "/dancers/maguy-merine.jpeg",
+    image: "/dancers/maguy-merine.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -705,7 +705,7 @@ export const allCandidatesData = [
   {
     name: "Jessi 237",
     title: "Web Performer",
-    image: "/dancers/jessi-237.jpeg",
+    image: "/dancers/jessi-237.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -714,7 +714,7 @@ export const allCandidatesData = [
   {
     name: "Petit tchakap",
     title: "Mbolé Dancer",
-    image: "/dancers/petit-tchakap.jpg",
+    image: "/dancers/petit-tchakap.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -723,7 +723,7 @@ export const allCandidatesData = [
   {
     name: "El fally du 237",
     title: "Mbolé Dancer",
-    image: "/dancers/el-fally-du-237.jpg",
+    image: "/dancers/el-fally-du-237.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -732,7 +732,7 @@ export const allCandidatesData = [
   {
     name: "Echantillon 1er",
     title: "Mbolé Dancer",
-    image: "/dancers/echantillon-1er.jpeg",
+    image: "/dancers/echantillon-1er.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -741,7 +741,7 @@ export const allCandidatesData = [
   {
     name: "Yvan 10",
     title: "Mbolé Dancer",
-    image: "/dancers/yvan-10.jpeg",
+    image: "/dancers/yvan-10.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -750,7 +750,7 @@ export const allCandidatesData = [
   {
     name: "Maguy merine",
     title: "Mbolé Dancer",
-    image: "/dancers/maguy-merine.jpeg",
+    image: "/dancers/maguy-merine.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -759,7 +759,7 @@ export const allCandidatesData = [
   {
     name: "Kendi",
     title: "Mbolé Dancer",
-    image: "/dancers/kendi.jpeg",
+    image: "/dancers/kendi.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -768,7 +768,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur Groupe de danse - AFU",
     title: "Dance Group",
-    image: "/dancers/afu-dance-academy.jpeg",
+    image: "/dancers/afu-dance-academy.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -777,7 +777,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur Groupe de danse - NWAR",
     title: "Dance Group",
-    image: "/dancers/etat-nwar-dance.jpg",
+    image: "/dancers/etat-nwar-dance.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -786,7 +786,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur Groupe de danse - Team Escram",
     title: "Dance Group",
-    image: "/dancers/team-escram.jpeg",
+    image: "/dancers/team-escram.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -795,7 +795,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur Groupe de danse - Mbolé",
     title: "Dance Group",
-    image: "/dancers/mbole-dancing.jpeg",
+    image: "/dancers/mbole-dancing.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -804,7 +804,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur artiste danseur mbolé - Petit tchakap",
     title: "Mbolé Dancer",
-    image: "/dancers/petit-tchakap.jpg",
+    image: "/dancers/petit-tchakap.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -813,7 +813,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur artiste danseur mbolé - Déboy",
     title: "Mbolé Dancer",
-    image: "/dancers/deboy-le-monstre.jpeg",
+    image: "/dancers/deboy-le-monstre.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -822,7 +822,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur artiste danseur mbolé - El Fally",
     title: "Mbolé Dancer",
-    image: "/dancers/el-fally-du-237.jpg",
+    image: "/dancers/el-fally-du-237.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -831,7 +831,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur artiste danseur mbolé - TKS",
     title: "Mbolé Dancer",
-    image: "/dancers/tks-officiel.jpg",
+    image: "/dancers/tks-officiel.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -840,7 +840,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur artiste danseur mbolé - 4 peace",
     title: "Mbolé Dancer",
-    image: "/dancers/4-peace.jpeg",
+    image: "/dancers/4-peace.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -849,7 +849,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur artiste danseur Afro Coupé - Ordinateur",
     title: "Afro Coupé Décalé",
-    image: "/dancers/ordinateur-baboue.jpeg",
+    image: "/dancers/ordinateur-baboue.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -858,7 +858,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur artiste danseur Afro Coupé - Shazam",
     title: "Afro Coupé Décalé",
-    image: "/dancers/shazam.jpeg",
+    image: "/dancers/shazam.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -867,7 +867,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur artiste danseur Afro Coupé - Xender",
     title: "Afro Coupé Décalé",
-    image: "/dancers/xender.jpeg",
+    image: "/dancers/xender.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -876,7 +876,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur artiste danseur Afro Coupé - BB Super",
     title: "Afro Coupé Décalé",
-    image: "/dancers/bb-super-lelu.jpeg",
+    image: "/dancers/bb-super-lelu.webp",
     votes: 0,
     badge: null,
     percentage: 0,
@@ -885,7 +885,7 @@ export const allCandidatesData = [
   {
     name: "Meilleur artiste danseur Afro Coupé - Vinny",
     title: "Afro Coupé Décalé",
-    image: "/dancers/vinny-magicien.jpg",
+    image: "/dancers/vinny-magicien.webp",
     votes: 0,
     badge: null,
     percentage: 0,

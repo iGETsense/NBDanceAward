@@ -23,7 +23,7 @@ const staticCandidates = [
   {
     name: "Étienne kampos",
     title: "Male Dance King",
-    image: "/dancers/Etienne kampos.jpg",
+    image: "/dancers/Etienne kampos.webp",
     votes: 1847,
     badge: 1,
     percentage: 45,
@@ -32,7 +32,7 @@ const staticCandidates = [
   {
     name: "De Flow",
     title: "Flow Master",
-    image: "/dancers/De Flow.jpeg",
+    image: "/dancers/De Flow.webp",
     votes: 1654,
     badge: null,
     percentage: 40,
@@ -41,7 +41,7 @@ const staticCandidates = [
   {
     name: "Pascal métaphore",
     title: "Poetic Dancer",
-    image: "/dancers/PASCAL métaphore.jpeg",
+    image: "/dancers/PASCAL métaphore.webp",
     votes: 1432,
     badge: null,
     percentage: 35,
@@ -50,7 +50,7 @@ const staticCandidates = [
   {
     name: "El Fally du 237",
     title: "Cameroon Star",
-    image: "/dancers/El fally du 237.jpg",
+    image: "/dancers/El fally du 237.webp",
     votes: 1289,
     badge: null,
     percentage: 31,
@@ -59,7 +59,7 @@ const staticCandidates = [
   {
     name: "Escram shuwingum",
     title: "Smooth Performer",
-    image: "/dancers/ESCRAM.jpeg",
+    image: "/dancers/ESCRAM.webp",
     votes: 1156,
     badge: null,
     percentage: 28,
@@ -68,7 +68,7 @@ const staticCandidates = [
   {
     name: "Petit tchakap",
     title: "Small but Mighty",
-    image: "/dancers/petit tchakap.jpg",
+    image: "/dancers/petit tchakap.webp",
     votes: 1089,
     badge: null,
     percentage: 26,
@@ -77,7 +77,7 @@ const staticCandidates = [
   {
     name: "3 peace",
     title: "Trio Performer",
-    image: "/dancers/3 peace.jpeg",
+    image: "/dancers/3 peace.webp",
     votes: 987,
     badge: null,
     percentage: 24,
@@ -86,7 +86,7 @@ const staticCandidates = [
   {
     name: "Jkaxel",
     title: "Urban Legend",
-    image: "/dancers/JKAXEL.jpg",
+    image: "/dancers/JKAXEL.webp",
     votes: 876,
     badge: null,
     percentage: 21,
@@ -97,7 +97,7 @@ const staticCandidates = [
   {
     name: "Maguy merine",
     title: "Dance Star",
-    image: "/dancers/MAGUY MERINE.jpeg",
+    image: "/dancers/MAGUY MERINE.webp",
     votes: 2534,
     badge: 1,
     percentage: 62,
@@ -106,7 +106,7 @@ const staticCandidates = [
   {
     name: "Kendi",
     title: "Dance Performer",
-    image: "/dancers/KENDI.jpeg",
+    image: "/dancers/KENDI.webp",
     votes: 2245,
     badge: 2,
     percentage: 55,
@@ -115,7 +115,7 @@ const staticCandidates = [
   {
     name: "Beb's velina",
     title: "Talented Dancer",
-    image: "/dancers/bebs-velina.jpeg",
+    image: "/dancers/bebs-velina.webp",
     votes: 1956,
     badge: null,
     percentage: 48,
@@ -124,7 +124,7 @@ const staticCandidates = [
   {
     name: "Katia eg",
     title: "Professional Artist",
-    image: "/dancers/Katia EG.png",
+    image: "/dancers/Katia EG.webp",
     votes: 1723,
     badge: null,
     percentage: 42,
@@ -133,7 +133,7 @@ const staticCandidates = [
   {
     name: "Stella officielle3",
     title: "Star Performer",
-    image: "/dancers/Stella Officielle3.jpeg",
+    image: "/dancers/Stella Officielle3.webp",
     votes: 1567,
     badge: null,
     percentage: 38,
@@ -142,7 +142,7 @@ const staticCandidates = [
   {
     name: "Nounours",
     title: "Dynamic Dancer",
-    image: "/dancers/Nounours.jpeg",
+    image: "/dancers/Nounours.webp",
     votes: 1423,
     badge: null,
     percentage: 35,
@@ -151,7 +151,7 @@ const staticCandidates = [
   {
     name: "O'konor Céleste",
     title: "Rising Star",
-    image: "/dancers/O’konor Celeste.jpeg",
+    image: "/dancers/O’konor Celeste.webp",
     votes: 1298,
     badge: null,
     percentage: 32,
@@ -162,7 +162,7 @@ const staticCandidates = [
   {
     name: "AFU Dance académie",
     title: "Professional Group",
-    image: "/dancers/AFU DANCE ACADEMY STUDIO.jpeg",
+    image: "/dancers/AFU DANCE ACADEMY STUDIO.webp",
     votes: 2089,
     badge: 1,
     percentage: 51,
@@ -171,7 +171,7 @@ const staticCandidates = [
   {
     name: "Etat NWAR dance",
     title: "Dance Collective",
-    image: "/dancers/ÉTAT NWAR DANCE SCHOOL.jpg",
+    image: "/dancers/ÉTAT NWAR DANCE SCHOOL.webp",
     votes: 1834,
     badge: null,
     percentage: 45,
@@ -180,7 +180,7 @@ const staticCandidates = [
   {
     name: "Team Escram",
     title: "Dance Crew",
-    image: "/dancers/TEAM ESCRAM.jpeg",
+    image: "/dancers/TEAM ESCRAM.webp",
     votes: 1689,
     badge: null,
     percentage: 41,
@@ -189,7 +189,7 @@ const staticCandidates = [
   {
     name: "Mbolé Dancing",
     title: "Cultural Group",
-    image: "/dancers/Mbole Dancing.jpeg",
+    image: "/dancers/Mbole Dancing.webp",
     votes: 1445,
     badge: null,
     percentage: 35,
@@ -200,7 +200,7 @@ const staticCandidates = [
   {
     name: "Déboy le monstre et Maguy merine",
     title: "Monster & Queen",
-    image: "/dancers/DEBOY LE MONSTRE.jpeg",
+    image: "/dancers/DEBOY LE MONSTRE.webp",
     votes: 1956,
     badge: 1,
     percentage: 48,
@@ -209,7 +209,7 @@ const staticCandidates = [
   {
     name: "4 peace et Rachel élégance",
     title: "Peace & Elegance",
-    image: "/dancers/4 peace.jpeg",
+    image: "/dancers/4 peace.webp",
     votes: 1723,
     badge: null,
     percentage: 42,
@@ -218,7 +218,7 @@ const staticCandidates = [
   {
     name: "Chica bassa et kendi",
     title: "Chica & Kendi",
-    image: "/dancers/CHICA BASSA.jpeg",
+    image: "/dancers/CHICA BASSA.webp",
     votes: 1567,
     badge: null,
     percentage: 38,
@@ -227,7 +227,7 @@ const staticCandidates = [
   {
     name: "Tks officiel et Trésor brown",
     title: "TKS & Treasure",
-    image: "/dancers/TKS OFFICIEL.jpg",
+    image: "/dancers/TKS OFFICIEL.webp",
     votes: 1432,
     badge: null,
     percentage: 35,
@@ -236,7 +236,7 @@ const staticCandidates = [
   {
     name: "El fally du 237 et davia off",
     title: "Fally & Davia",
-    image: "/dancers/El fally du 237.jpg",
+    image: "/dancers/El fally du 237.webp",
     votes: 1298,
     badge: null,
     percentage: 32,
@@ -245,7 +245,7 @@ const staticCandidates = [
   {
     name: "O'konor Celeste et Katia_eg",
     title: "Celeste & Katia",
-    image: "/dancers/O’konor Celeste.jpeg",
+    image: "/dancers/O’konor Celeste.webp",
     votes: 1178,
     badge: null,
     percentage: 29,
@@ -254,7 +254,7 @@ const staticCandidates = [
   {
     name: "3 peace et Influence femi",
     title: "3Peace & Influence",
-    image: "/dancers/3 peace.jpeg",
+    image: "/dancers/3 peace.webp",
     votes: 1056,
     badge: null,
     percentage: 26,
@@ -263,7 +263,7 @@ const staticCandidates = [
   {
     name: "Jumeaux de la capitale",
     title: "Twin Stars",
-    image: "/dancers/JUMAUX DE LA CAPITALE.jpg",
+    image: "/dancers/JUMAUX DE LA CAPITALE.webp",
     votes: 945,
     badge: null,
     percentage: 23,
@@ -274,7 +274,7 @@ const staticCandidates = [
   {
     name: "Accadien fureur",
     title: "Arcadian Choreographer",
-    image: "/dancers/Accadient Fureur.jpeg",
+    image: "/dancers/Accadient Fureur.webp",
     votes: 2245,
     badge: 1,
     percentage: 55,
@@ -283,7 +283,7 @@ const staticCandidates = [
   {
     name: "Goldy lastar",
     title: "Golden Star",
-    image: "/dancers/GOLDY LA-STAR.jpeg",
+    image: "/dancers/GOLDY LA-STAR.webp",
     votes: 2089,
     badge: null,
     percentage: 51,
@@ -292,7 +292,7 @@ const staticCandidates = [
   {
     name: "Garçon déterminé",
     title: "Determined Boy",
-    image: "/dancers/Garçon déterminé.jpg",
+    image: "/dancers/Garçon déterminé.webp",
     votes: 1834,
     badge: null,
     percentage: 45,
@@ -301,7 +301,7 @@ const staticCandidates = [
   {
     name: "El Fally du 237",
     title: "Versatile Artist",
-    image: "/dancers/El fally du 237.jpg",
+    image: "/dancers/El fally du 237.webp",
     votes: 1689,
     badge: null,
     percentage: 41,
@@ -310,7 +310,7 @@ const staticCandidates = [
   {
     name: "La religion noire",
     title: "Black Religion",
-    image: "/dancers/religion  noir.JPG",
+    image: "/dancers/religion  noir.webp",
     votes: 1567,
     badge: null,
     percentage: 38,
@@ -319,7 +319,7 @@ const staticCandidates = [
   {
     name: "Katia eg",
     title: "Female Choreographer",
-    image: "/dancers/Katia EG.png",
+    image: "/dancers/Katia EG.webp",
     votes: 1445,
     badge: null,
     percentage: 35,
@@ -328,7 +328,7 @@ const staticCandidates = [
   {
     name: "Le Hempe",
     title: "Hemp Master",
-    image: "/dancers/le hempe.jpg",
+    image: "/dancers/le hempe.webp",
     votes: 1323,
     badge: null,
     percentage: 32,
@@ -339,7 +339,7 @@ const staticCandidates = [
   {
     name: "Kendi",
     title: "Web Star",
-    image: "/dancers/KENDI.jpeg",
+    image: "/dancers/KENDI.webp",
     votes: 3245,
     badge: 1,
     percentage: 79,
@@ -348,7 +348,7 @@ const staticCandidates = [
   {
     name: "Déboy le monstre",
     title: "Viral Sensation",
-    image: "/dancers/DEBOY LE MONSTRE.jpeg",
+    image: "/dancers/DEBOY LE MONSTRE.webp",
     votes: 2834,
     badge: 2,
     percentage: 69,
@@ -357,7 +357,7 @@ const staticCandidates = [
   {
     name: "El fally 237",
     title: "Online Star",
-    image: "/dancers/El fally du 237.jpg",
+    image: "/dancers/El fally du 237.webp",
     votes: 2456,
     badge: null,
     percentage: 60,
@@ -366,7 +366,7 @@ const staticCandidates = [
   {
     name: "Jkaxel",
     title: "Internet Performer",
-    image: "/dancers/JKAXEL.jpg",
+    image: "/dancers/JKAXEL.webp",
     votes: 2189,
     badge: null,
     percentage: 53,
@@ -375,7 +375,7 @@ const staticCandidates = [
   {
     name: "Maguy merine",
     title: "Online Presence",
-    image: "/dancers/MAGUY MERINE.jpeg",
+    image: "/dancers/MAGUY MERINE.webp",
     votes: 1967,
     badge: null,
     percentage: 48,
@@ -384,7 +384,7 @@ const staticCandidates = [
   {
     name: "Jessi 237",
     title: "Digital Star",
-    image: "/dancers/Jessi 237.jpeg",
+    image: "/dancers/Jessi 237.webp",
     votes: 1789,
     badge: null,
     percentage: 44,
@@ -393,7 +393,7 @@ const staticCandidates = [
   {
     name: "Étienne kampos",
     title: "Web Performer",
-    image: "/dancers/Etienne kampos.jpg",
+    image: "/dancers/Etienne kampos.webp",
     votes: 1623,
     badge: null,
     percentage: 40,
@@ -402,7 +402,7 @@ const staticCandidates = [
   {
     name: "Nelly Dora",
     title: "Online Artist",
-    image: "/dancers/NELLY DORA.jpeg",
+    image: "/dancers/NELLY DORA.webp",
     votes: 1467,
     badge: null,
     percentage: 36,
@@ -411,7 +411,7 @@ const staticCandidates = [
   {
     name: "Chica bassa",
     title: "Viral Artist",
-    image: "/dancers/CHICA BASSA.jpeg",
+    image: "/dancers/CHICA BASSA.webp",
     votes: 1323,
     badge: null,
     percentage: 32,
@@ -420,7 +420,7 @@ const staticCandidates = [
   {
     name: "Nounours",
     title: "Popular Online",
-    image: "/dancers/Nounours.jpeg",
+    image: "/dancers/Nounours.webp",
     votes: 1189,
     badge: null,
     percentage: 29,
@@ -431,7 +431,7 @@ const staticCandidates = [
   {
     name: "Ayi ventilateur",
     title: "Wind Master",
-    image: "/dancers/ayi ventilateur.png",
+    image: "/dancers/ayi ventilateur.webp",
     votes: 1834,
     badge: 1,
     percentage: 45,
@@ -440,7 +440,7 @@ const staticCandidates = [
   {
     name: "Nounours traditionnel",
     title: "Traditional Bear",
-    image: "/dancers/le nounours traditionnel.jpeg",
+    image: "/dancers/le nounours traditionnel.webp",
     votes: 1689,
     badge: null,
     percentage: 41,
@@ -449,7 +449,7 @@ const staticCandidates = [
   {
     name: "Arcadien fureur",
     title: "Arcadian Fury",
-    image: "/dancers/Accadient Fureur.jpeg",
+    image: "/dancers/Accadient Fureur.webp",
     votes: 1567,
     badge: null,
     percentage: 38,
@@ -458,7 +458,7 @@ const staticCandidates = [
   {
     name: "Kibong adoube",
     title: "Adorned Master",
-    image: "/dancers/Kibong adoube.jpeg",
+    image: "/dancers/Kibong adoube.webp",
     votes: 1445,
     badge: null,
     percentage: 35,
@@ -469,7 +469,7 @@ const staticCandidates = [
   {
     name: "Ordinateur baboué",
     title: "Afro Master",
-    image: "/dancers/ORDINATEUR baboué.jpeg",
+    image: "/dancers/ORDINATEUR baboué.webp",
     votes: 2156,
     badge: 1,
     percentage: 53,
@@ -478,7 +478,7 @@ const staticCandidates = [
   {
     name: "Shazam le vrai",
     title: "Décalé Star",
-    image: "/dancers/SHAZAM.jpeg",
+    image: "/dancers/SHAZAM.webp",
     votes: 1923,
     badge: null,
     percentage: 47,
@@ -487,7 +487,7 @@ const staticCandidates = [
   {
     name: "Xender",
     title: "Afro Coupé Artist",
-    image: "/dancers/XENDER.jpeg",
+    image: "/dancers/XENDER.webp",
     votes: 1756,
     badge: null,
     percentage: 43,
@@ -496,7 +496,7 @@ const staticCandidates = [
   {
     name: "BB Super l'elu",
     title: "Elite Dancer",
-    image: "/dancers/Bb super lélu.jpeg",
+    image: "/dancers/Bb super lélu.webp",
     votes: 1634,
     badge: null,
     percentage: 40,
@@ -505,7 +505,7 @@ const staticCandidates = [
   {
     name: "Vinny magicien",
     title: "Magical Performer",
-    image: "/dancers/Vinny magicien.jpg",
+    image: "/dancers/Vinny magicien.webp",
     votes: 1489,
     badge: null,
     percentage: 36,
@@ -514,7 +514,7 @@ const staticCandidates = [
   {
     name: "Smobar Le Balthazar",
     title: "Smooth Dancer",
-    image: "/dancers/Smobar Le Balthazar.jpg",
+    image: "/dancers/Smobar Le Balthazar.webp",
     votes: 1367,
     badge: null,
     percentage: 33,
@@ -523,7 +523,7 @@ const staticCandidates = [
   {
     name: "Authentik",
     title: "Authentic Performer",
-    image: "/dancers/Authentik.jpg",
+    image: "/dancers/Authentik.webp",
     votes: 1256,
     badge: null,
     percentage: 31,
@@ -532,7 +532,7 @@ const staticCandidates = [
   {
     name: "Pikan pointure",
     title: "Sharp Dancer",
-    image: "/dancers/Pikan pointu.jpeg",
+    image: "/dancers/Pikan pointu.webp",
     votes: 1145,
     badge: null,
     percentage: 28,
@@ -541,7 +541,7 @@ const staticCandidates = [
   {
     name: "Wenjel Avataro",
     title: "Avatar Dancer",
-    image: "/dancers/Wenjel Avataro.jpeg",
+    image: "/dancers/Wenjel Avataro.webp",
     votes: 1034,
     badge: null,
     percentage: 25,
@@ -550,7 +550,7 @@ const staticCandidates = [
   {
     name: "Jesus saotao",
     title: "Spiritual Dancer",
-    image: "/dancers/JEZUS SAOTAO.jpeg",
+    image: "/dancers/JEZUS SAOTAO.webp",
     votes: 923,
     badge: null,
     percentage: 22,
@@ -561,7 +561,7 @@ const staticCandidates = [
   {
     name: "Petit tchakap",
     title: "Mbolé Master",
-    image: "/dancers/petit tchakap.jpg",
+    image: "/dancers/petit tchakap.webp",
     votes: 1867,
     badge: 1,
     percentage: 46,
@@ -570,7 +570,7 @@ const staticCandidates = [
   {
     name: "Déboy le monstre",
     title: "Monster Moves",
-    image: "/dancers/DEBOY LE MONSTRE.jpeg",
+    image: "/dancers/DEBOY LE MONSTRE.webp",
     votes: 1723,
     badge: null,
     percentage: 42,
@@ -579,7 +579,7 @@ const staticCandidates = [
   {
     name: "El fally du 237",
     title: "Talented Artist",
-    image: "/dancers/El fally du 237.jpg",
+    image: "/dancers/El fally du 237.webp",
     votes: 1598,
     badge: null,
     percentage: 39,
@@ -588,7 +588,7 @@ const staticCandidates = [
   {
     name: "Tks officiel",
     title: "Official Performer",
-    image: "/dancers/TKS OFFICIEL.jpg",
+    image: "/dancers/TKS OFFICIEL.webp",
     votes: 1467,
     badge: null,
     percentage: 36,
@@ -597,7 +597,7 @@ const staticCandidates = [
   {
     name: "4 peace",
     title: "Four Peace Group",
-    image: "/dancers/4 peace.jpeg",
+    image: "/dancers/4 peace.webp",
     votes: 1345,
     badge: null,
     percentage: 33,
@@ -606,7 +606,7 @@ const staticCandidates = [
   {
     name: "Echantillon 1er",
     title: "First Sample",
-    image: "/dancers/Échantillon 1er.jpeg",
+    image: "/dancers/Échantillon 1er.webp",
     votes: 1234,
     badge: null,
     percentage: 30,
@@ -615,7 +615,7 @@ const staticCandidates = [
   {
     name: "Yvan 10",
     title: "Perfect Ten",
-    image: "/dancers/yvan-10.jpg",
+    image: "/dancers/yvan-10.webp",
     votes: 1123,
     badge: null,
     percentage: 27,
@@ -624,7 +624,7 @@ const staticCandidates = [
   {
     name: "Nyanga Boy",
     title: "Boy Performer",
-    image: "/dancers/Nyanga Boy.jpeg",
+    image: "/dancers/Nyanga Boy.webp",
     votes: 1012,
     badge: null,
     percentage: 25,
@@ -633,7 +633,7 @@ const staticCandidates = [
   {
     name: "Trésor brown",
     title: "Brown Treasure",
-    image: "/dancers/Tresor Brown.jpeg",
+    image: "/dancers/Tresor Brown.webp",
     votes: 901,
     badge: null,
     percentage: 22,
@@ -644,7 +644,7 @@ const staticCandidates = [
   {
     name: "Nelly Dora",
     title: "Mbolé Master",
-    image: "/dancers/NELLY DORA.jpeg",
+    image: "/dancers/NELLY DORA.webp",
     votes: 1956,
     badge: 1,
     percentage: 48,
@@ -653,7 +653,7 @@ const staticCandidates = [
   {
     name: "Maguy merine",
     title: "Mbolé Star",
-    image: "/dancers/MAGUY MERINE.jpeg",
+    image: "/dancers/MAGUY MERINE.webp",
     votes: 1789,
     badge: null,
     percentage: 44,
@@ -662,7 +662,7 @@ const staticCandidates = [
   {
     name: "Kendi",
     title: "Mbolé Dancer",
-    image: "/dancers/KENDI.jpeg",
+    image: "/dancers/KENDI.webp",
     votes: 1645,
     badge: null,
     percentage: 40,
@@ -671,7 +671,7 @@ const staticCandidates = [
   {
     name: "Chica bassa",
     title: "Traditional Artist",
-    image: "/dancers/CHICA BASSA.jpeg",
+    image: "/dancers/CHICA BASSA.webp",
     votes: 1523,
     badge: null,
     percentage: 37,
@@ -680,7 +680,7 @@ const staticCandidates = [
   {
     name: "Lmn ponce off",
     title: "Performer",
-    image: "/dancers/LMN ponce Off.jpeg",
+    image: "/dancers/LMN ponce Off.webp",
     votes: 1412,
     badge: null,
     percentage: 34,
@@ -689,7 +689,7 @@ const staticCandidates = [
   {
     name: "Influence femi",
     title: "Influential Artist",
-    image: "/dancers/Influence Femi.jpeg",
+    image: "/dancers/Influence Femi.webp",
     votes: 1301,
     badge: null,
     percentage: 32,
@@ -698,7 +698,7 @@ const staticCandidates = [
   {
     name: "Jessi 237",
     title: "Rising Star",
-    image: "/dancers/Jessi 237.jpeg",
+    image: "/dancers/Jessi 237.webp",
     votes: 1190,
     badge: null,
     percentage: 29,
@@ -709,7 +709,7 @@ const staticCandidates = [
   {
     name: "El Fally du 237",
     title: "Dancer of the Year",
-    image: "/dancers/El fally du 237.jpg",
+    image: "/dancers/El fally du 237.webp",
     votes: 3456,
     badge: 1,
     percentage: 84,
@@ -718,7 +718,7 @@ const staticCandidates = [
   {
     name: "BB Super l'elu",
     title: "Super Chosen One",
-    image: "/dancers/Bb super lélu.jpeg",
+    image: "/dancers/Bb super lélu.webp",
     votes: 3123,
     badge: 2,
     percentage: 76,
@@ -727,7 +727,7 @@ const staticCandidates = [
   {
     name: "Déboy le monstre",
     title: "The Monster",
-    image: "/dancers/DEBOY LE MONSTRE.jpeg",
+    image: "/dancers/DEBOY LE MONSTRE.webp",
     votes: 2867,
     badge: 3,
     percentage: 70,
@@ -736,7 +736,7 @@ const staticCandidates = [
   {
     name: "Escram shuwingum",
     title: "Smooth Performer",
-    image: "/dancers/ESCRAM.jpeg",
+    image: "/dancers/ESCRAM.webp",
     votes: 2645,
     badge: null,
     percentage: 64,
@@ -745,7 +745,7 @@ const staticCandidates = [
   {
     name: "Shazam le vrai",
     title: "The Real One",
-    image: "/dancers/SHAZAM.jpeg",
+    image: "/dancers/SHAZAM.webp",
     votes: 2434,
     badge: null,
     percentage: 59,
@@ -754,7 +754,7 @@ const staticCandidates = [
   {
     name: "Kibong adoube",
     title: "Adorned Star",
-    image: "/dancers/Kibong adoube.jpeg",
+    image: "/dancers/Kibong adoube.webp",
     votes: 2256,
     badge: null,
     percentage: 55,
@@ -765,7 +765,7 @@ const staticCandidates = [
   {
     name: "Maxime la vitesse",
     title: "Young Prodigy",
-    image: "/dancers/Maxime la vitesse.jpg",
+    image: "/dancers/Maxime la vitesse.webp",
     votes: 2234,
     badge: 1,
     percentage: 54,
@@ -774,7 +774,7 @@ const staticCandidates = [
   {
     name: "Kloe la machine",
     title: "Young Talent",
-    image: "/dancers/Kloe la machine.JPG",
+    image: "/dancers/Kloe la machine.webp",
     votes: 2067,
     badge: 2,
     percentage: 50,
@@ -783,7 +783,7 @@ const staticCandidates = [
   {
     name: "Maldjess peace",
     title: "Rising Star",
-    image: "/dancers/Meldjess peace.jpeg",
+    image: "/dancers/Meldjess peace.webp",
     votes: 1889,
     badge: null,
     percentage: 46,
@@ -792,7 +792,7 @@ const staticCandidates = [
   {
     name: "Jumeaux de la capitale",
     title: "Talented Duo",
-    image: "/dancers/JUMAUX DE LA CAPITALE.jpg",
+    image: "/dancers/JUMAUX DE LA CAPITALE.webp",
     votes: 1734,
     badge: null,
     percentage: 42,
@@ -803,7 +803,7 @@ const staticCandidates = [
   {
     name: "Katia eg",
     title: "Female Dancer of Year",
-    image: "/dancers/Katia EG.png",
+    image: "/dancers/Katia EG.webp",
     votes: 3567,
     badge: 1,
     percentage: 87,
@@ -812,7 +812,7 @@ const staticCandidates = [
   {
     name: "Kendi",
     title: "Star Performer",
-    image: "/dancers/KENDI.jpeg",
+    image: "/dancers/KENDI.webp",
     votes: 3234,
     badge: 2,
     percentage: 79,
@@ -821,7 +821,7 @@ const staticCandidates = [
   {
     name: "Beb's velina",
     title: "Elegant Dancer",
-    image: "/dancers/bebs-velina.jpeg",
+    image: "/dancers/bebs-velina.webp",
     votes: 2978,
     badge: 3,
     percentage: 73,
@@ -830,7 +830,7 @@ const staticCandidates = [
   {
     name: "Maguy merine",
     title: "Talented Artist",
-    image: "/dancers/MAGUY MERINE.jpeg",
+    image: "/dancers/MAGUY MERINE.webp",
     votes: 2756,
     badge: null,
     percentage: 67,
@@ -839,7 +839,7 @@ const staticCandidates = [
   {
     name: "O'konor Céleste",
     title: "Celestial Star",
-    image: "/dancers/okonor-celeste.jpeg",
+    image: "/dancers/okonor-celeste.webp",
     votes: 2545,
     badge: null,
     percentage: 62,
@@ -1021,7 +1021,7 @@ export default function NBDanceAwardPage() {
         <div className="container mx-auto flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
           <div className="flex items-center gap-2 md:gap-3">
             <div className="relative h-10 w-10 md:h-12 md:w-12">
-              <Image src="/logo.png" alt="NB Dance Award" fill className="object-contain" priority quality={90} sizes="(max-width: 768px) 40px, 48px" />
+              <Image src="/logo.webp" alt="NB Dance Award" fill className="object-contain" priority quality={90} sizes="(max-width: 768px) 40px, 48px" />
             </div>
             <div className="flex flex-col md:flex-row md:items-center md:gap-1">
               <span className="text-xs font-bold leading-tight text-white md:hidden">
@@ -1046,7 +1046,7 @@ export default function NBDanceAwardPage() {
               <SheetHeader className="mb-8">
                 <div className="flex items-center gap-3">
                   <div className="relative h-12 w-12">
-                    <Image src="/logo.png" alt="NB Dance Award" fill className="object-contain" quality={90} sizes="48px" />
+                    <Image src="/logo.webp" alt="NB Dance Award" fill className="object-contain" quality={90} sizes="48px" />
                   </div>
                   <SheetTitle className="text-left">
                     <div className="flex flex-col">
@@ -1116,7 +1116,7 @@ export default function NBDanceAwardPage() {
         {/* Hero Section */}
         <section className="relative overflow-hidden">
           <div className="relative h-[400px] md:h-[500px]">
-            <Image src="/banner-dancers.jpg" alt="Dancers performing on stage" fill className="object-cover animate-fade-in-up" priority quality={85} sizes="100vw" />
+            <Image src="/banner-dancers.webp" alt="Dancers performing on stage" fill className="object-cover animate-fade-in-up" priority quality={85} sizes="100vw" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/40 to-transparent animate-fade-in-down" />
 
             <div className="container relative mx-auto flex h-full flex-col justify-end px-4 pb-8 md:px-6 md:pb-12">
@@ -1147,14 +1147,14 @@ export default function NBDanceAwardPage() {
         <div ref={partnersSection.ref as any} className={`transition-all duration-700 ${partnersSection.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <PartnersCarousel
             partners={[
-              { name: "LOGOGGG", logo: "/partners/LOGOGGG.png" },
-              { name: "WhatsApp Image 1", logo: "/partners/WhatsApp Image 2025-10-07 à 17.22.43_94d52ea3.jpg" },
-              { name: "WhatsApp Image 2", logo: "/partners/WhatsApp Image 2025-11-10 à 07.19.11_8ab8bff9.jpg" },
-              { name: "WhatsApp Image 3", logo: "/partners/WhatsApp Image 2025-11-13 à 22.31.35_9f132a8b.jpg" },
-              { name: "NB", logo: "/partners/nb.png" },
-              { name: "IGS", logo: "/partners/igs.png" },
-              { name: "Partenaire Officiel", logo: "/partners/partenaire officiel.jpg" },
-              { name: "Photo Partner", logo: "/partners/photo_2025-08-18_12-32-07.png" },
+              { name: "LOGOGGG", logo: "/partners/LOGOGGG.webp" },
+              { name: "WhatsApp Image 1", logo: "/partners/WhatsApp Image 2025-10-07 à 17.22.43_94d52ea3.webp" },
+              { name: "WhatsApp Image 2", logo: "/partners/WhatsApp Image 2025-11-10 à 07.19.11_8ab8bff9.webp" },
+              { name: "WhatsApp Image 3", logo: "/partners/WhatsApp Image 2025-11-13 à 22.31.35_9f132a8b.webp" },
+              { name: "NB", logo: "/partners/nb.webp" },
+              { name: "IGS", logo: "/partners/igs.webp" },
+              { name: "Partenaire Officiel", logo: "/partners/partenaire officiel.webp" },
+              { name: "Photo Partner", logo: "/partners/photo_2025-08-18_12-32-07.webp" },
             ]}
             autoPlay={true}
             autoPlayInterval={4000}
