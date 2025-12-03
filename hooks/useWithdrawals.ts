@@ -36,13 +36,19 @@ export function useWithdrawals(limit: number = 50) {
                 (snapshot) => {
                     const data = snapshot.val();
 
+                    console.log('[useWithdrawals] Raw Firebase data:', data);
+
                     if (data) {
                         // Convert to array and sort by newest first
                         const withdrawalArray = Object.values(data) as Withdrawal[];
+                        console.log('[useWithdrawals] Withdrawal array:', withdrawalArray);
+                        console.log('[useWithdrawals] Array length:', withdrawalArray.length);
+
                         withdrawalArray.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
                         setWithdrawals(withdrawalArray);
                     } else {
+                        console.log('[useWithdrawals] No withdrawal data found');
                         setWithdrawals([]);
                     }
 
@@ -79,13 +85,20 @@ export function useWithdrawalStats() {
         // Fetch all withdrawals to calculate total
         const unsubscribe = onValue(withdrawalsRef, (snapshot) => {
             const data = snapshot.val();
+            console.log('[useWithdrawalStats] Raw data:', data);
+
             if (data) {
                 const withdrawalArray = Object.values(data) as Withdrawal[];
+                console.log('[useWithdrawalStats] Total withdrawals:', withdrawalArray.length);
+
                 const total = withdrawalArray
                     .filter(w => w.status === 'completed')
                     .reduce((sum, w) => sum + (w.amount || 0), 0);
+
+                console.log('[useWithdrawalStats] Total withdrawn (completed only):', total);
                 setTotalWithdrawn(total);
             } else {
+                console.log('[useWithdrawalStats] No withdrawal data');
                 setTotalWithdrawn(0);
             }
             setLoading(false);
