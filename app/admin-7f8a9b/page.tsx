@@ -11,8 +11,6 @@ import { useCandidates } from "@/hooks/useFirebaseData"
 import { sanitizeInput, validateNumeric, validateWithdrawalData, RateLimiter } from "@/lib/security"
 import { AdminStats, TransactionsList } from "@/components/AdminDashboard"
 import { AdminWithdrawal } from "@/components/AdminWithdrawal"
-import { ReconciliationTool } from "@/components/ReconciliationTool"
-import { ManualWithdrawalRegistration } from "@/components/ManualWithdrawalRegistration"
 import { FailedTransactions } from "@/components/FailedTransactions"
 import { auth } from "@/lib/firebase"
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut, User } from "firebase/auth"
@@ -331,13 +329,7 @@ export default function AdminPage() {
           </div>
 
           {/* Withdrawal Section - New Component with Mesomb Integration */}
-          <div className="mb-8 space-y-8">
-            {/* Reconciliation Tool */}
-            <ReconciliationTool />
-
-            {/* Manual Withdrawal Registration */}
-            <ManualWithdrawalRegistration />
-
+          <div className="mb-8">
             {/* Withdrawal Section */}
             <AdminWithdrawal />
           </div>
