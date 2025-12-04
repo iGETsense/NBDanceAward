@@ -16,6 +16,7 @@ import { useCandidates, useLeaderboard } from "@/hooks/useFirebaseData"
 import { useVoting } from "@/hooks/useVoting"
 import { CountdownPopup } from "@/components/CountdownPopup"
 import { decodeVoteLinkClient, encodeVoteLinkClient } from "@/lib/voteLinks"
+import { Client, Databases } from "appwrite";
 
 
 const staticCandidates = [
