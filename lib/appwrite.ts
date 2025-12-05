@@ -29,7 +29,7 @@ export const getAppwriteCandidates = async (databaseId: string, collectionId: st
         const response = await databases.listDocuments(
             databaseId,
             collectionId,
-            [Query.limit(100)] // Adjust limit as needed
+            [Query.limit(1000)] // Adjust limit as needed
         );
 
         // Transform Appwrite documents to match your application's data structure
