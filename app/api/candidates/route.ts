@@ -1,23 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { addCandidate, updateCandidate, getCandidates } from '@/lib/database'
+import { addCandidate, updateCandidate } from '@/lib/database'
 import { sanitizeInput } from '@/lib/security'
+import {
+  getSecureCandidates,
+  getSecureCategories,
+  getSecureCandidateCategories
+} from '@/lib/secureDatabase'
+import { getCandidateImage } from '@/lib/candidateImages'
+import { calculatePercentages } from '@/lib/percentageCalculator'
 
 /**
  * GET /api/candidates
- * Get all candidates with fallback to static data
+ * Get all candidates with secure Firebase access (Cloudflare fallback)
  */
 export async function GET() {
   try {
-    let candidates = await getCandidates();
+    // Fetch all data using secure server-side service
+    const [candidates, categories, links] = await Promise.all([
+      getSecureCandidates(),
+      getSecureCategories(),
+      getSecureCandidateCategories(),
+    ]);
 
-    // If Firebase returns empty (network blocked), use static data
+    // If all backends failed, use static data
     if (!candidates || Object.keys(candidates).length === 0) {
-      console.log('Using static candidate data as fallback');
-      // Import static data
+      console.log('⚠️ All backends failed, using static candidate data');
       const { allCandidatesData } = await import('@/lib/candidatesData');
 
-      // Convert array to object format expected by frontend
-      candidates = allCandidatesData.reduce((acc: any, candidate: any, index: number) => {
+      const staticCandidates = allCandidatesData.reduce((acc: any, candidate: any, index: number) => {
         const id = candidate.name.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '') + `-${index}`;
         acc[id] = {
           ...candidate,
@@ -28,16 +38,43 @@ export async function GET() {
         };
         return acc;
       }, {});
+
+      return NextResponse.json({ success: true, candidates: Object.values(staticCandidates) });
     }
 
-    // Convert object to array if needed
-    const candidatesArray = Array.isArray(candidates)
-      ? candidates
-      : Object.values(candidates || {});
+    // Create category lookup map
+    const candidateCategoryMap = new Map<string, string>();
+    const linksArray = Array.isArray(links) ? links : Object.values(links || {});
+    linksArray.forEach((link: any) => {
+      if (link) candidateCategoryMap.set(link.candidateId, link.categoryId);
+    });
 
-    return NextResponse.json({ success: true, candidates: candidatesArray });
+    // Enrich candidates with category info and images
+    const candidatesArray = Object.values(candidates);
+    const enrichedCandidates = candidatesArray.map((candidate: any) => {
+      const categoryId = candidateCategoryMap.get(candidate.id);
+      const category = categoryId && categories?.[categoryId]
+        ? categories[categoryId]
+        : null;
+
+      return {
+        ...candidate,
+        categoryId: categoryId || 'unknown',
+        category: category ? category.name : 'Unknown Category',
+        image: getCandidateImage(candidate.id, candidate.baseId),
+      };
+    });
+
+    // Calculate vote percentages
+    const withPercentages = calculatePercentages(enrichedCandidates);
+
+    return NextResponse.json({
+      success: true,
+      candidates: withPercentages,
+      source: 'secure-api'
+    });
   } catch (error) {
-    console.error('Error in candidates API:', error);
+    console.error('❌ Error in candidates API:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch candidates' },
       { status: 500 }

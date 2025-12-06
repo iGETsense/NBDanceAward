@@ -138,13 +138,13 @@ export async function getVotesRest(): Promise<Record<string, any>> {
 export async function getUserVotesRest(userId: string): Promise<Record<string, any>> {
     const allVotes = await getVotesRest();
     const userVotes: Record<string, any> = {};
-    
+
     for (const [voteId, vote] of Object.entries(allVotes)) {
         if ((vote as any).userId === userId) {
             userVotes[voteId] = vote;
         }
     }
-    
+
     return userVotes;
 }
 
@@ -161,7 +161,7 @@ export async function submitVoteRest(voteData: {
 }): Promise<{ success: boolean; voteId: string }> {
     try {
         const voteId = `${voteData.userId}_${Date.now()}`;
-        
+
         // Write vote
         await writeFirebaseRest(`/votes/${voteId}`, {
             ...voteData,
@@ -173,7 +173,7 @@ export async function submitVoteRest(voteData: {
         const candidates = await getCandidatesRest();
         const candidate = candidates[voteData.candidateId];
         const currentVotes = candidate?.votes || 0;
-        
+
         await updateFirebaseRest(`/candidates/${voteData.candidateId}`, {
             votes: currentVotes + voteData.voteCount,
         });
@@ -182,7 +182,7 @@ export async function submitVoteRest(voteData: {
         const users = await fetchFirebaseRest<Record<string, any>>('/users');
         const user = users?.[voteData.userId];
         const currentUserVotes = user?.totalVotes || 0;
-        
+
         await updateFirebaseRest(`/users/${voteData.userId}`, {
             totalVotes: currentUserVotes + voteData.voteCount,
         });
@@ -229,7 +229,7 @@ export async function updateUserRest(userId: string, userData: any): Promise<any
  */
 export async function getLeaderboardRest(limit: number = 10): Promise<any[]> {
     const candidates = await getCandidatesRest();
-    
+
     const leaderboard = Object.entries(candidates)
         .map(([id, candidate]) => ({
             ...candidate,
