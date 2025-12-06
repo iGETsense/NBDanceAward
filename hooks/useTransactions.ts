@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { ref, onValue, query, orderByChild, limitToLast } from 'firebase/database';
-import { database } from '@/lib/firebase';
+import { database, auth } from '@/lib/firebase';
 
 export interface Transaction {
     id: string;
@@ -60,7 +60,18 @@ export function useTransactions(limit: number = 100) {
 
         const fetchTransactions = async () => {
             try {
-                const response = await fetch('/api/admin-7f8a9b/transactions');
+                // Get current user token if available
+                const user = auth.currentUser;
+                const token = user ? await user.getIdToken() : null;
+
+                const headers: HeadersInit = {};
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                const response = await fetch('/api/admin-7f8a9b/transactions', {
+                    headers
+                });
                 if (!response.ok) throw new Error('Failed to fetch transactions');
 
                 const result = await response.json();

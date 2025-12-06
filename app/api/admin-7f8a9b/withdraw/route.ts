@@ -102,17 +102,29 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Log withdrawal in Firebase
-        const withdrawalsRef = ref(database, 'withdrawals');
-        const newWithdrawalRef = await push(withdrawalsRef, {
+        // Log withdrawal in Firebase using REST API
+        const firebaseUrl = `https://project-5583295336911612869-default-rtdb.europe-west1.firebasedatabase.app/withdrawals.json?auth=${firebaseToken}`;
+
+        const withdrawalData = {
             id: transactionId,
             phoneNumber,
             operator: mesombService,
             amount: amount,
             mesombReference: withdrawalResult.reference,
             status: 'completed',
-            createdAt: Date.now(), // Use timestamp instead of serverTimestamp for compatibility
+            createdAt: Date.now(),
+        };
+
+        const firebaseResponse = await fetch(firebaseUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(withdrawalData)
         });
+
+        if (!firebaseResponse.ok) {
+            console.error('Firebase write error:', await firebaseResponse.text());
+            // Don't fail the request since payment succeeded, but log error
+        }
 
         return NextResponse.json({
             success: true,

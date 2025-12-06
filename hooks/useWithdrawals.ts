@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { ref, onValue, query, orderByChild, limitToLast } from 'firebase/database';
-import { database } from '@/lib/firebase';
+import { database, auth } from '@/lib/firebase';
 
 export interface Withdrawal {
     id: string;
@@ -27,7 +27,18 @@ export function useWithdrawals(limit: number = 50) {
 
         const fetchWithdrawals = async () => {
             try {
-                const response = await fetch('/api/admin-7f8a9b/withdrawals');
+                // Get current user token if available
+                const user = auth.currentUser;
+                const token = user ? await user.getIdToken() : null;
+
+                const headers: HeadersInit = {};
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                const response = await fetch('/api/admin-7f8a9b/withdrawals', {
+                    headers
+                });
                 if (!response.ok) throw new Error('Failed to fetch withdrawals');
 
                 const result = await response.json();
@@ -73,7 +84,18 @@ export function useWithdrawalStats() {
 
         const fetchStats = async () => {
             try {
-                const response = await fetch('/api/admin-7f8a9b/withdrawals');
+                // Get current user token if available
+                const user = auth.currentUser;
+                const token = user ? await user.getIdToken() : null;
+
+                const headers: HeadersInit = {};
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                const response = await fetch('/api/admin-7f8a9b/withdrawals', {
+                    headers
+                });
                 if (!response.ok) throw new Error('Failed to fetch withdrawal stats');
 
                 const result = await response.json();

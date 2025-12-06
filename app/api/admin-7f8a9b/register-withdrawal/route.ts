@@ -60,9 +60,10 @@ export async function POST(request: NextRequest) {
         // Generate transaction ID
         const transactionId = `manual_withdrawal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-        // Register withdrawal in Firebase
-        const withdrawalsRef = ref(database, 'withdrawals');
-        await push(withdrawalsRef, {
+        // Register withdrawal in Firebase using REST API
+        const firebaseUrl = `https://project-5583295336911612869-default-rtdb.europe-west1.firebasedatabase.app/withdrawals.json?auth=${firebaseToken}`;
+
+        const withdrawalData = {
             id: transactionId,
             phoneNumber: phoneNumber || 'N/A',
             operator: 'MANUAL',
@@ -72,7 +73,17 @@ export async function POST(request: NextRequest) {
             createdAt: Date.now(),
             note: note || 'Retrait manuel enregistré pour synchronisation avec Mesomb',
             isManual: true,
+        };
+
+        const firebaseResponse = await fetch(firebaseUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(withdrawalData)
         });
+
+        if (!firebaseResponse.ok) {
+            throw new Error(`Firebase error: ${firebaseResponse.status} ${firebaseResponse.statusText}`);
+        }
 
         console.log('[Manual Withdrawal] Registered:', {
             transactionId,

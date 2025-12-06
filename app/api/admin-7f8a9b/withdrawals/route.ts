@@ -15,8 +15,18 @@ const FIREBASE_DB_URL = "https://project-5583295336911612869-default-rtdb.europe
 
 export async function GET(request: NextRequest) {
     try {
+        // Get auth token from header
+        const authHeader = request.headers.get('Authorization');
+        const token = authHeader?.startsWith('Bearer ') ? authHeader.split('Bearer ')[1] : null;
+
+        // Construct URL with auth token if present
+        let url = `${FIREBASE_DB_URL}/withdrawals.json?orderBy="createdAt"&limitToLast=100`;
+        if (token) {
+            url += `&auth=${token}`;
+        }
+
         // Use REST API for reliability
-        const response = await fetch(`${FIREBASE_DB_URL}/withdrawals.json?orderBy="createdAt"&limitToLast=100`);
+        const response = await fetch(url);
 
         if (!response.ok) {
             throw new Error(`Firebase REST error: ${response.status} ${response.statusText}`);
