@@ -2,7 +2,7 @@
 
 ## 🔐 Overview
 
-The Firebase proxy server uses **hardcoded credentials** instead of envinment files for better security.
+The Firebase proxy server uses **hardcoded credentials** instead of envinment files for better sty.
 
 **Why hardcoded?**
 - No `.env` file to accidentally commit
