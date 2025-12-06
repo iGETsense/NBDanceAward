@@ -192,7 +192,7 @@ export const submitAppwriteVote = async (voteData: VoteData) => {
         return { success: true, voteId };
     } catch (error) {
         console.error('Error submitting vote to Appwrite:', error);
-        return { success: false, error };
+        return { success: false, voteId: '', error };
     }
 };
 
