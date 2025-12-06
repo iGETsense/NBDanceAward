@@ -2,23 +2,6 @@ import { database } from './firebase'
 import { ref, set, update, get, onValue, increment } from 'firebase/database'
 import { calculatePercentages, updateCandidatePercentage } from './percentageCalculator'
 import { getCandidateImage } from './candidateImages'
-<<<<<<< HEAD
-
-// ============ CATEGORIES ============
-
-export async function getCategories() {
-  try {
-    const snapshot = await get(ref(database, 'categories'))
-    if (snapshot.exists()) {
-      const categoriesObj = snapshot.val()
-      return Object.values(categoriesObj).sort((a: any, b: any) => a.order - b.order)
-    }
-    return []
-  } catch (error) {
-    console.error('Error fetching categories:', error)
-    return []
-  }
-=======
 import { hybridRead, hybridWrite, withFailover, FAILOVER_TIMEOUT_MS } from './hybridDatabase'
 import {
   getAppwriteCandidates,
@@ -51,14 +34,10 @@ export async function getCategories() {
     getAppwriteCategories,
     'getCategories'
   )
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
 }
 
 export function subscribeToCategories(callback: (data: any) => void) {
   const categoriesRef = ref(database, 'categories')
-<<<<<<< HEAD
-  const unsubscribe = onValue(categoriesRef, (snapshot) => {
-=======
   let fallbackTriggered = false
 
   // Set up timeout to trigger Appwrite fallback
@@ -78,16 +57,11 @@ export function subscribeToCategories(callback: (data: any) => void) {
   const unsubscribe = onValue(categoriesRef, (snapshot) => {
     clearTimeout(timeoutId)
     fallbackTriggered = true
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
     if (snapshot.exists()) {
       const categoriesObj = snapshot.val()
       const sorted = Object.values(categoriesObj).sort((a: any, b: any) => a.order - b.order)
       callback(sorted)
     }
-<<<<<<< HEAD
-  })
-  return unsubscribe
-=======
   }, (error) => {
     clearTimeout(timeoutId)
     console.error('🔥 Firebase subscription error:', error)
@@ -102,132 +76,10 @@ export function subscribeToCategories(callback: (data: any) => void) {
     clearTimeout(timeoutId)
     unsubscribe()
   }
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
 }
 
 // ============ CANDIDATES ============
 
-<<<<<<< HEAD
-// Helper function to retry Firebase calls with exponential backoff
-async function retryWithBackoff<T>(
-  fn: () => Promise<T>,
-  maxRetries: number = 3,
-  initialDelay: number = 1000
-): Promise<T> {
-  let lastError: any;
-
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      return await fn();
-    } catch (error) {
-      lastError = error;
-      if (i < maxRetries - 1) {
-        const delay = initialDelay * Math.pow(2, i);
-        console.log(`Retry attempt ${i + 1}/${maxRetries} after ${delay}ms`);
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    }
-  }
-
-  throw lastError;
-}
-
-import { getAppwriteCandidates, isAppwriteConfigured } from './appwrite';
-
-export async function getCandidates() {
-  // Define the Firebase fetch promise
-  const firebasePromise = retryWithBackoff(async () => {
-    const snapshot = await get(ref(database, 'candidates'));
-    if (snapshot.exists()) {
-      return snapshot.val();
-    }
-    return {};
-  }, 3, 1000);
-
-  // Define the Fallback (Proxy -> Appwrite) promise
-  const fallbackPromise = async () => {
-    // 1. Try Proxy first (Server-side Firebase)
-    try {
-      const proxyUrl = '/api/proxy/firebase?path=candidates';
-      const proxyResponse = await fetch(proxyUrl, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        cache: 'no-store'
-      });
-
-      if (proxyResponse.ok) {
-        const proxyData = await proxyResponse.json();
-        if (proxyData.success && proxyData.data) {
-          return proxyData.data;
-        }
-      }
-    } catch (proxyError) {
-      // Proxy failed, continue to Appwrite
-    }
-
-    // 2. Try Appwrite
-    if (isAppwriteConfigured()) {
-      try {
-        // Use env vars for IDs, with defaults
-        const dbId = process.env.NEXT_PUBLIC_APPWRITE_DB_ID || 'candidates_db';
-        const collId = process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID || 'candidates';
-        return await getAppwriteCandidates(dbId, collId);
-      } catch (appwriteError) {
-        // Appwrite failed
-      }
-    }
-
-    return {};
-  };
-
-  // Race logic: If Firebase takes > 2.5s, switch to fallback
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Firebase timeout')), 2500)
-  );
-
-  try {
-    // Try Firebase with a timeout race
-    return await Promise.race([firebasePromise, timeoutPromise]);
-  } catch (error) {
-    // If timeout or error, switch to fallback
-    return await fallbackPromise();
-  }
-}
-
-export async function getCandidatesByCategory(categoryId: string) {
-  try {
-    // Get candidate IDs for this category from the link table
-    const linkSnapshot = await get(ref(database, 'candidateCategories'))
-    if (!linkSnapshot.exists()) {
-      return []
-    }
-
-    const links = linkSnapshot.val()
-    const candidateIds = Array.isArray(links)
-      ? links.filter((link: any) => link.categoryId === categoryId).map((link: any) => link.candidateId)
-      : Object.values(links).filter((link: any) => link.categoryId === categoryId).map((link: any) => link.candidateId)
-
-    // Get all candidates
-    const candidatesSnapshot = await get(ref(database, 'candidates'))
-    if (!candidatesSnapshot.exists()) {
-      return []
-    }
-
-    const candidatesObj = candidatesSnapshot.val()
-
-    // Filter candidates by IDs from link table
-    const filtered = Object.entries(candidatesObj)
-      .filter(([id]) => candidateIds.includes(id))
-      .map(([_, candidate]) => candidate)
-
-    return filtered
-  } catch (error) {
-    console.error('Error fetching candidates by category:', error)
-    return []
-  }
-=======
 // Internal Firebase fetch for candidates
 async function getFirebaseCandidates() {
   const snapshot = await get(ref(database, 'candidates'))
@@ -296,7 +148,6 @@ export async function getCandidatesByCategory(categoryId: string) {
     () => getAppwriteCandidatesByCategory(categoryId),
     'getCandidatesByCategory'
   )
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
 }
 
 export function subscribeToCandidates(callback: (data: any) => void) {
@@ -385,8 +236,6 @@ export async function updateCandidate(candidateId: string, candidateData: any) {
 
 // ============ VOTES ============
 
-<<<<<<< HEAD
-=======
 // Internal Firebase submit vote
 async function firebaseSubmitVote(
   userId: string,
@@ -423,7 +272,6 @@ async function firebaseSubmitVote(
   return { success: true, voteId }
 }
 
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
 export async function submitVote(
   userId: string,
   candidateId: string,
@@ -433,33 +281,6 @@ export async function submitVote(
   transactionId: string
 ) {
   try {
-<<<<<<< HEAD
-    const voteId = `${userId}_${Date.now()}`
-
-    // Add vote record
-    await set(ref(database, `votes/${voteId}`), {
-      userId,
-      candidateId,
-      voteCount,
-      paymentMethod,
-      provider,
-      transactionId,
-      status: 'completed',
-      createdAt: new Date().toISOString(),
-    })
-
-    // Update candidate vote count
-    await update(ref(database, `candidates/${candidateId}`), {
-      votes: increment(voteCount),
-    })
-
-    // Update user vote count
-    await update(ref(database, `users/${userId}`), {
-      totalVotes: increment(voteCount),
-    })
-
-    return { success: true, voteId }
-=======
     // Use hybrid failover for Orange network compatibility
     const result = await hybridWrite(
       () => firebaseSubmitVote(userId, candidateId, voteCount, paymentMethod, provider, transactionId),
@@ -468,28 +289,12 @@ export async function submitVote(
     )
     console.log(`✅ Vote submitted via ${result.source}`)
     return result.data
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
   } catch (error) {
     console.error('Error submitting vote:', error)
     return { success: false, error }
   }
 }
 
-<<<<<<< HEAD
-export async function getUserVotes(userId: string) {
-  try {
-    const snapshot = await get(ref(database, `votes`))
-    if (snapshot.exists()) {
-      const allVotes = snapshot.val()
-      const userVotes = Object.values(allVotes).filter((vote: any) => vote.userId === userId)
-      return userVotes
-    }
-    return []
-  } catch (error) {
-    console.error('Error fetching user votes:', error)
-    return []
-  }
-=======
 // Internal Firebase fetch for user votes
 async function getFirebaseUserVotes(userId: string) {
   const snapshot = await get(ref(database, `votes`))
@@ -506,14 +311,10 @@ export async function getUserVotes(userId: string) {
     () => getAppwriteUserVotes(userId),
     'getUserVotes'
   )
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
 }
 
 export function subscribeToVotes(callback: (data: any) => void) {
   const votesRef = ref(database, 'votes')
-<<<<<<< HEAD
-  const unsubscribe = onValue(votesRef, (snapshot) => {
-=======
   let fallbackTriggered = false
 
   const timeoutId = setTimeout(async () => {
@@ -526,34 +327,19 @@ export function subscribeToVotes(callback: (data: any) => void) {
   const unsubscribe = onValue(votesRef, (snapshot) => {
     clearTimeout(timeoutId)
     fallbackTriggered = true
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
     if (snapshot.exists()) {
       callback(snapshot.val())
     }
   })
-<<<<<<< HEAD
-  return unsubscribe
-=======
 
   return () => {
     clearTimeout(timeoutId)
     unsubscribe()
   }
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
 }
 
 // ============ USERS ============
 
-<<<<<<< HEAD
-export async function createUser(userId: string, userData: any) {
-  try {
-    await set(ref(database, `users/${userId}`), {
-      ...userData,
-      totalVotes: 0,
-      createdAt: new Date().toISOString(),
-    })
-    return { success: true }
-=======
 // Internal Firebase create user
 async function firebaseCreateUser(userId: string, userData: any) {
   await set(ref(database, `users/${userId}`), {
@@ -574,26 +360,12 @@ export async function createUser(userId: string, userData: any) {
     )
     console.log(`✅ User created via ${result.source}`)
     return result.data
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
   } catch (error) {
     console.error('Error creating user:', error)
     return { success: false, error }
   }
 }
 
-<<<<<<< HEAD
-export async function getUser(userId: string) {
-  try {
-    const snapshot = await get(ref(database, `users/${userId}`))
-    if (snapshot.exists()) {
-      return snapshot.val()
-    }
-    return null
-  } catch (error) {
-    console.error('Error fetching user:', error)
-    return null
-  }
-=======
 // Internal Firebase fetch for user
 async function getFirebaseUser(userId: string) {
   const snapshot = await get(ref(database, `users/${userId}`))
@@ -615,15 +387,10 @@ export async function getUser(userId: string) {
 async function firebaseUpdateUser(userId: string, userData: any) {
   await update(ref(database, `users/${userId}`), userData)
   return { success: true }
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
 }
 
 export async function updateUser(userId: string, userData: any) {
   try {
-<<<<<<< HEAD
-    await update(ref(database, `users/${userId}`), userData)
-    return { success: true }
-=======
     // Use hybrid failover for Orange network compatibility
     const result = await hybridWrite(
       () => firebaseUpdateUser(userId, userData),
@@ -632,7 +399,6 @@ export async function updateUser(userId: string, userData: any) {
     )
     console.log(`✅ User updated via ${result.source}`)
     return result.data
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
   } catch (error) {
     console.error('Error updating user:', error)
     return { success: false, error }
@@ -641,23 +407,6 @@ export async function updateUser(userId: string, userData: any) {
 
 // ============ LEADERBOARD ============
 
-<<<<<<< HEAD
-export async function getLeaderboard(limit: number = 10) {
-  try {
-    const snapshot = await get(ref(database, 'candidates'))
-    if (snapshot.exists()) {
-      const candidates = snapshot.val()
-      const sorted = Object.values(candidates)
-        .sort((a: any, b: any) => (b.votes || 0) - (a.votes || 0))
-        .slice(0, limit)
-      return sorted
-    }
-    return []
-  } catch (error) {
-    console.error('Error fetching leaderboard:', error)
-    return []
-  }
-=======
 // Internal Firebase fetch for leaderboard
 async function getFirebaseLeaderboard(limit: number) {
   const snapshot = await get(ref(database, 'candidates'))
@@ -676,7 +425,6 @@ export async function getLeaderboard(limit: number = 10) {
     () => getAppwriteLeaderboard(limit),
     'getLeaderboard'
   )
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
 }
 
 export function subscribeToLeaderboard(callback: (data: any) => void, limit: number = 10) {

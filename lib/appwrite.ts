@@ -1,16 +1,10 @@
-<<<<<<< HEAD
-import { Client, Databases, Query } from 'appwrite';
-=======
 import { Client, Databases, Query, ID } from 'appwrite';
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
 
 const client = new Client();
 
 const ENDPOINT = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
 const PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
 
-<<<<<<< HEAD
-=======
 // Collection IDs from environment
 export const APPWRITE_CONFIG = {
     databaseId: process.env.NEXT_PUBLIC_APPWRITE_DB_ID || 'candidates_db',
@@ -20,8 +14,6 @@ export const APPWRITE_CONFIG = {
     votesCollection: process.env.NEXT_PUBLIC_APPWRITE_VOTES_COLLECTION || 'votes',
     usersCollection: process.env.NEXT_PUBLIC_APPWRITE_USERS_COLLECTION || 'users',
 };
-
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
 // Only initialize if project ID is available
 if (PROJECT_ID) {
     client
@@ -36,10 +28,6 @@ export const isAppwriteConfigured = () => {
     return !!PROJECT_ID;
 };
 
-<<<<<<< HEAD
-// Helper to fetch candidates from Appwrite
-export const getAppwriteCandidates = async (databaseId: string, collectionId: string) => {
-=======
 // Transform Appwrite document to clean format (remove Appwrite-specific fields)
 function cleanAppwriteDoc(doc: any): any {
     const { $id, $createdAt, $updatedAt, $permissions, $databaseId, $collectionId, ...rest } = doc;
@@ -82,42 +70,12 @@ export const getAppwriteCandidates = async (databaseId?: string, collectionId?: 
 // ============ CATEGORIES ============
 
 export const getAppwriteCategories = async () => {
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
     if (!isAppwriteConfigured()) {
         throw new Error('Appwrite is not configured');
     }
 
     try {
         const response = await databases.listDocuments(
-<<<<<<< HEAD
-            databaseId,
-            collectionId,
-            [Query.limit(1000)] // Adjust limit as needed
-        );
-
-        // Transform Appwrite documents to match your application's data structure
-        // This assumes your Appwrite collection has similar fields to Firebase
-        const candidates: Record<string, any> = {};
-        response.documents.forEach((doc) => {
-            // Use the document ID or a specific field as the key
-            const id = doc.id || doc.$id;
-            candidates[id] = {
-                ...doc,
-                id: id,
-                // Remove Appwrite specific fields if needed
-                $id: undefined,
-                $createdAt: undefined,
-                $updatedAt: undefined,
-                $permissions: undefined,
-                $databaseId: undefined,
-                $collectionId: undefined,
-            };
-        });
-
-        return candidates;
-    } catch (error) {
-        console.error('Error fetching from Appwrite:', error);
-=======
             APPWRITE_CONFIG.databaseId,
             APPWRITE_CONFIG.categoriesCollection,
             [Query.limit(100), Query.orderAsc('order')]
@@ -348,7 +306,6 @@ export const getAppwriteLeaderboard = async (limit: number = 10) => {
         return response.documents.map(cleanAppwriteDoc);
     } catch (error) {
         console.error('Error fetching leaderboard from Appwrite:', error);
->>>>>>> 97a2df4 (Implement hybrid database failover system with Firebase and Appwrite)
         throw error;
     }
 };
