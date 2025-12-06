@@ -19,17 +19,26 @@ export async function GET(request: NextRequest) {
         const authHeader = request.headers.get('Authorization');
         const token = authHeader?.startsWith('Bearer ') ? authHeader.split('Bearer ')[1] : null;
 
+        console.log(`[API] Fetching withdrawals. Token present: ${!!token}`);
+
         // Construct URL with auth token if present
         let url = `${FIREBASE_DB_URL}/withdrawals.json?orderBy="createdAt"&limitToLast=100`;
         if (token) {
             url += `&auth=${token}`;
+        } else {
+            console.warn('[API] No auth token provided for withdrawals fetch');
         }
 
         // Use REST API for reliability
         const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error(`Firebase REST error: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`[API] Firebase REST error: ${response.status} ${response.statusText}`, errorText);
+            return NextResponse.json(
+                { success: false, error: `Firebase error: ${response.status}`, details: errorText },
+                { status: response.status }
+            );
         }
 
         const data = await response.json();
