@@ -29,6 +29,7 @@ export function useWithdrawals(limit: number = 50) {
             try {
                 // Get current user token if available
                 const user = auth.currentUser;
+                console.log(`[Withdrawals] Current user: ${user ? user.uid : 'null'}`);
                 const token = user ? await user.getIdToken() : null;
 
                 const headers: HeadersInit = {};
@@ -39,7 +40,12 @@ export function useWithdrawals(limit: number = 50) {
                 const response = await fetch('/api/admin-7f8a9b/withdrawals', {
                     headers
                 });
-                if (!response.ok) throw new Error('Failed to fetch withdrawals');
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`[Withdrawals] Fetch failed: ${response.status} ${response.statusText}`, errorText);
+                    throw new Error(`Failed to fetch withdrawals: ${response.status} ${errorText}`);
+                }
 
                 const result = await response.json();
 
@@ -86,6 +92,7 @@ export function useWithdrawalStats() {
             try {
                 // Get current user token if available
                 const user = auth.currentUser;
+                console.log(`[Withdrawals Stats] Current user: ${user ? user.uid : 'null'}`);
                 const token = user ? await user.getIdToken() : null;
 
                 const headers: HeadersInit = {};
@@ -96,7 +103,12 @@ export function useWithdrawalStats() {
                 const response = await fetch('/api/admin-7f8a9b/withdrawals', {
                     headers
                 });
-                if (!response.ok) throw new Error('Failed to fetch withdrawal stats');
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`[Withdrawals Stats] Fetch failed: ${response.status} ${response.statusText}`, errorText);
+                    throw new Error(`Failed to fetch withdrawal stats: ${response.status} ${errorText}`);
+                }
 
                 const result = await response.json();
 

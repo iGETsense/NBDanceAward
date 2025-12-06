@@ -62,6 +62,7 @@ export function useTransactions(limit: number = 100) {
             try {
                 // Get current user token if available
                 const user = auth.currentUser;
+                console.log(`[Transactions] Current user: ${user ? user.uid : 'null'}`);
                 const token = user ? await user.getIdToken() : null;
 
                 const headers: HeadersInit = {};
@@ -72,7 +73,12 @@ export function useTransactions(limit: number = 100) {
                 const response = await fetch('/api/admin-7f8a9b/transactions', {
                     headers
                 });
-                if (!response.ok) throw new Error('Failed to fetch transactions');
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`[Transactions] Fetch failed: ${response.status} ${response.statusText}`, errorText);
+                    throw new Error(`Failed to fetch transactions: ${response.status} ${errorText}`);
+                }
 
                 const result = await response.json();
 

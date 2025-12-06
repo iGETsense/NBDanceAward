@@ -54,8 +54,11 @@ export async function POST(request: NextRequest) {
         const totalAmount = voteCount * votePrice;
 
         // Detect operator and map to Mesomb service
+        // We prioritize the detected operator over the user's selection to avoid mismatch errors
         const operator = detectOperator(phoneNumber);
         const mesombService = operator === 'MTN' ? 'MTN' : 'ORANGE';
+
+        console.log(`[Submit] Detected operator for ${phoneNumber}: ${operator} -> Service: ${mesombService}`);
 
         // Generate unique transaction ID
         const transactionId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -77,13 +80,16 @@ export async function POST(request: NextRequest) {
         );
 
         if (!paymentResult.success) {
+            // Use the specific error message from Mesomb if available
+            const errorMessage = paymentResult.error || 'Erreur de paiement: votre vote n\'est pas passé';
+
             return NextResponse.json(
                 {
                     success: false,
-                    error: 'Erreur de paiement: votre vote n\'est pas passé',
+                    error: errorMessage,
                     details: paymentResult.error || 'Payment initiation failed',
                 },
-                { status: 500 }
+                { status: 400 } // Use 400 for bad requests (like insufficient funds) instead of 500
             );
         }
 
