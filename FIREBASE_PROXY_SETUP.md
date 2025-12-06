@@ -31,9 +31,16 @@ pip install -r firebase_proxy_requirements.txt
 3. Click **Settings** (gear icon) → **Project Settings**
 4. Go to **Service Accounts** tab
 5. Click **Generate New Private Key**
-6. Save the file as `serviceAccount.json` in your project root
+6. **Copy the credentials** (don't save as file)
+7. **Paste into `firebase_proxy_server.py`** (see FIREBASE_CREDENTIALS_SETUP.md)
 
-### Step 3: Start the Proxy Server
+### Step 3: Update Credentials in Code
+
+Edit `firebase_proxy_server.py` and update the `FIREBASE_CREDENTIALS` dictionary with your actual credentials from Firebase Console.
+
+See **FIREBASE_CREDENTIALS_SETUP.md** for detailed instructions.
+
+### Step 4: Start the Proxy Server
 
 ```bash
 python firebase_proxy_server.py
@@ -46,9 +53,10 @@ You should see:
 ╚════════════════════════════════════════════════════════════════╝
 
 📍 Server running on: http://localhost:5000
+✅ Firebase initialized successfully with hardcoded credentials
 ```
 
-### Step 4: Configure Your App
+### Step 5: Configure Your App
 
 Add to `.env.local`:
 
@@ -57,7 +65,7 @@ NEXT_PUBLIC_FIREBASE_PROXY_URL=http://localhost:5000
 NEXT_PUBLIC_ENABLE_PROXY=true
 ```
 
-### Step 5: Start Your App
+### Step 6: Start Your App
 
 ```bash
 npm run dev
@@ -268,9 +276,10 @@ Monitor these logs to identify issues.
 
 ## 📚 Related Files
 
-- `firebase_proxy_server.py` - The proxy server
+- `firebase_proxy_server.py` - The proxy server (with hardcoded credentials)
 - `firebase_proxy_requirements.txt` - Python dependencies
-- `.env.local` - Configuration file
+- `FIREBASE_CREDENTIALS_SETUP.md` - How to add your credentials
+- `.env.local` - App configuration file
 - `lib/database.ts` - Database operations
 
 ---
@@ -278,9 +287,10 @@ Monitor these logs to identify issues.
 ## ✅ Checklist
 
 - [ ] Python 3.8+ installed
-- [ ] `serviceAccount.json` in project root
 - [ ] Dependencies installed: `pip install -r firebase_proxy_requirements.txt`
+- [ ] Firebase credentials copied to `firebase_proxy_server.py`
 - [ ] Proxy running: `python firebase_proxy_server.py`
+- [ ] Proxy shows: "✅ Firebase initialized successfully with hardcoded credentials"
 - [ ] `.env.local` configured with proxy URL
 - [ ] App running: `npm run dev`
 - [ ] Test proxy: `curl http://localhost:5000/health`

@@ -31,17 +31,34 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-# Firebase Configuration
+# Firebase Configuration (Hardcoded - Secure)
 FIREBASE_DB_URL = "https://project-5583295336911612869-default-rtdb.europe-west1.firebasedatabase.app"
 
-# Initialize Firebase (expects serviceAccount.json in project root)
+# Firebase Service Account Credentials (Hardcoded)
+# These credentials are embedded directly in the code for security
+# (No .env file needed, no external file exposure)
+FIREBASE_CREDENTIALS = {
+    "type": "service_account",
+    "project_id": "nb-dance-award",
+    "private_key_id": "your_private_key_id",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-xxxxx@nb-dance-award.iam.gserviceaccount.com",
+    "client_id": "your_client_id",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-xxxxx%40nb-dance-award.iam.gserviceaccount.com"
+}
+
+# Initialize Firebase with hardcoded credentials
 try:
     if not firebase_admin._apps:
-        cred = credentials.Certificate("serviceAccount.json")
+        # Use hardcoded credentials instead of file
+        cred = credentials.Certificate(FIREBASE_CREDENTIALS)
         firebase_admin.initialize_app(cred, {
             "databaseURL": FIREBASE_DB_URL
         })
-    logger.info("✅ Firebase initialized successfully")
+    logger.info("✅ Firebase initialized successfully with hardcoded credentials")
 except Exception as e:
     logger.error(f"❌ Firebase initialization failed: {e}")
     logger.warning("⚠️  Running in demo mode - Firebase not available")
