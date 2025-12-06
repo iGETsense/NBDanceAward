@@ -1,8 +1,7 @@
 import { Client, Databases, Query, ID } from 'appwrite';
 
-const client = new Client();
-
-const ENDPOINT = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
+// Environment variables with validation
+const ENDPOINT = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
 const PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
 
 // Collection IDs from environment
@@ -14,18 +13,28 @@ export const APPWRITE_CONFIG = {
     votesCollection: process.env.NEXT_PUBLIC_APPWRITE_VOTES_COLLECTION || 'votes',
     usersCollection: process.env.NEXT_PUBLIC_APPWRITE_USERS_COLLECTION || 'users',
 };
-// Only initialize if project ID is available
-if (PROJECT_ID) {
-    client
+
+// Initialize client only if both endpoint and project ID are available
+let client: Client | null = null;
+
+if (ENDPOINT && PROJECT_ID) {
+    client = new Client()
         .setEndpoint(ENDPOINT)
         .setProject(PROJECT_ID);
+} else {
+    // Create a dummy client that won't be used
+    client = new Client();
+    if (typeof window === 'undefined') {
+        // Server-side: log warning
+        console.warn('⚠️ Appwrite not configured. Set NEXT_PUBLIC_APPWRITE_ENDPOINT and NEXT_PUBLIC_APPWRITE_PROJECT_ID in .env.local');
+    }
 }
 
 export const databases = new Databases(client);
 
 // Helper to check if Appwrite is configured
 export const isAppwriteConfigured = () => {
-    return !!PROJECT_ID;
+    return !!(ENDPOINT && PROJECT_ID);
 };
 
 // Transform Appwrite document to clean format (remove Appwrite-specific fields)
