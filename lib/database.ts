@@ -31,7 +31,7 @@ async function getFirebaseCategories() {
 export async function getCategories() {
   return hybridRead(
     getFirebaseCategories,
-    getAppwriteCategories,
+    () => Promise.reject(new Error('Appwrite disabled')),
     'getCategories',
     { useCache: true }
   )

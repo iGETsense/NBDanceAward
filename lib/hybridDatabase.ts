@@ -1,18 +1,20 @@
 /**
- * Hybrid Database Service with Caching & Performance Optimization
+ * Database Service with Caching & Performance Optimization
  * 
- * Orchestrates failover between Firebase (primary) and Appwrite (secondary).
- * If Firebase doesn't respond within the timeout, automatically switches to Appwrite.
- * Includes in-memory caching and parallel request optimization.
+ * Uses Firebase as the primary database.
+ * Includes in-memory caching for improved performance.
+ * 
+ * For Orange network compatibility, use the Firebase proxy server:
+ * Set NEXT_PUBLIC_FIREBASE_PROXY_URL in .env.local
  */
 
 // Configuration from environment or defaults
 export const FAILOVER_TIMEOUT_MS = parseInt(
-    process.env.NEXT_PUBLIC_FAILOVER_TIMEOUT_MS || '1500',  // Reduced from 2500ms
+    process.env.NEXT_PUBLIC_FAILOVER_TIMEOUT_MS || '5000',
     10
 );
 
-export const ENABLE_FAILOVER = process.env.NEXT_PUBLIC_ENABLE_FAILOVER !== 'false';
+export const ENABLE_FAILOVER = false; // Disabled - Firebase only
 
 // Cache configuration
 const CACHE_DURATION_MS = 30000; // 30 seconds cache
