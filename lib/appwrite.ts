@@ -51,7 +51,7 @@ export const getAppwriteCandidates = async (databaseId?: string, collectionId?: 
         const response = await databases.listDocuments(
             dbId,
             collId,
-            [Query.limit(100)]
+            [Query.limit(500)]  // Increased limit to get all candidates in one request
         );
 
         const candidates: Record<string, any> = {};
@@ -78,7 +78,7 @@ export const getAppwriteCategories = async () => {
         const response = await databases.listDocuments(
             APPWRITE_CONFIG.databaseId,
             APPWRITE_CONFIG.categoriesCollection,
-            [Query.limit(100), Query.orderAsc('order')]
+            [Query.limit(500), Query.orderAsc('order')]
         );
 
         return response.documents.map(cleanAppwriteDoc);

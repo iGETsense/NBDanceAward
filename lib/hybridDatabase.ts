@@ -1,17 +1,55 @@
 /**
- * Hybrid Database Service
+ * Hybrid Database Service with Caching & Performance Optimization
  * 
  * Orchestrates failover between Firebase (primary) and Appwrite (secondary).
  * If Firebase doesn't respond within the timeout, automatically switches to Appwrite.
+ * Includes in-memory caching and parallel request optimization.
  */
 
 // Configuration from environment or defaults
 export const FAILOVER_TIMEOUT_MS = parseInt(
-    process.env.NEXT_PUBLIC_FAILOVER_TIMEOUT_MS || '2500',
+    process.env.NEXT_PUBLIC_FAILOVER_TIMEOUT_MS || '1500',  // Reduced from 2500ms
     10
 );
 
 export const ENABLE_FAILOVER = process.env.NEXT_PUBLIC_ENABLE_FAILOVER !== 'false';
+
+// Cache configuration
+const CACHE_DURATION_MS = 30000; // 30 seconds cache
+const cache = new Map<string, { data: any; timestamp: number }>();
+
+/**
+ * Get cached data if available and not expired
+ */
+function getCachedData(key: string): any | null {
+    const cached = cache.get(key);
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION_MS) {
+        return cached.data;
+    }
+    cache.delete(key);
+    return null;
+}
+
+/**
+ * Set data in cache
+ */
+function setCachedData(key: string, data: any): void {
+    cache.set(key, { data, timestamp: Date.now() });
+}
+
+/**
+ * Clear cache for a specific key
+ */
+export function clearCache(key: string): void {
+    cache.delete(key);
+}
+
+/**
+ * Clear all cache
+ */
+export function clearAllCache(): void {
+    cache.clear();
+}
 
 export type BackendSource = 'firebase' | 'appwrite' | 'proxy';
 
@@ -153,13 +191,32 @@ export async function withFailover<T>(
 
 /**
  * Simplified version for read operations - just returns the data
+ * Includes caching for improved performance
  */
 export async function hybridRead<T>(
     firebaseFn: () => Promise<T>,
     appwriteFn: () => Promise<T>,
-    operationName: string
+    operationName: string,
+    options: { useCache?: boolean } = {}
 ): Promise<T> {
+    const cacheKey = `read_${operationName}`;
+    
+    // Check cache first
+    if (options.useCache !== false) {
+        const cached = getCachedData(cacheKey);
+        if (cached !== null) {
+            console.log(`💾 [${operationName}] Returned from cache`);
+            return cached;
+        }
+    }
+    
     const result = await withFailover(firebaseFn, appwriteFn, operationName);
+    
+    // Cache the result
+    if (options.useCache !== false) {
+        setCachedData(cacheKey, result.data);
+    }
+    
     return result.data;
 }
 

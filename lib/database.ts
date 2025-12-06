@@ -2,7 +2,7 @@ import { database } from './firebase'
 import { ref, set, update, get, onValue, increment } from 'firebase/database'
 import { calculatePercentages, updateCandidatePercentage } from './percentageCalculator'
 import { getCandidateImage } from './candidateImages'
-import { hybridRead, hybridWrite, withFailover, FAILOVER_TIMEOUT_MS } from './hybridDatabase'
+import { hybridRead, hybridWrite, withFailover, FAILOVER_TIMEOUT_MS, clearCache } from './hybridDatabase'
 import {
   getAppwriteCandidates,
   getAppwriteCategories,
@@ -32,7 +32,8 @@ export async function getCategories() {
   return hybridRead(
     getFirebaseCategories,
     getAppwriteCategories,
-    'getCategories'
+    'getCategories',
+    { useCache: true }
   )
 }
 
@@ -309,7 +310,8 @@ export async function getUserVotes(userId: string) {
   return hybridRead(
     () => getFirebaseUserVotes(userId),
     () => getAppwriteUserVotes(userId),
-    'getUserVotes'
+    `getUserVotes_${userId}`,
+    { useCache: true }
   )
 }
 
@@ -423,7 +425,8 @@ export async function getLeaderboard(limit: number = 10) {
   return hybridRead(
     () => getFirebaseLeaderboard(limit),
     () => getAppwriteLeaderboard(limit),
-    'getLeaderboard'
+    `getLeaderboard_${limit}`,
+    { useCache: true }
   )
 }
 
