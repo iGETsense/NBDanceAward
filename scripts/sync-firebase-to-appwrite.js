@@ -8,7 +8,25 @@
 const { Client, Databases, ID } = require('node-appwrite');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config({ path: '.env.local' });
+
+// Load .env.local manually
+function loadEnv() {
+    const envPath = path.join(process.cwd(), '.env.local');
+    if (fs.existsSync(envPath)) {
+        const envContent = fs.readFileSync(envPath, 'utf8');
+        envContent.split('\n').forEach(line => {
+            const [key, ...valueParts] = line.split('=');
+            if (key && !key.startsWith('#')) {
+                const value = valueParts.join('=').trim();
+                if (value) {
+                    process.env[key.trim()] = value;
+                }
+            }
+        });
+    }
+}
+
+loadEnv();
 
 const PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
 const ENDPOINT = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
