@@ -11,28 +11,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
 import { ref, get, query, orderByChild, limitToLast } from 'firebase/database';
 
+const FIREBASE_DB_URL = "https://project-5583295336911612869-default-rtdb.europe-west1.firebasedatabase.app";
+
 export async function GET(request: NextRequest) {
     try {
-        // In a real app, verify the session cookie or token here
-        // For now, we rely on the obscurity of the URL and could add a header check
+        // Use REST API for reliability
+        const response = await fetch(`${FIREBASE_DB_URL}/withdrawals.json?orderBy="createdAt"&limitToLast=100`);
 
-        const withdrawalsRef = ref(database, 'withdrawals');
-        const withdrawalsQuery = query(
-            withdrawalsRef,
-            orderByChild('createdAt'),
-            limitToLast(100) // Fetch last 100 withdrawals
-        );
+        if (!response.ok) {
+            throw new Error(`Firebase REST error: ${response.status} ${response.statusText}`);
+        }
 
-        const snapshot = await get(withdrawalsQuery);
+        const data = await response.json();
 
-        if (!snapshot.exists()) {
+        if (!data) {
             return NextResponse.json({
                 success: true,
                 withdrawals: []
             });
         }
 
-        const data = snapshot.val();
         const withdrawals = Object.values(data).sort((a: any, b: any) =>
             (b.createdAt || 0) - (a.createdAt || 0)
         );

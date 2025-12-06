@@ -11,25 +11,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
 import { ref, get, query, orderByChild, limitToLast } from 'firebase/database';
 
+const FIREBASE_DB_URL = "https://project-5583295336911612869-default-rtdb.europe-west1.firebasedatabase.app";
+
 export async function GET(request: NextRequest) {
     try {
-        const transactionsRef = ref(database, 'transactions');
-        const transactionsQuery = query(
-            transactionsRef,
-            orderByChild('createdAt'),
-            limitToLast(100)
-        );
+        // Use REST API for reliability in serverless environment
+        const response = await fetch(`${FIREBASE_DB_URL}/transactions.json?orderBy="createdAt"&limitToLast=100`);
 
-        const snapshot = await get(transactionsQuery);
+        if (!response.ok) {
+            throw new Error(`Firebase REST error: ${response.status} ${response.statusText}`);
+        }
 
-        if (!snapshot.exists()) {
+        const data = await response.json();
+
+        if (!data) {
             return NextResponse.json({
                 success: true,
                 transactions: []
             });
         }
 
-        const data = snapshot.val();
         const transactions = Object.entries(data).map(([id, tx]: [string, any]) => ({
             id,
             ...tx,
