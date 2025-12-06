@@ -4,6 +4,17 @@ import { calculatePercentages, updateCandidatePercentage } from './percentageCal
 import { getCandidateImage } from './candidateImages'
 import { hybridRead, hybridWrite, withFailover, FAILOVER_TIMEOUT_MS, clearCache } from './hybridDatabase'
 import {
+  getCandidatesRest,
+  getCategoriesRest,
+  getVotesRest,
+  getUserVotesRest,
+  submitVoteRest,
+  getUserRest,
+  createUserRest,
+  updateUserRest,
+  getLeaderboardRest,
+} from './firebaseRestApi'
+import {
   getAppwriteCandidates,
   getAppwriteCategories,
   getAppwriteCandidatesByCategory,
@@ -29,12 +40,26 @@ async function getFirebaseCategories() {
 }
 
 export async function getCategories() {
-  return hybridRead(
-    getFirebaseCategories,
-    () => Promise.reject(new Error('Appwrite disabled')),
-    'getCategories',
-    { useCache: true }
-  )
+  try {
+    // Try SDK first
+    const categories = await hybridRead(
+      getFirebaseCategories,
+      () => Promise.reject(new Error('Appwrite disabled')),
+      'getCategories',
+      { useCache: true }
+    )
+    return categories
+  } catch (error) {
+    console.warn('⚠️ Firebase SDK failed, trying REST API...')
+    try {
+      const categoriesObj = await getCategoriesRest()
+      const sorted = Object.values(categoriesObj).sort((a: any, b: any) => a.order - b.order)
+      return sorted
+    } catch (restError) {
+      console.error('❌ Both Firebase SDK and REST API failed:', error)
+      throw error
+    }
+  }
 }
 
 export function subscribeToCategories(callback: (data: any) => void) {
@@ -91,32 +116,24 @@ async function getFirebaseCandidates() {
 }
 
 export async function getCandidates() {
-  // Proxy function for server-side Firebase access (network workaround)
-  const proxyFn = async () => {
-    const proxyUrl = '/api/proxy/firebase?path=candidates'
-    const proxyResponse = await fetch(proxyUrl, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      cache: 'no-store'
-    })
-
-    if (proxyResponse.ok) {
-      const proxyData = await proxyResponse.json()
-      if (proxyData.success && proxyData.data) {
-        return proxyData.data
-      }
+  try {
+    // Try SDK first
+    const candidates = await hybridRead(
+      getFirebaseCandidates,
+      () => Promise.reject(new Error('Appwrite disabled')),
+      'getCandidates',
+      { useCache: true }
+    )
+    return candidates
+  } catch (error) {
+    console.warn('⚠️ Firebase SDK failed, trying REST API...')
+    try {
+      return await getCandidatesRest()
+    } catch (restError) {
+      console.error('❌ Both Firebase SDK and REST API failed:', error)
+      throw error
     }
-    throw new Error('Proxy request failed')
   }
-
-  const result = await withFailover(
-    getFirebaseCandidates,
-    getAppwriteCandidates,
-    'getCandidates',
-    { proxyFn }
-  )
-
-  return result.data
 }
 
 
@@ -282,17 +299,28 @@ export async function submitVote(
   transactionId: string
 ) {
   try {
-    // Use hybrid failover for Orange network compatibility
-    const result = await hybridWrite(
-      () => firebaseSubmitVote(userId, candidateId, voteCount, paymentMethod, provider, transactionId),
-      () => submitAppwriteVote({ userId, candidateId, voteCount, paymentMethod, provider, transactionId }),
-      'submitVote'
-    )
-    console.log(`✅ Vote submitted via ${result.source}`)
-    return result.data
+    // Try Firebase SDK first
+    const result = await firebaseSubmitVote(userId, candidateId, voteCount, paymentMethod, provider, transactionId)
+    console.log(`✅ Vote submitted via Firebase SDK`)
+    return result
   } catch (error) {
-    console.error('Error submitting vote:', error)
-    return { success: false, error }
+    console.warn('⚠️ Firebase SDK failed, trying REST API...')
+    try {
+      // Fallback to REST API
+      const result = await submitVoteRest({
+        userId,
+        candidateId,
+        voteCount,
+        paymentMethod,
+        provider,
+        transactionId,
+      })
+      console.log(`✅ Vote submitted via REST API`)
+      return result
+    } catch (restError) {
+      console.error('❌ Both Firebase SDK and REST API failed:', error)
+      return { success: false, error }
+    }
   }
 }
 
