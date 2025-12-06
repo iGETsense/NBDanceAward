@@ -12,6 +12,7 @@ export function useCategories() {
     let isMounted = true;
 
     const fetchCategories = async () => {
+      console.log('🚀 [Debug] Fetching categories...');
       try {
         const response = await fetch('/api/categories');
         if (!response.ok) throw new Error('Failed to fetch categories');
@@ -53,6 +54,7 @@ export function useCandidates() {
     let isMounted = true;
 
     const fetchCandidates = async () => {
+      console.log('🚀 [Debug] Fetching candidates...');
       try {
         const response = await fetch('/api/candidates');
         if (!response.ok) throw new Error('Failed to fetch candidates');
