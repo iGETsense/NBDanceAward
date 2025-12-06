@@ -22,9 +22,10 @@ export async function GET(request: NextRequest) {
         console.log(`[API] Fetching withdrawals. Token present: ${!!token}`);
 
         // Construct URL with auth token if present
-        let url = `${FIREBASE_DB_URL}/withdrawals.json?orderBy="createdAt"&limitToLast=100`;
+        // Note: We fetch all and sort in JS to avoid requiring .indexOn in Firebase rules
+        let url = `${FIREBASE_DB_URL}/withdrawals.json`;
         if (token) {
-            url += `&auth=${token}`;
+            url += `?auth=${token}`;
         } else {
             console.warn('[API] No auth token provided for withdrawals fetch');
         }
@@ -50,9 +51,10 @@ export async function GET(request: NextRequest) {
             });
         }
 
-        const withdrawals = Object.values(data).sort((a: any, b: any) =>
-            (b.createdAt || 0) - (a.createdAt || 0)
-        );
+        const withdrawals = Object.entries(data).map(([id, w]: [string, any]) => ({
+            id,
+            ...w,
+        })).sort((a: any, b: any) => b.createdAt - a.createdAt).slice(0, 100);
 
         return NextResponse.json({
             success: true,

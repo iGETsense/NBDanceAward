@@ -32,6 +32,10 @@
         "votes": {
             ".read": true,
             ".write": true
+        },
+        "withdrawals": {
+            ".read": "auth != null",
+            ".write": "auth != null"
         }
     }
 }
