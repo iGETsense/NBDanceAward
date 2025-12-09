@@ -120,87 +120,88 @@ export default function ReportIssuePage() {
                             </div>
                         )}
 
-                        <div className="space-y-2">
-                            <Label htmlFor="name" className="text-yellow-500">Nom complet *</Label>
-                            <Input
-                                id="name"
-                                required
-                                className="bg-neutral-800 border-neutral-700 focus:border-yellow-500 text-white placeholder:text-gray-500"
-                                placeholder="Votre nom"
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="phone" className="text-yellow-500">Numéro de téléphone *</Label>
-                            <Input
-                                id="phone"
-                                required
-                                type="tel"
-                                className="bg-neutral-800 border-neutral-700 focus:border-yellow-500 text-white placeholder:text-gray-500"
-                                placeholder="6xxxxxxxx"
-                                value={formData.phone}
-                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="reference" className="text-yellow-500">Référence de transaction (Si disponible)</Label>
-                        <Input
-                            id="reference"
-                            className="bg-neutral-800 border-neutral-700 focus:border-yellow-500 text-white placeholder:text-gray-500"
-                            placeholder="ex: MP251209.2039.C45116"
-                            value={formData.reference}
-                            onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="description" className="text-yellow-500">Description du problème *</Label>
-                        <Textarea
-                            id="description"
-                            required
-                            className="bg-neutral-800 border-neutral-700 focus:border-yellow-500 min-h-[120px] text-white placeholder:text-gray-500"
-                            placeholder="Expliquez ce qui s'est passé..."
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label className="text-yellow-500">Preuve (Capture d'écran)</Label>
-                        <div className="border-2 border-dashed border-neutral-700 rounded-lg p-6 hover:border-blue-500/50 transition-colors text-center cursor-pointer relative bg-neutral-800/20">
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            />
-                            <div className="flex flex-col items-center gap-2 text-gray-400">
-                                <Upload className="w-8 h-8 mb-2" />
-                                {imageFile ? (
-                                    <span className="text-blue-400 font-medium">{imageFile.name}</span>
-                                ) : (
-                                    <>
-                                        <span className="font-medium">Cliquez pour ajouter une image</span>
-                                        <span className="text-xs">PNG, JPG (Max 5MB)</span>
-                                    </>
-                                )}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="name" className="text-yellow-500">Nom complet *</Label>
+                                <Input
+                                    id="name"
+                                    required
+                                    className="bg-neutral-800 border-neutral-700 focus:border-yellow-500 text-white placeholder:text-gray-500"
+                                    placeholder="Votre nom"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="phone" className="text-yellow-500">Numéro de téléphone *</Label>
+                                <Input
+                                    id="phone"
+                                    required
+                                    type="tel"
+                                    className="bg-neutral-800 border-neutral-700 focus:border-yellow-500 text-white placeholder:text-gray-500"
+                                    placeholder="6xxxxxxxx"
+                                    value={formData.phone}
+                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                />
                             </div>
                         </div>
-                    </div>
 
-                    <Button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-6"
-                    >
-                        {loading ? 'Envoi en cours...' : 'Envoyer le rapport'}
-                    </Button>
-                </form>
-            </Card>
-        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="reference" className="text-yellow-500">Référence de transaction (Si disponible)</Label>
+                            <Input
+                                id="reference"
+                                className="bg-neutral-800 border-neutral-700 focus:border-yellow-500 text-white placeholder:text-gray-500"
+                                placeholder="ex: MP251209.2039.C45116"
+                                value={formData.reference}
+                                onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="description" className="text-yellow-500">Description du problème *</Label>
+                            <Textarea
+                                id="description"
+                                required
+                                className="bg-neutral-800 border-neutral-700 focus:border-yellow-500 min-h-[120px] text-white placeholder:text-gray-500"
+                                placeholder="Expliquez ce qui s'est passé..."
+                                value={formData.description}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label className="text-yellow-500">Preuve (Capture d'écran)</Label>
+                            <div className="border-2 border-dashed border-neutral-700 rounded-lg p-6 hover:border-blue-500/50 transition-colors text-center cursor-pointer relative bg-neutral-800/20">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                />
+                                <div className="flex flex-col items-center gap-2 text-gray-400">
+                                    <Upload className="w-8 h-8 mb-2" />
+                                    {imageFile ? (
+                                        <span className="text-blue-400 font-medium">{imageFile.name}</span>
+                                    ) : (
+                                        <>
+                                            <span className="font-medium">Cliquez pour ajouter une image</span>
+                                            <span className="text-xs">PNG, JPG (Max 5MB)</span>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <Button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-6"
+                        >
+                            {loading ? 'Envoi en cours...' : 'Envoyer le rapport'}
+                        </Button>
+                    </form>
+                </Card>
+            </div>
         </div >
     );
 }
