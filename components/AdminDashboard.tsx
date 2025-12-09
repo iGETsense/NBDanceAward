@@ -29,7 +29,14 @@ export function AdminStats() {
 
     // Calculate total votes from candidates
     const totalVotes = candidates.reduce((sum, c) => sum + (c.votes || 0), 0);
-    const currentBalance = stats.netRevenue - totalWithdrawn;
+
+    // Calculate revenue based on Total Votes (User requirement: 459 votes * 105 XAF)
+    const PRICE_PER_VOTE = 105;
+    const grossRevenue = totalVotes * PRICE_PER_VOTE;
+    const netRevenue = grossRevenue * 0.95;
+
+    // Available balance is Net Revenue - Withdrawn
+    const currentBalance = netRevenue - totalWithdrawn;
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
@@ -39,7 +46,7 @@ export function AdminStats() {
                     <div className="flex-1 min-w-0">
                         <p className="text-zinc-400 text-xs sm:text-sm mb-1">Montant Total (Brut)</p>
                         <h3 className="text-2xl sm:text-3xl font-bold text-white break-words">
-                            {stats.totalRevenue.toLocaleString()} <span className="text-sm sm:text-lg text-zinc-400">XAF</span>
+                            {grossRevenue.toLocaleString()} <span className="text-sm sm:text-lg text-zinc-400">XAF</span>
                         </h3>
                     </div>
                     <div className="bg-green-500/20 p-2 sm:p-3 rounded-lg flex-shrink-0 ml-2">
@@ -49,10 +56,10 @@ export function AdminStats() {
                 <div className="flex flex-col gap-1 text-xs text-zinc-400">
                     <div className="flex justify-between items-center text-sm font-semibold text-white/90 pb-1 border-b border-white/10 mb-1">
                         <span>Disponible (Net -5%):</span>
-                        <span>{(stats.netRevenue - totalWithdrawn).toLocaleString()} XAF</span>
+                        <span>{Math.round(currentBalance).toLocaleString()} XAF</span>
                     </div>
                     <span className="truncate">Retiré: {totalWithdrawn.toLocaleString()} XAF</span>
-                    <span className="truncate text-[10px] opacity-70">Total Net Théorique: {stats.netRevenue.toLocaleString()} XAF</span>
+                    <span className="truncate text-[10px] opacity-70">Total Net Théorique: {Math.round(netRevenue).toLocaleString()} XAF</span>
                 </div>
             </div>
 
