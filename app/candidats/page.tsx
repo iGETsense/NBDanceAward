@@ -1499,7 +1499,7 @@ export default function CandidatsPage() {
                     Please complete the payment on your phone. Transaction ID: {transactionId.slice(0, 8)}...
                   </p>
                   <p className="text-[10px] md:text-xs text-blue-300 mt-1">
-                    This may take up to 60 seconds. Do not close this window.
+                    This may take up to 3 minutes. Do not close this window.
                   </p>
                 </div>
               )}

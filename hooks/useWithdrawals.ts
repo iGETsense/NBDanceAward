@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { ref, onValue, query, orderByChild, limitToLast } from 'firebase/database';
 import { database, auth } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export interface Withdrawal {
     id: string;
@@ -24,6 +25,7 @@ export function useWithdrawals(limit: number = 50) {
 
     useEffect(() => {
         let isMounted = true;
+        let intervalId: NodeJS.Timeout | null = null;
 
         const fetchWithdrawals = async () => {
             try {
@@ -63,14 +65,28 @@ export function useWithdrawals(limit: number = 50) {
             }
         };
 
-        fetchWithdrawals();
+        // Wait for auth state to be ready before fetching
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is authenticated, fetch withdrawals
+                fetchWithdrawals();
 
-        // Poll every 30 seconds
-        const intervalId = setInterval(fetchWithdrawals, 30000);
+                // Set up polling interval
+                if (intervalId) clearInterval(intervalId);
+                intervalId = setInterval(fetchWithdrawals, 30000);
+            } else {
+                // No user authenticated
+                if (isMounted) {
+                    setLoading(false);
+                    setError('Authentication required');
+                }
+            }
+        });
 
         return () => {
             isMounted = false;
-            clearInterval(intervalId);
+            unsubscribe();
+            if (intervalId) clearInterval(intervalId);
         };
     }, [limit]);
 
@@ -87,6 +103,7 @@ export function useWithdrawalStats() {
 
     useEffect(() => {
         let isMounted = true;
+        let intervalId: NodeJS.Timeout | null = null;
 
         const fetchStats = async () => {
             try {
@@ -129,14 +146,27 @@ export function useWithdrawalStats() {
             }
         };
 
-        fetchStats();
+        // Wait for auth state to be ready before fetching
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is authenticated, fetch stats
+                fetchStats();
 
-        // Poll every 30 seconds
-        const intervalId = setInterval(fetchStats, 30000);
+                // Set up polling interval
+                if (intervalId) clearInterval(intervalId);
+                intervalId = setInterval(fetchStats, 30000);
+            } else {
+                // No user authenticated
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        });
 
         return () => {
             isMounted = false;
-            clearInterval(intervalId);
+            unsubscribe();
+            if (intervalId) clearInterval(intervalId);
         };
     }, []);
 

@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { ref, onValue, query, orderByChild, limitToLast } from 'firebase/database';
 import { database, auth } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export interface Transaction {
     id: string;
@@ -37,6 +38,7 @@ export interface TransactionStats {
     pendingTransactions: number;
     failedTransactions: number;
     totalRevenue: number;
+    netRevenue: number;
     totalVotes: number;
     averageTransactionValue: number;
 }
@@ -49,6 +51,7 @@ export function useTransactions(limit: number = 100) {
         pendingTransactions: 0,
         failedTransactions: 0,
         totalRevenue: 0,
+        netRevenue: 0,
         totalVotes: 0,
         averageTransactionValue: 0,
     });
@@ -57,6 +60,7 @@ export function useTransactions(limit: number = 100) {
 
     useEffect(() => {
         let isMounted = true;
+        let intervalId: NodeJS.Timeout | null = null;
 
         const fetchTransactions = async () => {
             try {
@@ -90,13 +94,15 @@ export function useTransactions(limit: number = 100) {
                     const pending = txArray.filter((tx: Transaction) => tx.status === 'pending');
                     const failed = txArray.filter((tx: Transaction) => tx.status === 'failed');
 
-                    // Calculate gross revenue from completed transactions
-                    const grossRevenue = completed.reduce((sum: number, tx: Transaction) => sum + tx.amount, 0);
+                    // Calculate total votes first
+                    const totalVotes = completed.reduce((sum: number, tx: Transaction) => sum + tx.voteCount, 0);
+
+                    // Calculate gross revenue based on Total Votes * 105 XAF (as per user request)
+                    const PRICE_PER_VOTE = 105;
+                    const grossRevenue = totalVotes * PRICE_PER_VOTE;
 
                     // Deduct 5% platform fee to get net revenue
                     const netRevenue = grossRevenue * 0.95;
-
-                    const totalVotes = completed.reduce((sum: number, tx: Transaction) => sum + tx.voteCount, 0);
 
                     setTransactions(txArray);
                     setStats({
@@ -104,10 +110,11 @@ export function useTransactions(limit: number = 100) {
                         completedTransactions: completed.length,
                         pendingTransactions: pending.length,
                         failedTransactions: failed.length,
-                        totalRevenue: Math.round(netRevenue),
+                        totalRevenue: Math.round(grossRevenue), // Store as Gross (Votes * 105)
+                        netRevenue: Math.round(netRevenue),     // Store as Net (Gross * 0.95)
                         totalVotes,
                         averageTransactionValue: completed.length > 0
-                            ? Math.round(netRevenue / completed.length)
+                            ? Math.round(grossRevenue / completed.length)
                             : 0,
                     });
                     setLoading(false);
@@ -121,14 +128,28 @@ export function useTransactions(limit: number = 100) {
             }
         };
 
-        fetchTransactions();
+        // Wait for auth state to be ready before fetching
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is authenticated, fetch transactions
+                fetchTransactions();
 
-        // Poll every 30 seconds
-        const intervalId = setInterval(fetchTransactions, 30000);
+                // Set up polling interval
+                if (intervalId) clearInterval(intervalId);
+                intervalId = setInterval(fetchTransactions, 30000);
+            } else {
+                // No user authenticated
+                if (isMounted) {
+                    setLoading(false);
+                    setError('Authentication required');
+                }
+            }
+        });
 
         return () => {
             isMounted = false;
-            clearInterval(intervalId);
+            unsubscribe();
+            if (intervalId) clearInterval(intervalId);
         };
     }, [limit]);
 

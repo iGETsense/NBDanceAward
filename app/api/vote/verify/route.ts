@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
-import { ref, get, update, runTransaction, serverTimestamp } from 'firebase/database';
+import { ref, get, update, runTransaction, serverTimestamp, set } from 'firebase/database';
 import { checkPaymentStatus } from '../../lib/mesomb';
 
 export async function POST(request: NextRequest) {
@@ -251,5 +251,3 @@ async function recalculateCategoryPercentages(candidateId: string) {
     }
 }
 
-// Import set from firebase/database
-import { set } from 'firebase/database';

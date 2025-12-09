@@ -116,7 +116,7 @@ export function useVoting() {
    */
   const pollPaymentStatus = useCallback(async (
     transactionId: string,
-    maxAttempts: number = 30,
+    maxAttempts: number = 90, // Increased to 3 minutes (90 * 2s)
     intervalMs: number = 2000
   ): Promise<PaymentVerificationResult> => {
     setPaymentStatus('pending');

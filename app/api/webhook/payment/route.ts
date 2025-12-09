@@ -36,7 +36,10 @@ export async function POST(request: NextRequest) {
         const transactionId = Object.keys(transactions)[0];
         const transaction = transactions[transactionId];
 
-        // Only process if payment is successful and transaction is pending
+        // Message for logging
+        console.log(`[Webhook] Processing ${reference} - Status: ${status}`);
+
+        // Handle SUCCESS
         if (status === 'SUCCESS' && transaction.status === 'pending') {
             // Update votes
             await updateVotesAfterPayment(transaction);
@@ -46,11 +49,24 @@ export async function POST(request: NextRequest) {
             await update(transactionRef, {
                 status: 'completed',
                 completedAt: serverTimestamp(),
+                mesombStatus: status
             });
 
-            return NextResponse.json({ message: 'Webhook processed successfully' });
-        } else {
-            return NextResponse.json({ message: 'Webhook received but not processed' });
+            return NextResponse.json({ message: 'Payment confirmed successfully' });
+        }
+        // Handle FAILED or CANCELED
+        else if ((status === 'FAILED' || status === 'CANCELED') && transaction.status === 'pending') {
+            const transactionRef = ref(database, `transactions/${transactionId}`);
+            await update(transactionRef, {
+                status: 'failed',
+                failedAt: serverTimestamp(),
+                mesombStatus: status
+            });
+
+            return NextResponse.json({ message: 'Payment marked as failed' });
+        }
+        else {
+            return NextResponse.json({ message: `Webhook received: ${status} (No action taken)` });
         }
     } catch (error: any) {
         console.error('Webhook error:', error);
