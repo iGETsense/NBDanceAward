@@ -25,6 +25,9 @@
         "transactions": {
             ".read": true,
             ".write": true,
+            ".indexOn": [
+                "mesombReference"
+            ],
             "$transactionId": {
                 ".validate": "newData.hasChildren(['id', 'candidateId', 'voteCount', 'phoneNumber', 'paymentMethod', 'operator', 'amount', 'status'])"
             }

@@ -18,23 +18,37 @@ export async function GET() {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { reference, status } = body;
+
+        // Mesomb sends: pk, status, type, amount, fees, b_party, message, service, reference, ts, direction, country, currency, customer
+        // We need 'reference' to find our transaction and 'status' to determine outcome
+        const { reference, status, pk, amount, service, b_party } = body;
+
+        console.log('[Webhook] Received payload:', JSON.stringify(body, null, 2));
 
         if (!reference) {
+            console.error('[Webhook] Missing reference in payload');
             return NextResponse.json(
                 { error: 'Missing reference' },
                 { status: 400 }
             );
         }
 
+        console.log(`[Webhook] Looking for transaction with mesombReference: ${reference}`);
+
         // Find transaction by Mesomb reference
+        // NOTE: This query requires .indexOn for mesombReference in Firebase rules
         const transactionsRef = ref(database, 'transactions');
         const transactionsQuery = query(transactionsRef, orderByChild('mesombReference'), equalTo(reference));
         const transactionsSnapshot = await get(transactionsQuery);
 
         if (!transactionsSnapshot.exists()) {
+            console.error(`[Webhook] Transaction NOT FOUND for reference: ${reference}`);
+            console.log('[Webhook] This may indicate:');
+            console.log('  1. The transaction was never created in our system');
+            console.log('  2. Firebase .indexOn rule is missing for mesombReference');
+            console.log('  3. The reference format does not match');
             return NextResponse.json(
-                { error: 'Transaction not found' },
+                { error: 'Transaction not found', reference },
                 { status: 404 }
             );
         }
@@ -43,11 +57,12 @@ export async function POST(request: NextRequest) {
         const transactionId = Object.keys(transactions)[0];
         const transaction = transactions[transactionId];
 
-        // Message for logging
-        console.log(`[Webhook] Processing ${reference} - Status: ${status}`);
+        console.log(`[Webhook] Found transaction: ${transactionId}, current status: ${transaction.status}`);
 
         // Handle SUCCESS
         if (status === 'SUCCESS' && transaction.status === 'pending') {
+            console.log(`[Webhook] Updating transaction ${transactionId} to completed`);
+
             // Update votes
             await updateVotesAfterPayment(transaction);
 
@@ -56,29 +71,38 @@ export async function POST(request: NextRequest) {
             await update(transactionRef, {
                 status: 'completed',
                 completedAt: serverTimestamp(),
-                mesombStatus: status
+                mesombStatus: status,
+                webhookReceived: true,
+                webhookReceivedAt: serverTimestamp()
             });
 
-            return NextResponse.json({ message: 'Payment confirmed successfully' });
+            console.log(`[Webhook] SUCCESS: Transaction ${transactionId} marked as completed, votes added`);
+            return NextResponse.json({ message: 'Payment confirmed successfully', transactionId });
         }
         // Handle FAILED or CANCELED
         else if ((status === 'FAILED' || status === 'CANCELED') && transaction.status === 'pending') {
+            console.log(`[Webhook] Marking transaction ${transactionId} as failed`);
+
             const transactionRef = ref(database, `transactions/${transactionId}`);
             await update(transactionRef, {
                 status: 'failed',
                 failedAt: serverTimestamp(),
-                mesombStatus: status
+                mesombStatus: status,
+                webhookReceived: true,
+                webhookReceivedAt: serverTimestamp()
             });
 
-            return NextResponse.json({ message: 'Payment marked as failed' });
+            console.log(`[Webhook] Transaction ${transactionId} marked as failed`);
+            return NextResponse.json({ message: 'Payment marked as failed', transactionId });
         }
         else {
+            console.log(`[Webhook] No action taken for status: ${status}, transaction status: ${transaction.status}`);
             return NextResponse.json({ message: `Webhook received: ${status} (No action taken)` });
         }
     } catch (error: any) {
-        console.error('Webhook error:', error);
+        console.error('[Webhook] Error processing webhook:', error);
         return NextResponse.json(
-            { error: 'Internal server error' },
+            { error: 'Internal server error', details: error.message },
             { status: 500 }
         );
     }
