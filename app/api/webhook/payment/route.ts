@@ -8,6 +8,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
 import { ref, query, orderByChild, equalTo, get, update, runTransaction, set, serverTimestamp } from 'firebase/database';
 
+export async function GET() {
+    return NextResponse.json({
+        status: 'active',
+        message: 'Payment Webhook Endpoint is running. Please send POST requests from Mesomb.'
+    });
+}
+
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
