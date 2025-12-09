@@ -481,8 +481,8 @@ export default function NBDanceAwardPage() {
                 <a href="#" className="hover:text-white transition-colors">
                   FAQ
                 </a>
-                <a href="#" className="hover:text-white transition-colors">
-                  Support
+                <a href="/report-issue" className="hover:text-white transition-colors">
+                  Signaler un Problème
                 </a>
                 <a href="#" className="hover:text-white transition-colors md:inline hidden">
                   Confidentialité
