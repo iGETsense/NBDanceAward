@@ -23,8 +23,15 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
 
         // Mesomb sends: pk, status, type, amount, fees, b_party, message, service, reference, ts, direction, country, currency, customer
-        // We need 'reference' to find our transaction and 'status' to determine outcome
-        const { reference, status, pk, amount, service, b_party } = body;
+        // We use PK (primary key) or reference to find the transaction
+        const pk = body.pk;
+        const bodyReference = body.reference;
+
+        // CRITICAL: Use PK as primary lookup if available, otherwise reference
+        // In the user log, both are identical: "c20170da-c933-413e-8972-f5925d7af991"
+        const lookupReference = pk || bodyReference;
+
+        const { status, amount, service, b_party } = body;
 
         console.log('[Webhook] Received payload:', JSON.stringify(body, null, 2));
 
@@ -36,7 +43,7 @@ export async function POST(request: NextRequest) {
         await set(webhookLogRef, {
             id: webhookId,
             receivedAt: serverTimestamp(),
-            reference,
+            reference: lookupReference,
             status,
             pk,
             amount,
@@ -46,9 +53,9 @@ export async function POST(request: NextRequest) {
             processed: false,
         });
 
-        console.log(`[Webhook] Logged webhook ${webhookId} for reference: ${reference}`);
+        console.log(`[Webhook] Logged webhook ${webhookId} for reference: ${lookupReference}`);
 
-        if (!reference) {
+        if (!lookupReference) {
             console.error('[Webhook] Missing reference in payload');
             await update(webhookLogRef, {
                 processed: true,
@@ -61,7 +68,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        console.log(`[Webhook] Looking for transaction with mesombReference: ${reference}`);
+        console.log(`[Webhook] Looking for transaction with mesombReference: ${lookupReference}`);
 
         // ========================================================================
         // STEP 2: FIND TRANSACTION WITH RETRY MECHANISM
@@ -76,7 +83,7 @@ export async function POST(request: NextRequest) {
 
         for (let attempt = 0; attempt < maxRetries; attempt++) {
             const transactionsRef = ref(database, 'transactions');
-            const transactionsQuery = query(transactionsRef, orderByChild('mesombReference'), equalTo(reference));
+            const transactionsQuery = query(transactionsRef, orderByChild('mesombReference'), equalTo(lookupReference));
             transactionsSnapshot = await get(transactionsQuery);
 
             if (transactionsSnapshot.exists()) {
@@ -93,7 +100,7 @@ export async function POST(request: NextRequest) {
         }
 
         if (!transactionFound) {
-            console.error(`[Webhook] Transaction NOT FOUND after ${maxRetries} retries for reference: ${reference}`);
+            console.error(`[Webhook] Transaction NOT FOUND after ${maxRetries} retries for reference: ${lookupReference}`);
             console.log('[Webhook] This may indicate:');
             console.log('  1. Transaction creation failed in /api/vote/submit');
             console.log('  2. Firebase .indexOn rule is missing for mesombReference');
@@ -107,7 +114,7 @@ export async function POST(request: NextRequest) {
             });
 
             return NextResponse.json(
-                { error: 'Transaction not found', reference },
+                { error: 'Transaction not found', reference: lookupReference },
                 { status: 404 }
             );
         }
