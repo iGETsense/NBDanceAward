@@ -23,10 +23,14 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
 
         // Mesomb sends: pk, status, type, amount, fees, b_party, message, service, reference, ts, direction, country, currency, customer
-        // We need 'reference' to find our transaction and 'status' to determine outcome
+        // IMPORTANT: Mesomb sometimes sends 'pk' instead of 'reference' - we must handle both!
         const { reference, status, pk, amount, service, b_party } = body;
 
+        // Use pk as fallback if reference is missing
+        const mesombReference = reference || pk;
+
         console.log('[Webhook] Received payload:', JSON.stringify(body, null, 2));
+        console.log('[Webhook] Using mesombReference:', mesombReference, '(from', reference ? 'reference' : 'pk', ')');
 
         // ========================================================================
         // STEP 1: LOG ALL WEBHOOKS FOR AUDIT TRAIL
@@ -36,23 +40,24 @@ export async function POST(request: NextRequest) {
         await set(webhookLogRef, {
             id: webhookId,
             receivedAt: serverTimestamp(),
-            reference,
             status,
+            service,
+            reference: mesombReference, // Store the actual reference we're using
+            originalReference: reference, // Keep original for debugging
             pk,
             amount,
-            service,
             b_party,
             fullPayload: body,
             processed: false,
         });
 
-        console.log(`[Webhook] Logged webhook ${webhookId} for reference: ${reference}`);
+        console.log(`[Webhook] Logged webhook ${webhookId} for reference: ${mesombReference}`);
 
-        if (!reference) {
-            console.error('[Webhook] Missing reference in payload');
+        if (!mesombReference) {
+            console.error('[Webhook] Missing both reference AND pk in webhook payload');
             await update(webhookLogRef, {
-                processed: true,
-                error: 'Missing reference',
+                error: 'Missing both reference and pk',
+                processed: true, // Mark as processed to avoid retry
                 processedAt: serverTimestamp(),
             });
             return NextResponse.json(
@@ -61,7 +66,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        console.log(`[Webhook] Looking for transaction with mesombReference: ${reference}`);
+        console.log(`[Webhook] Looking for transaction with mesombReference: ${mesombReference}`);
 
         // ========================================================================
         // STEP 2: FIND TRANSACTION WITH RETRY MECHANISM
@@ -76,7 +81,7 @@ export async function POST(request: NextRequest) {
 
         for (let attempt = 0; attempt < maxRetries; attempt++) {
             const transactionsRef = ref(database, 'transactions');
-            const transactionsQuery = query(transactionsRef, orderByChild('mesombReference'), equalTo(reference));
+            const transactionsQuery = query(transactionsRef, orderByChild('mesombReference'), equalTo(mesombReference));
             transactionsSnapshot = await get(transactionsQuery);
 
             if (transactionsSnapshot.exists()) {
@@ -93,7 +98,7 @@ export async function POST(request: NextRequest) {
         }
 
         if (!transactionFound) {
-            console.error(`[Webhook] Transaction NOT FOUND after ${maxRetries} retries for reference: ${reference}`);
+            console.error(`[Webhook] Transaction NOT FOUND after ${maxRetries} retries for reference: ${mesombReference}`);
             console.log('[Webhook] This may indicate:');
             console.log('  1. Transaction creation failed in /api/vote/submit');
             console.log('  2. Firebase .indexOn rule is missing for mesombReference');
@@ -102,12 +107,13 @@ export async function POST(request: NextRequest) {
             await update(webhookLogRef, {
                 processed: false, // Mark as unprocessed for manual review
                 error: 'Transaction not found after retries',
+                reference: mesombReference,
                 retries: maxRetries,
                 processedAt: serverTimestamp(),
             });
 
             return NextResponse.json(
-                { error: 'Transaction not found', reference },
+                { error: 'Transaction not found', reference: mesombReference },
                 { status: 404 }
             );
         }
