@@ -130,9 +130,7 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
         }
 
         // Check for explicit success indicators
-        // CRITICAL FIX: Prioritize transaction PK (UUID) over local reference (Nonce)
-        // Webhooks send the PK, so we must store the PK to match them!
-        const reference = response.transaction?.pk || response.pk || response.reference;
+        const reference = response.reference || response.transaction?.pk;
         if (!reference) {
             console.error('[Mesomb] No reference returned:', {
                 response: response,

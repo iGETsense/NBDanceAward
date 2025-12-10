@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
 import { ref, get, update, runTransaction, serverTimestamp, set } from 'firebase/database';
 import { checkPaymentStatus } from '../../lib/mesomb';
-import { updateVotesAfterPayment } from '../../lib/vote-utils';
+import { updateVotesAfterPayment } from '../lib/vote-utils';
 
 export async function POST(request: NextRequest) {
     try {
