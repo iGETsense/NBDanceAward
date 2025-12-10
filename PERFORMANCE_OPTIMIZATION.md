@@ -11,7 +11,7 @@
 All read operations now cache results for 30 seconds:
 - `getCategories()` - Cached
 - `getCandidatesByCategory()` - Cached per category
-- `getUserVotes()` - Cached per user
+- `getUserVotes()` - Cached per users
 - `getUser()` - Cached per user
 - `getLeaderboard()` - Cached per limit
 
