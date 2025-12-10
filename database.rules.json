@@ -27,12 +27,13 @@
             ".write": true,
             ".indexOn": [
                 "mesombReference"
-            ],
-            "$transactionId": {
-                ".validate": "newData.hasChildren(['id', 'candidateId', 'voteCount', 'phoneNumber', 'paymentMethod', 'operator', 'amount', 'status'])"
-            }
+            ]
         },
         "votes": {
+            ".read": true,
+            ".write": true
+        },
+        "webhookLogs": {
             ".read": true,
             ".write": true
         },

@@ -46,6 +46,22 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        // CRITICAL FIX: Check if mesombReference exists
+        // With Two-Phase Commit, transaction is created BEFORE payment initiation
+        // So mesombReference might be null if payment hasn't been initiated yet
+        if (!transaction.mesombReference) {
+            console.log('[Verify] Transaction exists but payment not yet initiated:', {
+                transactionId,
+                paymentInitiated: transaction.paymentInitiated,
+            });
+
+            return NextResponse.json({
+                success: false,
+                status: 'pending',
+                message: 'Paiement en cours d\'initialisation. Veuillez patienter...',
+            });
+        }
+
         // Check payment status with Mesomb
         const paymentStatus = await checkPaymentStatus(transaction.mesombReference);
 
