@@ -39,7 +39,7 @@ export interface WithdrawalParams {
 
 export interface PaymentResult {
     success: boolean;
-    status: 'SUCCESS' | 'FAILED' | 'PENDING';
+    status: 'SUCCESS' | 'FAILED' | 'PENDING' | 'CANCELED';
     reference?: string;
     message?: string;
     error?: string;

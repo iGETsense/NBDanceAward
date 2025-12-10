@@ -17,7 +17,7 @@ export interface Transaction {
     operator: string;
     amount: number;
     mesombReference: string;
-    status: 'pending' | 'completed' | 'failed';
+    status: 'creating' | 'pending' | 'completed' | 'failed' | 'init_failed';
     createdAt: number;
     completedAt?: number;
     failedAt?: number;
@@ -91,8 +91,8 @@ export function useTransactions(limit: number = 100) {
 
                     // Calculate statistics
                     const completed = txArray.filter((tx: Transaction) => tx.status === 'completed');
-                    const pending = txArray.filter((tx: Transaction) => tx.status === 'pending');
-                    const failed = txArray.filter((tx: Transaction) => tx.status === 'failed');
+                    const pending = txArray.filter((tx: Transaction) => tx.status === 'pending' || tx.status === 'creating');
+                    const failed = txArray.filter((tx: Transaction) => tx.status === 'failed' || tx.status === 'init_failed');
 
                     // Calculate total votes first
                     const totalVotes = completed.reduce((sum: number, tx: Transaction) => sum + tx.voteCount, 0);

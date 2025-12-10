@@ -1,7 +1,10 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 
 // Polling interval in milliseconds (e.g., 30 seconds)
 const POLLING_INTERVAL = 30000;
+
+// Event name for triggering immediate refresh
+export const VOTE_SUCCESS_EVENT = 'vote-success-refresh';
 
 export function useCategories() {
   const [categories, setCategories] = useState<any[]>([])
@@ -49,41 +52,56 @@ export function useCandidates() {
   const [candidates, setCandidates] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const isMountedRef = useRef(true);
+
+  const fetchCandidates = useCallback(async () => {
+    console.log('🚀 [Debug] Fetching candidates...');
+    try {
+      // Add cache-busting parameter for immediate refreshes
+      const response = await fetch(`/api/candidates?t=${Date.now()}`);
+      if (!response.ok) throw new Error('Failed to fetch candidates');
+
+      const result = await response.json();
+      if (isMountedRef.current) {
+        setCandidates(result.candidates || []);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error('Error fetching candidates:', err);
+      if (isMountedRef.current) {
+        setError(err instanceof Error ? err.message : 'Failed to load candidates');
+        setLoading(false);
+      }
+    }
+  }, []);
+
+  // Expose refresh function for immediate updates after voting
+  const refresh = useCallback(() => {
+    console.log('🔄 [useCandidates] Immediate refresh triggered');
+    fetchCandidates();
+  }, [fetchCandidates]);
 
   useEffect(() => {
-    let isMounted = true;
-
-    const fetchCandidates = async () => {
-      console.log('🚀 [Debug] Fetching candidates...');
-      try {
-        const response = await fetch('/api/candidates');
-        if (!response.ok) throw new Error('Failed to fetch candidates');
-
-        const result = await response.json();
-        if (isMounted) {
-          setCandidates(result.candidates || []);
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error('Error fetching candidates:', err);
-        if (isMounted) {
-          setError(err instanceof Error ? err.message : 'Failed to load candidates');
-          setLoading(false);
-        }
-      }
-    };
-
+    isMountedRef.current = true;
     fetchCandidates();
 
     const intervalId = setInterval(fetchCandidates, POLLING_INTERVAL);
 
-    return () => {
-      isMounted = false;
-      clearInterval(intervalId);
+    // Listen for vote success events to trigger immediate refresh
+    const handleVoteSuccess = () => {
+      console.log('🎉 [useCandidates] Vote success event received, refreshing...');
+      fetchCandidates();
     };
-  }, [])
+    window.addEventListener(VOTE_SUCCESS_EVENT, handleVoteSuccess);
 
-  return { candidates, loading, error }
+    return () => {
+      isMountedRef.current = false;
+      clearInterval(intervalId);
+      window.removeEventListener(VOTE_SUCCESS_EVENT, handleVoteSuccess);
+    };
+  }, [fetchCandidates])
+
+  return { candidates, loading, error, refresh }
 }
 
 export function useLeaderboard(limit: number = 10) {

@@ -170,27 +170,42 @@ export const secureDb = {
 };
 
 /**
- * Get candidates with fallback
+ * Get candidates with fallback - returns empty object on failure so API can use static data
  */
 export async function getSecureCandidates() {
-    const { data } = await secureDbFetch('/candidates');
-    return data || {};
+    try {
+        const { data } = await secureDbFetch('/candidates');
+        return data || {};
+    } catch (error) {
+        console.error('[getSecureCandidates] All backends failed, returning empty:', (error as Error).message);
+        return {}; // Return empty so API route can fall back to static data
+    }
 }
 
 /**
  * Get categories with fallback
  */
 export async function getSecureCategories() {
-    const { data } = await secureDbFetch('/categories');
-    return data || {};
+    try {
+        const { data } = await secureDbFetch('/categories');
+        return data || {};
+    } catch (error) {
+        console.error('[getSecureCategories] All backends failed, returning empty:', (error as Error).message);
+        return {};
+    }
 }
 
 /**
  * Get candidate categories links
  */
 export async function getSecureCandidateCategories() {
-    const { data } = await secureDbFetch('/candidateCategories');
-    return data || [];
+    try {
+        const { data } = await secureDbFetch('/candidateCategories');
+        return data || [];
+    } catch (error) {
+        console.error('[getSecureCandidateCategories] All backends failed, returning empty:', (error as Error).message);
+        return [];
+    }
 }
 
 /**

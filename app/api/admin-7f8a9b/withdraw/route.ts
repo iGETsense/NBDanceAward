@@ -105,6 +105,20 @@ export async function POST(request: NextRequest) {
         // Log withdrawal in Firebase using REST API
         const firebaseUrl = `https://project-5583295336911612869-default-rtdb.europe-west1.firebasedatabase.app/withdrawals.json?auth=${firebaseToken}`;
 
+        // Extract admin UID from token for audit trail
+        let adminUid = 'unknown';
+        try {
+            const payload = JSON.parse(atob(firebaseToken.split('.')[1]));
+            adminUid = payload.user_id || payload.sub || 'unknown';
+        } catch (e) {
+            // Use unknown if parsing fails
+        }
+
+        // Get IP address for audit trail
+        const forwardedFor = request.headers.get('x-forwarded-for');
+        const ipAddress = forwardedFor ? forwardedFor.split(',')[0].trim() : 'unknown';
+        const userAgent = request.headers.get('user-agent') || 'unknown';
+
         const withdrawalData = {
             id: transactionId,
             phoneNumber,
@@ -113,6 +127,11 @@ export async function POST(request: NextRequest) {
             mesombReference: withdrawalResult.reference,
             status: 'completed',
             createdAt: Date.now(),
+            // Audit trail fields
+            initiatedBy: adminUid,
+            ipAddress: ipAddress,
+            userAgent: userAgent,
+            reason: body.reason || 'Manual admin withdrawal',
         };
 
         const firebaseResponse = await fetch(firebaseUrl, {

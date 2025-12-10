@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
-import { ref, set, serverTimestamp } from 'firebase/database';
+import { ref, set, update, serverTimestamp } from 'firebase/database';
 import { collectPayment } from '../../lib/mesomb';
 import { paymentQueue } from '@/lib/paymentQueue';
 import {
@@ -69,32 +69,10 @@ export async function POST(request: NextRequest) {
             activeRequests: paymentQueue.getActiveRequests(),
         });
 
-        // Initiate payment with Mesomb via queue (handles concurrency + retries)
-        const paymentResult = await paymentQueue.add(() =>
-            collectPayment({
-                amount: totalAmount,
-                service: mesombService,
-                payer: phoneNumber.replace(/\s/g, '').replace(/^\+237/, ''),
-                nonce: transactionId,
-            })
-        );
-
-        if (!paymentResult.success) {
-            // Use the specific error message from Mesomb if available
-            const errorMessage = paymentResult.error || 'Erreur de paiement: votre vote n\'est pas passé';
-
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: errorMessage,
-                    details: paymentResult.error || 'Payment initiation failed',
-                },
-                { status: 400 } // Use 400 for bad requests (like insufficient funds) instead of 500
-            );
-        }
-
-        // Create transaction record in Firebase
-        const transactionData = {
+        // CRITICAL FIX: Create transaction record BEFORE calling Mesomb
+        // This prevents "phantom transactions" where payment succeeds but DB record is lost
+        const transactionRef = ref(database, `transactions/${transactionId}`);
+        const initialTransactionData = {
             id: transactionId,
             candidateId,
             voteCount,
@@ -102,22 +80,85 @@ export async function POST(request: NextRequest) {
             paymentMethod,
             operator: mesombService,
             amount: totalAmount,
-            mesombReference: paymentResult.reference,
-            status: paymentResult.status === 'FAILED' ? 'failed' : 'pending',
-            createdAt: serverTimestamp(),
-            // Enhanced fields for debugging and reconciliation
-            mesombResponse: {
-                success: paymentResult.success,
-                status: paymentResult.status,
-                message: paymentResult.message,
-                reference: paymentResult.reference,
-            },
-            errorDetails: paymentResult.error || null,
-            reconciliationStatus: paymentResult.status === 'FAILED' ? 'confirmed_failed' : null,
+            status: 'creating', // Initial status before payment attempt
+            createdAt: Date.now(), // Use Date.now() for reliable timestamp comparison
+            createdAtServer: serverTimestamp(),
         };
 
-        const transactionRef = ref(database, `transactions/${transactionId}`);
-        await set(transactionRef, transactionData);
+        // Step 1: Create record FIRST
+        await set(transactionRef, initialTransactionData);
+        console.log('[Submit] Transaction record created with status: creating');
+
+        // Step 2: Initiate payment with Mesomb via queue
+        let paymentResult;
+        try {
+            paymentResult = await paymentQueue.add(() =>
+                collectPayment({
+                    amount: totalAmount,
+                    service: mesombService,
+                    payer: phoneNumber.replace(/\s/g, '').replace(/^\+237/, ''),
+                    nonce: transactionId,
+                })
+            );
+        } catch (paymentError: any) {
+            // Payment call crashed - update record to failed
+            await update(transactionRef, {
+                status: 'init_failed',
+                errorDetails: paymentError.message || 'Payment initiation crashed',
+                failedAt: Date.now(),
+            });
+
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: 'Erreur de paiement: votre vote n\'est pas passé',
+                    details: paymentError.message || 'Payment initiation failed',
+                },
+                { status: 500 }
+            );
+        }
+
+        // Step 3: Update transaction with Mesomb response
+        if (!paymentResult.success) {
+            // Payment was rejected by Mesomb
+            // Note: Firebase doesn't accept undefined values, use null or empty string
+            await update(transactionRef, {
+                status: 'failed',
+                mesombReference: paymentResult.reference || null,
+                mesombResponse: {
+                    success: paymentResult.success,
+                    status: paymentResult.status || 'FAILED',
+                    message: paymentResult.message || paymentResult.error || 'Payment failed',
+                    reference: paymentResult.reference || null,
+                },
+                errorDetails: paymentResult.error || paymentResult.message || 'Payment rejected',
+                failedAt: Date.now(),
+                reconciliationStatus: 'confirmed_failed',
+            });
+
+            const errorMessage = paymentResult.error || 'Erreur de paiement: votre vote n\'est pas passé';
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: errorMessage,
+                    details: paymentResult.error || 'Payment initiation failed',
+                },
+                { status: 400 }
+            );
+        }
+
+        // Step 4: Update record to pending (payment initiated successfully)
+        // Note: Firebase doesn't accept undefined values, use null or empty string
+        await update(transactionRef, {
+            status: 'pending',
+            mesombReference: paymentResult.reference || null,
+            mesombResponse: {
+                success: paymentResult.success,
+                status: paymentResult.status || 'PENDING',
+                message: paymentResult.message || 'Payment initiated',
+                reference: paymentResult.reference || null,
+            },
+        });
 
         // Log transaction creation
         console.log('[Vote] Transaction created:', {

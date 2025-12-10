@@ -4,6 +4,10 @@
  */
 
 import { useState, useCallback } from 'react';
+import { VOTE_SUCCESS_EVENT } from './useFirebaseData';
+
+// Save transaction ID to localStorage for later recovery
+const PENDING_TRANSACTION_KEY = 'nbdance_pending_transaction';
 
 export interface SubmitVoteParams {
   candidateId: string;
@@ -23,9 +27,57 @@ export interface VoteSubmissionResult {
 
 export interface PaymentVerificationResult {
   success: boolean;
-  status?: 'pending' | 'completed' | 'failed';
+  status?: 'pending' | 'completed' | 'failed' | 'timeout' | 'creating';
   message?: string;
   error?: string;
+}
+
+// Helper to save pending transaction
+function savePendingTransaction(transactionId: string, candidateId: string) {
+  try {
+    localStorage.setItem(PENDING_TRANSACTION_KEY, JSON.stringify({
+      transactionId,
+      candidateId,
+      timestamp: Date.now()
+    }));
+  } catch (e) {
+    // localStorage may not be available
+  }
+}
+
+// Helper to clear pending transaction
+function clearPendingTransaction() {
+  try {
+    localStorage.removeItem(PENDING_TRANSACTION_KEY);
+  } catch (e) {
+    // localStorage may not be available
+  }
+}
+
+// Helper to get pending transaction
+export function getPendingTransaction(): { transactionId: string; candidateId: string; timestamp: number } | null {
+  try {
+    const stored = localStorage.getItem(PENDING_TRANSACTION_KEY);
+    if (stored) {
+      const data = JSON.parse(stored);
+      // Only return if less than 1 hour old
+      if (Date.now() - data.timestamp < 60 * 60 * 1000) {
+        return data;
+      }
+      localStorage.removeItem(PENDING_TRANSACTION_KEY);
+    }
+  } catch (e) {
+    // localStorage may not be available
+  }
+  return null;
+}
+
+// Dispatch event to trigger immediate data refresh
+function triggerDataRefresh() {
+  if (typeof window !== 'undefined') {
+    console.log('🎉 [useVoting] Dispatching vote success event');
+    window.dispatchEvent(new CustomEvent(VOTE_SUCCESS_EVENT));
+  }
 }
 
 export function useVoting() {
@@ -33,7 +85,8 @@ export function useVoting() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'pending' | 'completed' | 'failed'>('idle');
+  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'pending' | 'completed' | 'failed' | 'timeout'>('idle');
+  const [currentTransactionId, setCurrentTransactionId] = useState<string | null>(null);
 
   /**
    * Submit a vote and initiate payment
@@ -43,6 +96,7 @@ export function useVoting() {
     setError(null);
     setSuccess(false);
     setPaymentStatus('idle');
+    setCurrentTransactionId(null);
 
     try {
       const response = await fetch('/api/vote/submit', {
@@ -60,6 +114,9 @@ export function useVoting() {
         setPaymentStatus('failed');
       } else {
         setPaymentStatus('pending');
+        setCurrentTransactionId(result.transactionId);
+        // Save to localStorage for recovery
+        savePendingTransaction(result.transactionId, params.candidateId);
       }
 
       return result;
@@ -94,7 +151,7 @@ export function useVoting() {
 
       const result = await response.json();
 
-      if (!result.success && result.status !== 'pending') {
+      if (!result.success && result.status !== 'pending' && result.status !== 'creating') {
         setError(result.error || 'Payment verification failed');
       }
 
@@ -116,7 +173,7 @@ export function useVoting() {
    */
   const pollPaymentStatus = useCallback(async (
     transactionId: string,
-    maxAttempts: number = 90, // Increased to 3 minutes (90 * 2s)
+    maxAttempts: number = 90, // 3 minutes (90 * 2s)
     intervalMs: number = 2000
   ): Promise<PaymentVerificationResult> => {
     setPaymentStatus('pending');
@@ -128,12 +185,17 @@ export function useVoting() {
         setPaymentStatus('completed');
         setSuccess(true);
         setError(null);
+        clearPendingTransaction();
+        // Trigger immediate data refresh so user sees updated vote count
+        triggerDataRefresh();
         return result;
       }
 
-      if (result.error) {
+      // Handle explicit failure (not timeout)
+      if (result.status === 'failed') {
         setPaymentStatus('failed');
-        setError(result.error);
+        setError(result.error || result.message || 'Payment failed');
+        clearPendingTransaction();
         return result;
       }
 
@@ -141,14 +203,37 @@ export function useVoting() {
       await new Promise(resolve => setTimeout(resolve, intervalMs));
     }
 
-    setPaymentStatus('failed');
-    const timeoutError = 'Payment verification timed out. Please check back later.';
-    setError(timeoutError);
+    // IMPROVED: Don't mark as failed on timeout - mark as timeout
+    // The payment might still succeed via webhook
+    setPaymentStatus('timeout');
+    const timeoutMessage = 'La vérification a pris trop de temps. Votre paiement est peut-être encore en cours. Vous pouvez vérifier le statut plus tard avec ce numéro: ' + transactionId;
+    setError(timeoutMessage);
+
+    // Keep the transaction in localStorage for recovery
     return {
       success: false,
-      status: 'pending',
-      error: timeoutError,
+      status: 'timeout',
+      message: timeoutMessage,
     };
+  }, [verifyPayment]);
+
+  /**
+   * Check status of a previously pending transaction
+   */
+  const checkPendingTransaction = useCallback(async (): Promise<PaymentVerificationResult | null> => {
+    const pending = getPendingTransaction();
+    if (!pending) return null;
+
+    const result = await verifyPayment(pending.transactionId);
+
+    if (result.success && result.status === 'completed') {
+      clearPendingTransaction();
+      triggerDataRefresh();
+    } else if (result.status === 'failed') {
+      clearPendingTransaction();
+    }
+
+    return result;
   }, [verifyPayment]);
 
   /**
@@ -160,17 +245,20 @@ export function useVoting() {
     setPaymentStatus('idle');
     setIsSubmitting(false);
     setIsVerifying(false);
+    setCurrentTransactionId(null);
   }, []);
 
   return {
     submitVote,
     verifyPayment,
     pollPaymentStatus,
+    checkPendingTransaction,
     resetState,
     isSubmitting,
     isVerifying,
     error,
     success,
     paymentStatus,
+    currentTransactionId,
   };
 }

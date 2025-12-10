@@ -13,7 +13,6 @@ import Link from "next/link"
 import { CountdownPopup } from "@/components/CountdownPopup"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
-import { validatePhoneNumber, formatPhoneNumber, detectOperator, getOperatorName, type MobileOperator } from "@/lib/phoneValidation"
 import { decodeVoteLinkClient, encodeVoteLinkClient } from "@/lib/voteLinks"
 import { useVoting } from "@/hooks/useVoting"
 
@@ -893,8 +892,6 @@ export default function CandidatsPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [shuffledCandidates, setShuffledCandidates] = useState<any[]>([])
   const [phoneNumber, setPhoneNumber] = useState("")
-  const [phoneError, setPhoneError] = useState("")
-  const [detectedOperator, setDetectedOperator] = useState<MobileOperator>('unknown')
 
   // Scroll animations
   const pageTitle = useScrollAnimation()
@@ -958,8 +955,6 @@ export default function CandidatsPage() {
           setSelectedCandidate(candidate)
           setVoteCount(1)
           setPhoneNumber("")
-          setPhoneError("")
-          setDetectedOperator('unknown')
           setIsVotingModalOpen(true)
         }
       }
@@ -970,23 +965,7 @@ export default function CandidatsPage() {
     setSelectedCandidate(candidate)
     setVoteCount(1)
     setPhoneNumber("")
-    setPhoneError("")
-    setDetectedOperator('unknown')
     setIsVotingModalOpen(true)
-  }
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    const formatted = formatPhoneNumber(value)
-    setPhoneNumber(formatted)
-
-    // Detect operator in real-time
-    const operator = detectOperator(value)
-    setDetectedOperator(operator)
-
-    // Validate against selected payment method
-    const validation = validatePhoneNumber(value, selectedPaymentMethod)
-    setPhoneError(validation.warning || validation.suggestion || '')
   }
 
   const incrementVotes = () => setVoteCount((prev) => prev + 1)
@@ -1346,6 +1325,7 @@ export default function CandidatsPage() {
                           const paymentResult = await pollPaymentStatus(result.transactionId)
 
                           if (paymentResult.success && paymentResult.status === 'completed') {
+                            // Success - close modal after delay
                             setTimeout(() => {
                               setIsVotingModalOpen(false)
                               setPhoneNumber("")
@@ -1353,6 +1333,13 @@ export default function CandidatsPage() {
                               setTransactionId(null)
                               resetState()
                             }, 2000)
+                          } else if (paymentResult.status === 'timeout') {
+                            // Timeout - payment may still be processing
+                            // Keep modal open, user can see the message from useVoting hook
+                            console.log('Payment verification timed out, transaction:', result.transactionId)
+                          } else if (paymentResult.status === 'failed') {
+                            // Failed - user can see error and retry
+                            console.log('Payment failed:', paymentResult.message)
                           }
                         }
                       } catch (error) {
@@ -1433,44 +1420,13 @@ export default function CandidatsPage() {
                     </div>
                     <Input
                       type="tel"
-                      value={phoneNumber}
-                      onChange={handlePhoneChange}
                       placeholder="6xx xxx xxx"
-                      className={`w-full rounded-lg border ${phoneError
-                        ? 'border-red-500 focus:border-red-500'
-                        : detectedOperator !== 'unknown' && !phoneError
-                          ? 'border-green-500 focus:border-green-500'
-                          : 'border-zinc-700 focus:border-yellow-500'
-                        } bg-zinc-800 pl-20 md:pl-24 pr-10 md:pr-12 py-4 md:py-5 text-sm md:text-base text-white placeholder:text-zinc-500`}
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      className="w-full rounded-lg border border-zinc-700 bg-zinc-800 pl-20 md:pl-24 pr-10 md:pr-12 py-4 md:py-5 text-sm md:text-base text-white placeholder:text-zinc-500 focus:border-yellow-500"
                     />
-                    {detectedOperator !== 'unknown' && !phoneError ? (
-                      <CheckCircle2 className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-green-500" />
-                    ) : phoneError ? (
-                      <AlertCircle className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-red-500" />
-                    ) : (
-                      <Lock className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-zinc-500" />
-                    )}
+                    <Lock className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-zinc-500" />
                   </div>
-
-                  {/* Operator Badge */}
-                  {detectedOperator !== 'unknown' && (
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className={`text-xs font-medium ${detectedOperator === 'mtn' ? 'text-yellow-500' :
-                        detectedOperator === 'orange' ? 'text-orange-500' :
-                          'text-green-500'
-                        }`}>
-                        {getOperatorName(detectedOperator)} détecté
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Error/Warning Message */}
-                  {phoneError && (
-                    <div className="mt-2 flex items-start gap-2 text-xs text-red-400">
-                      <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                      <span>{phoneError}</span>
-                    </div>
-                  )}
                 </div>
               )}
 
@@ -1528,6 +1484,32 @@ export default function CandidatsPage() {
                 </div>
               )}
 
+              {paymentStatus === 'timeout' && transactionId && (
+                <div className="mb-4 md:mb-6 rounded-lg bg-yellow-500/10 border border-yellow-500/50 p-3 md:p-4">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-yellow-500 flex-shrink-0" />
+                    <p className="text-xs md:text-sm text-yellow-500 font-semibold">Vérification en cours...</p>
+                  </div>
+                  <p className="text-[10px] md:text-xs text-yellow-400 mt-1">
+                    Votre paiement est peut-être en cours de traitement. Vérifiez votre solde avant de réessayer.
+                  </p>
+                  <p className="text-[10px] md:text-xs text-yellow-300 mt-2 font-mono">
+                    Référence: {transactionId}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setIsVotingModalOpen(false)
+                      setPhoneNumber("")
+                      setVoteCount(1)
+                      setTransactionId(null)
+                      resetState()
+                    }}
+                    className="mt-3 text-xs text-yellow-400 underline hover:text-yellow-300"
+                  >
+                    Fermer et vérifier plus tard
+                  </button>
+                </div>
+              )}
 
               {/* Security Badges */}
               <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-[10px] md:text-xs text-zinc-400">

@@ -9,8 +9,9 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
-import { ref, get, update, runTransaction, serverTimestamp, set } from 'firebase/database';
+import { ref, get, update, serverTimestamp } from 'firebase/database';
 import { checkPaymentStatus } from '../../lib/mesomb';
+import { processSuccessfulPayment, markTransactionFailed } from '@/lib/voteProcessor';
 
 export async function POST(request: NextRequest) {
     try {
@@ -46,54 +47,70 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        // If already failed, return failure
+        if (transaction.status === 'failed' || transaction.status === 'init_failed') {
+            return NextResponse.json({
+                success: false,
+                status: 'failed',
+                message: transaction.failureReason || 'Payment failed',
+            });
+        }
+
+        // Only check with Mesomb if we have a reference (status is 'pending')
+        if (!transaction.mesombReference) {
+            // Transaction is still in 'creating' state - payment not yet initiated
+            return NextResponse.json({
+                success: false,
+                status: 'creating',
+                message: 'Payment is being initiated. Please wait.',
+            });
+        }
+
         // Check payment status with Mesomb
         const paymentStatus = await checkPaymentStatus(transaction.mesombReference);
 
         if (paymentStatus.success && paymentStatus.status === 'SUCCESS') {
-            // Payment confirmed - update votes
-            await updateVotesAfterPayment(transaction);
-
-            // Update transaction status
-            await update(transactionRef, {
-                status: 'completed',
-                completedAt: serverTimestamp(),
-                mesombResponse: {
-                    ...transaction.mesombResponse,
-                    finalStatus: 'SUCCESS',
-                    verifiedAt: serverTimestamp()
-                }
-            });
-
-            console.log('[Verify] Payment confirmed:', {
+            console.log('[Verify] Payment confirmed, processing:', {
                 transactionId,
                 reference: transaction.mesombReference,
             });
 
-            return NextResponse.json({
-                success: true,
-                status: 'completed',
-                message: 'Payment confirmed! Votes have been added.',
-            });
-        } else if (paymentStatus.status === 'FAILED') {
-            // Explicit failure from Mesomb
-            await update(transactionRef, {
-                status: 'failed',
-                reconciliationStatus: 'confirmed_failed',
-                failedAt: serverTimestamp(),
-                failureReason: paymentStatus.error || 'Payment failed at provider',
-                mesombResponse: {
-                    ...transaction.mesombResponse,
-                    finalStatus: 'FAILED',
-                    error: paymentStatus.error,
-                    verifiedAt: serverTimestamp()
-                }
-            });
+            // Use shared vote processor - marks completed FIRST, then processes votes
+            const result = await processSuccessfulPayment({
+                id: transactionId,
+                candidateId: transaction.candidateId,
+                voteCount: transaction.voteCount
+            }, 'SUCCESS');
 
+            if (result.success) {
+                return NextResponse.json({
+                    success: true,
+                    status: 'completed',
+                    message: 'Payment confirmed! Votes have been added.',
+                });
+            } else {
+                console.error('[Verify] Failed to process payment:', result.error);
+                return NextResponse.json({
+                    success: false,
+                    status: 'error',
+                    message: 'Payment was received but there was an error processing your vote. Please contact support.',
+                    reference: transactionId,
+                });
+            }
+        }
+
+        if (paymentStatus.status === 'FAILED' || paymentStatus.status === 'CANCELED') {
             console.warn('[Verify] Payment failed:', {
                 transactionId,
                 reference: transaction.mesombReference,
                 error: paymentStatus.error
             });
+
+            await markTransactionFailed(
+                transactionId,
+                paymentStatus.error || 'Payment failed at provider',
+                paymentStatus.status
+            );
 
             return NextResponse.json({
                 success: false,
@@ -101,48 +118,52 @@ export async function POST(request: NextRequest) {
                 message: 'Erreur de paiement: votre vote n\'est pas passé',
                 details: paymentStatus.error || 'Payment failed. Please try again.',
             });
-        } else {
-            // Check if transaction is too old (more than 10 minutes)
-            const createdAt = transaction.createdAt;
-            const now = Date.now();
-            const tenMinutes = 10 * 60 * 1000;
+        }
 
-            if (createdAt && (now - createdAt > tenMinutes)) {
-                // Transaction timed out - mark for review
-                await update(transactionRef, {
-                    status: 'failed',
-                    reconciliationStatus: 'needs_review',
-                    failedAt: serverTimestamp(),
-                    failureReason: 'Timeout - payment not confirmed within 10 minutes',
-                });
+        // Still pending - check timeout
+        // FIX: Use createdAt properly - it's stored as Date.now() (number) in new transactions
+        const createdAt = typeof transaction.createdAt === 'number'
+            ? transaction.createdAt
+            : (transaction.createdAt?._seconds ? transaction.createdAt._seconds * 1000 : null);
 
-                console.warn('[Verify] Transaction timed out:', {
-                    transactionId,
-                    reference: transaction.mesombReference,
-                    age: now - createdAt,
-                });
+        const now = Date.now();
+        const tenMinutes = 10 * 60 * 1000;
 
-                return NextResponse.json({
-                    success: false,
-                    status: 'failed',
-                    message: 'Payment verification timed out. If you were charged, please contact support with this reference: ' + transactionId,
-                });
-            }
+        if (createdAt && (now - createdAt > tenMinutes)) {
+            // Transaction timed out - mark for manual review
+            await update(transactionRef, {
+                status: 'failed',
+                reconciliationStatus: 'needs_review',
+                failedAt: Date.now(),
+                failureReason: 'Timeout - payment not confirmed within 10 minutes',
+            });
 
-            // Still pending
-            console.log('[Verify] Payment still pending:', {
+            console.warn('[Verify] Transaction timed out:', {
                 transactionId,
                 reference: transaction.mesombReference,
-                status: paymentStatus.status,
-                error: paymentStatus.error,
+                age: now - createdAt,
             });
 
             return NextResponse.json({
                 success: false,
-                status: 'pending',
-                message: 'Payment is still pending. Please complete payment on your phone.',
+                status: 'timeout',
+                message: 'Payment verification timed out. If you were charged, please contact support with this reference: ' + transactionId,
             });
         }
+
+        // Still pending
+        console.log('[Verify] Payment still pending:', {
+            transactionId,
+            reference: transaction.mesombReference,
+            status: paymentStatus.status,
+        });
+
+        return NextResponse.json({
+            success: false,
+            status: 'pending',
+            message: 'Payment is still pending. Please complete payment on your phone.',
+        });
+
     } catch (error: any) {
         console.error('Verify payment error:', error);
         return NextResponse.json(
@@ -154,100 +175,3 @@ export async function POST(request: NextRequest) {
         );
     }
 }
-
-/**
- * Helper function to update votes after successful payment
- */
-async function updateVotesAfterPayment(transaction: any) {
-    const { candidateId, voteCount } = transaction;
-
-    // Increment candidate votes atomically
-    const candidateVotesRef = ref(database, `candidates/${candidateId}/votes`);
-    await runTransaction(candidateVotesRef, (currentVotes) => {
-        return (currentVotes || 0) + voteCount;
-    });
-
-    // Recalculate percentages for the category
-    await recalculateCategoryPercentages(candidateId);
-
-    // Store vote record
-    const voteId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const voteRef = ref(database, `votes/${voteId}`);
-    await set(voteRef, {
-        id: voteId,
-        candidateId,
-        voteCount,
-        transactionId: transaction.id,
-        createdAt: serverTimestamp(),
-    });
-}
-
-/**
- * Recalculate percentages for all candidates in a category
- */
-async function recalculateCategoryPercentages(candidateId: string) {
-    try {
-        // Get candidate's category
-        const candidateRef = ref(database, `candidates/${candidateId}`);
-        const candidateSnapshot = await get(candidateRef);
-        const candidate = candidateSnapshot.val();
-
-        if (!candidate) return;
-
-        // Get candidate's category ID from candidateCategories
-        const linksRef = ref(database, 'candidateCategories');
-        const linksSnapshot = await get(linksRef);
-        const links = linksSnapshot.val();
-
-        if (!links) return;
-
-        // Find category for this candidate
-        let categoryId: string | null = null;
-        const linksArray = Array.isArray(links) ? links : Object.values(links);
-
-        for (const link of linksArray as any[]) {
-            if (link.candidateId === candidateId) {
-                categoryId = link.categoryId;
-                break;
-            }
-        }
-
-        if (!categoryId) return;
-
-        // Get all candidates in this category
-        const categoryCandidateIds: string[] = [];
-        for (const link of linksArray as any[]) {
-            if (link.categoryId === categoryId) {
-                categoryCandidateIds.push(link.candidateId);
-            }
-        }
-
-        // Get all candidates data
-        const candidatesRef = ref(database, 'candidates');
-        const candidatesSnapshot = await get(candidatesRef);
-        const allCandidates = candidatesSnapshot.val();
-
-        // Calculate total votes in category
-        let totalVotes = 0;
-        for (const cId of categoryCandidateIds) {
-            if (allCandidates[cId]) {
-                totalVotes += allCandidates[cId].votes || 0;
-            }
-        }
-
-        // Update percentages
-        if (totalVotes > 0) {
-            for (const cId of categoryCandidateIds) {
-                if (allCandidates[cId]) {
-                    const votes = allCandidates[cId].votes || 0;
-                    const percentage = Math.round((votes / totalVotes) * 100);
-                    const percentageRef = ref(database, `candidates/${cId}/percentage`);
-                    await set(percentageRef, percentage);
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error recalculating percentages:', error);
-    }
-}
-
