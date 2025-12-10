@@ -7,7 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
 import { ref, onValue, off, get, query, orderByChild, equalTo, update, set, serverTimestamp } from 'firebase/database';
-import { updateVotesAfterPayment } from '../lib/vote-utils';
+import { updateVotesAfterPayment } from '../../lib/vote-utils';
 
 export async function GET() {
     return NextResponse.json({
