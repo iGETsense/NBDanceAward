@@ -1359,7 +1359,7 @@ export default function CandidatsPage() {
                         console.error('Voting error:', error)
                       }
                     }}
-                    disabled={isSubmitting || isVerifying || !phoneNumber || phoneNumber.length < 9}
+                    disabled={isSubmitting || isVerifying || !phoneNumber}
                     className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 md:py-5 text-sm md:text-base rounded-full uppercase">
                     {isSubmitting ? 'Submitting Vote...' : isVerifying ? 'Verifying Payment...' : 'Proceed to Payment'}
                   </Button>

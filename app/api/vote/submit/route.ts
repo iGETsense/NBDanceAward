@@ -57,10 +57,20 @@ export async function POST(request: NextRequest) {
         const totalAmount = voteCount * votePrice;
 
         // Detect operator and map to Mesomb service
-        const operator = detectOperator(phoneNumber);
-        const mesombService = operator === 'MTN' ? 'MTN' : 'ORANGE';
+        // Determine Mesomb service based on user selection is safer than auto-detection
+        let mesombService: 'MTN' | 'ORANGE' = 'MTN'; // Default
 
-        console.log(`[Submit] Detected operator for ${phoneNumber}: ${operator} -> Service: ${mesombService}`);
+        if (paymentMethod === 'orange') {
+            mesombService = 'ORANGE';
+        } else if (paymentMethod === 'mobile') {
+            mesombService = 'MTN';
+        } else {
+            // Fallback to auto-detection if paymentMethod not provided
+            const operator = detectOperator(phoneNumber);
+            mesombService = operator === 'ORANGE' ? 'ORANGE' : 'MTN';
+        }
+
+        console.log(`[Submit] Phone: ${phoneNumber} -> Service: ${mesombService} (Method: ${paymentMethod || 'auto'})`);
 
         // ========================================================================
         // PHASE 1: CREATE TRANSACTION FIRST (Two-Phase Commit Pattern)

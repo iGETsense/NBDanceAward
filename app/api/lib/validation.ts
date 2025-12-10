@@ -18,13 +18,13 @@ export function validatePhoneNumber(phoneNumber: string): ValidationResult {
     // Remove spaces and country code
     const cleaned = phoneNumber.replace(/\s/g, '').replace(/^\+237/, '');
 
-    // Cameroon numbers: 6xx xxx xxx (9 digits starting with 6)
-    const phoneRegex = /^6\d{8}$/;
+    // Simplified validation: just check that it has 9 digits
+    const phoneRegex = /^\d{9}$/;
 
     if (!phoneRegex.test(cleaned)) {
         return {
             valid: false,
-            error: 'Invalid phone number format. Must be a Cameroon number (6xx xxx xxx)',
+            error: 'Le numéro de téléphone doit contenir 9 chiffres.',
         };
     }
 
