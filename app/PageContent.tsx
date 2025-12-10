@@ -67,7 +67,7 @@ export default function NBDanceAwardPage() {
   // Voting hook with all features
   const {
     submitVote,
-    pollPaymentStatus,
+    monitorPaymentWithListener,
     isSubmitting,
     isVerifying,
     error: voteError,
@@ -617,7 +617,7 @@ export default function NBDanceAwardPage() {
                           setTransactionId(result.transactionId)
 
                           // Start polling for payment status
-                          const paymentResult = await pollPaymentStatus(result.transactionId)
+                          const paymentResult = await monitorPaymentWithListener(result.transactionId)
 
                           if (paymentResult.success && paymentResult.status === 'completed') {
                             // Payment successful, close modal after delay

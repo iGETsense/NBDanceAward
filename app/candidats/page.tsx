@@ -878,7 +878,7 @@ const customImagePositioning: { [key: string]: string } = {
 export default function CandidatsPage() {
   // Firebase hook
   const { candidates: allCandidates, loading: candidatesLoading } = useCandidates()
-  const { submitVote, pollPaymentStatus, isSubmitting, isVerifying, error: voteError, success: voteSuccess, paymentStatus, resetState } = useVoting()
+  const { submitVote, monitorPaymentWithListener, isSubmitting, isVerifying, error: voteError, success: voteSuccess, paymentStatus, resetState } = useVoting()
   const [transactionId, setTransactionId] = useState<string | null>(null)
   const searchParams = useSearchParams()
 
@@ -1343,7 +1343,7 @@ export default function CandidatsPage() {
 
                         if (result.success && result.transactionId) {
                           setTransactionId(result.transactionId)
-                          const paymentResult = await pollPaymentStatus(result.transactionId)
+                          const paymentResult = await monitorPaymentWithListener(result.transactionId)
 
                           if (paymentResult.success && paymentResult.status === 'completed') {
                             setTimeout(() => {

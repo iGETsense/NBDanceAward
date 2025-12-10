@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
-import { ref, set, serverTimestamp } from 'firebase/database';
+import { ref, set, update, serverTimestamp } from 'firebase/database';
 import { collectPayment } from '../../lib/mesomb';
 import { paymentQueue } from '@/lib/paymentQueue';
 import {
@@ -135,8 +135,7 @@ export async function POST(request: NextRequest) {
         });
 
         // Update transaction to indicate payment is being initiated
-        await set(transactionRef, {
-            ...initialTransactionData,
+        await update(transactionRef, {
             paymentInitiated: true,
             paymentInitiatedAt: serverTimestamp(),
         });
@@ -157,14 +156,19 @@ export async function POST(request: NextRequest) {
             console.error('[Submit] ✗ PHASE 2 FAILED: Mesomb payment error:', mesombError);
 
             // Update transaction with error details
-            await set(transactionRef, {
-                ...initialTransactionData,
+            await update(transactionRef, {
                 paymentInitiated: true,
                 paymentInitiatedAt: serverTimestamp(),
                 status: 'failed',
                 failedAt: serverTimestamp(),
+                errorType: 'payment_initiation_failed',
                 errorDetails: mesombError.message,
                 reconciliationStatus: 'needs_review', // Admin should check if money was actually debited
+                mesombResponse: {
+                    success: false,
+                    message: mesombError.message,
+                    error: mesombError.message,
+                },
             });
 
             const isNetworkError = mesombError.message?.includes('network') ||
@@ -196,8 +200,7 @@ export async function POST(request: NextRequest) {
             // Payment explicitly failed (insufficient balance, invalid number, etc.)
             console.log('[Submit] Payment failed:', paymentResult.error);
 
-            await set(transactionRef, {
-                ...initialTransactionData,
+            await update(transactionRef, {
                 paymentInitiated: true,
                 paymentInitiatedAt: serverTimestamp(),
                 status: 'failed',
@@ -209,6 +212,7 @@ export async function POST(request: NextRequest) {
                     message: paymentResult.message,
                     error: paymentResult.error,
                 },
+                errorType: 'payment_rejected',
                 errorDetails: paymentResult.error,
                 reconciliationStatus: 'confirmed_failed', // Confirmed failure, no money debited
             });
@@ -226,8 +230,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Payment successfully initiated! Update transaction with Mesomb reference
-        await set(transactionRef, {
-            ...initialTransactionData,
+        await update(transactionRef, {
             paymentInitiated: true,
             paymentInitiatedAt: serverTimestamp(),
             status: 'pending', // Waiting for webhook confirmation
@@ -262,12 +265,12 @@ export async function POST(request: NextRequest) {
         // If we have a transaction, mark it as failed
         if (transactionRef && transactionId) {
             try {
-                await set(transactionRef, {
-                    id: transactionId,
+                await update(transactionRef, {
                     status: 'failed',
                     failedAt: serverTimestamp(),
                     errorDetails: error.message,
                     reconciliationStatus: 'needs_review',
+                    errorType: 'unexpected_error',
                 });
             } catch (updateError) {
                 console.error('[Submit] Could not update transaction with error:', updateError);
