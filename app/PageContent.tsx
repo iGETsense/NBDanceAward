@@ -67,7 +67,7 @@ export default function NBDanceAwardPage() {
   // Voting hook with all features
   const {
     submitVote,
-    monitorPaymentWithListener,
+    pollPaymentStatus,
     isSubmitting,
     isVerifying,
     error: voteError,
@@ -617,7 +617,7 @@ export default function NBDanceAwardPage() {
                           setTransactionId(result.transactionId)
 
                           // Start polling for payment status
-                          const paymentResult = await monitorPaymentWithListener(result.transactionId)
+                          const paymentResult = await pollPaymentStatus(result.transactionId)
 
                           if (paymentResult.success && paymentResult.status === 'completed') {
                             // Payment successful, close modal after delay
@@ -634,7 +634,7 @@ export default function NBDanceAwardPage() {
                         console.error('Voting error:', error)
                       }
                     }}
-                    disabled={isSubmitting || isVerifying || !phoneNumber}
+                    disabled={isSubmitting || isVerifying || !phoneNumber || phoneNumber.length < 9}
                     className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 md:py-5 text-sm md:text-base rounded-full uppercase">
                     {isSubmitting ? 'Submitting Vote...' : isVerifying ? 'Verifying Payment...' : 'Proceed to Payment'}
                   </Button>

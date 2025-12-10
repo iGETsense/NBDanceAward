@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
-import { ref, set, update, serverTimestamp } from 'firebase/database';
+import { ref, set, serverTimestamp } from 'firebase/database';
 import { collectPayment } from '../../lib/mesomb';
 import { paymentQueue } from '@/lib/paymentQueue';
 import {
@@ -20,9 +20,6 @@ import {
 } from '../../lib/validation';
 
 export async function POST(request: NextRequest) {
-    let transactionRef: any = null;
-    let transactionId: string | null = null;
-
     try {
         const body = await request.json();
         const { candidateId, voteCount, phoneNumber, paymentMethod } = body;
@@ -57,37 +54,47 @@ export async function POST(request: NextRequest) {
         const totalAmount = voteCount * votePrice;
 
         // Detect operator and map to Mesomb service
-        // Determine Mesomb service based on user selection is safer than auto-detection
-        let mesombService: 'MTN' | 'ORANGE' = 'MTN'; // Default
+        // We prioritize the detected operator over the user's selection to avoid mismatch errors
+        const operator = detectOperator(phoneNumber);
+        const mesombService = operator === 'MTN' ? 'MTN' : 'ORANGE';
 
-        if (paymentMethod === 'orange') {
-            mesombService = 'ORANGE';
-        } else if (paymentMethod === 'mobile') {
-            mesombService = 'MTN';
-        } else {
-            // Fallback to auto-detection if paymentMethod not provided
-            const operator = detectOperator(phoneNumber);
-            mesombService = operator === 'ORANGE' ? 'ORANGE' : 'MTN';
-        }
+        console.log(`[Submit] Detected operator for ${phoneNumber}: ${operator} -> Service: ${mesombService}`);
 
-        console.log(`[Submit] Phone: ${phoneNumber} -> Service: ${mesombService} (Method: ${paymentMethod || 'auto'})`);
+        // Generate unique transaction ID
+        const transactionId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-        // ========================================================================
-        // PHASE 1: CREATE TRANSACTION FIRST (Two-Phase Commit Pattern)
-        // This GUARANTEES the client will NEVER be charged without a transaction record
-        // ========================================================================
-
-        // Generate unique transaction ID (idempotency key)
-        transactionId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-        console.log('[Submit] PHASE 1: Creating transaction BEFORE payment initiation:', {
+        console.log('[Submit] Processing payment via queue:', {
             transactionId,
-            candidateId,
-            amount: totalAmount,
+            queueLength: paymentQueue.getQueueLength(),
+            activeRequests: paymentQueue.getActiveRequests(),
         });
 
-        // Create transaction record with status='pending' BEFORE calling Mesomb
-        const initialTransactionData = {
+        // Initiate payment with Mesomb via queue (handles concurrency + retries)
+        const paymentResult = await paymentQueue.add(() =>
+            collectPayment({
+                amount: totalAmount,
+                service: mesombService,
+                payer: phoneNumber.replace(/\s/g, '').replace(/^\+237/, ''),
+                nonce: transactionId,
+            })
+        );
+
+        if (!paymentResult.success) {
+            // Use the specific error message from Mesomb if available
+            const errorMessage = paymentResult.error || 'Erreur de paiement: votre vote n\'est pas passé';
+
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: errorMessage,
+                    details: paymentResult.error || 'Payment initiation failed',
+                },
+                { status: 400 } // Use 400 for bad requests (like insufficient funds) instead of 500
+            );
+        }
+
+        // Create transaction record in Firebase
+        const transactionData = {
             id: transactionId,
             candidateId,
             voteCount,
@@ -95,171 +102,30 @@ export async function POST(request: NextRequest) {
             paymentMethod,
             operator: mesombService,
             amount: totalAmount,
-            status: 'pending', // Transaction exists but payment not yet initiated
-            createdAt: serverTimestamp(),
-            createdBeforePayment: true, // Flag indicating we used the safe pattern
-            paymentInitiated: false, // Will be set to true when we call Mesomb
-            // Initially empty, will be filled after payment attempt
-            mesombReference: null,
-            mesombResponse: null,
-            errorDetails: null,
-            reconciliationStatus: null,
-        };
-
-        transactionRef = ref(database, `transactions/${transactionId}`);
-
-        try {
-            await set(transactionRef, initialTransactionData);
-            console.log('[Submit] ✓ PHASE 1 SUCCESS: Transaction created in Firebase');
-        } catch (firebaseError: any) {
-            // CRITICAL: If Firebase fails, we STOP here. Client will NOT be charged.
-            console.error('[Submit] ✗ PHASE 1 FAILED: Cannot create transaction in Firebase:', firebaseError);
-
-            // Detect if it's a network error
-            const isNetworkError = firebaseError.message?.includes('network') ||
-                firebaseError.message?.includes('fetch') ||
-                firebaseError.code === 'unavailable';
-
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: isNetworkError
-                        ? 'Erreur de connexion: Vérifiez votre connexion internet et réessayez'
-                        : 'Service temporairement indisponible. Veuillez réessayer dans quelques instants.',
-                    errorType: 'transaction_creation_failed',
-                    isNetworkError,
-                    details: firebaseError.message,
-                },
-                { status: 503 } // Service Unavailable
-            );
-        }
-
-        // ========================================================================
-        // PHASE 2: INITIATE PAYMENT (Client will be charged here)
-        // ========================================================================
-
-        console.log('[Submit] PHASE 2: Initiating payment with Mesomb:', {
-            transactionId,
-            queueLength: paymentQueue.getQueueLength(),
-            activeRequests: paymentQueue.getActiveRequests(),
-        });
-
-        // Update transaction to indicate payment is being initiated
-        await update(transactionRef, {
-            paymentInitiated: true,
-            paymentInitiatedAt: serverTimestamp(),
-        });
-
-        let paymentResult;
-        try {
-            // Initiate payment with Mesomb via queue (handles concurrency + retries)
-            paymentResult = await paymentQueue.add(() =>
-                collectPayment({
-                    amount: totalAmount,
-                    service: mesombService,
-                    payer: phoneNumber.replace(/\s/g, '').replace(/^\+237/, ''),
-                    nonce: transactionId!, // Use transactionId as idempotency key (definitely defined here)
-                })
-            );
-        } catch (mesombError: any) {
-            // Payment initiation failed (network error, Mesomb down, etc.)
-            console.error('[Submit] ✗ PHASE 2 FAILED: Mesomb payment error:', mesombError);
-
-            // Update transaction with error details
-            await update(transactionRef, {
-                paymentInitiated: true,
-                paymentInitiatedAt: serverTimestamp(),
-                status: 'failed',
-                failedAt: serverTimestamp(),
-                errorType: 'payment_initiation_failed',
-                errorDetails: mesombError.message,
-                reconciliationStatus: 'needs_review', // Admin should check if money was actually debited
-                mesombResponse: {
-                    success: false,
-                    message: mesombError.message,
-                    error: mesombError.message,
-                },
-            });
-
-            const isNetworkError = mesombError.message?.includes('network') ||
-                mesombError.message?.includes('fetch') ||
-                mesombError.message?.includes('timeout');
-
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: isNetworkError
-                        ? 'Erreur de connexion: Impossible de contacter le service de paiement. Vérifiez votre connexion internet.'
-                        : 'Erreur de paiement: Le service de paiement est temporairement indisponible.',
-                    errorType: 'payment_initiation_failed',
-                    isNetworkError,
-                    transactionId: transactionId || undefined, // Return transaction ID so user can check status later
-                    details: mesombError.message,
-                },
-                { status: 503 }
-            );
-        }
-
-        // ========================================================================
-        // PHASE 3: UPDATE TRANSACTION WITH PAYMENT RESULT
-        // ========================================================================
-
-        console.log('[Submit] PHASE 3: Payment initiated, updating transaction with result');
-
-        if (!paymentResult.success) {
-            // Payment explicitly failed (insufficient balance, invalid number, etc.)
-            console.log('[Submit] Payment failed:', paymentResult.error);
-
-            await update(transactionRef, {
-                paymentInitiated: true,
-                paymentInitiatedAt: serverTimestamp(),
-                status: 'failed',
-                failedAt: serverTimestamp(),
-                mesombReference: paymentResult.reference || null,
-                mesombResponse: {
-                    success: false,
-                    status: paymentResult.status,
-                    message: paymentResult.message,
-                    error: paymentResult.error,
-                },
-                errorType: 'payment_rejected',
-                errorDetails: paymentResult.error,
-                reconciliationStatus: 'confirmed_failed', // Confirmed failure, no money debited
-            });
-
-            return NextResponse.json(
-                {
-                    success: false,
-                    error: paymentResult.error || 'Erreur de paiement: votre vote n\'est pas passé',
-                    errorType: 'payment_rejected',
-                    transactionId,
-                    details: paymentResult.error,
-                },
-                { status: 400 }
-            );
-        }
-
-        // Payment successfully initiated! Update transaction with Mesomb reference
-        await update(transactionRef, {
-            paymentInitiated: true,
-            paymentInitiatedAt: serverTimestamp(),
-            status: 'pending', // Waiting for webhook confirmation
             mesombReference: paymentResult.reference,
+            status: paymentResult.status === 'FAILED' ? 'failed' : 'pending',
+            createdAt: serverTimestamp(),
+            // Enhanced fields for debugging and reconciliation
             mesombResponse: {
-                success: true,
+                success: paymentResult.success,
                 status: paymentResult.status,
                 message: paymentResult.message,
                 reference: paymentResult.reference,
             },
-        });
+            errorDetails: paymentResult.error || null,
+            reconciliationStatus: paymentResult.status === 'FAILED' ? 'confirmed_failed' : null,
+        };
 
-        console.log('[Submit] ✓ SUCCESS: Transaction created and payment initiated:', {
+        const transactionRef = ref(database, `transactions/${transactionId}`);
+        await set(transactionRef, transactionData);
+
+        // Log transaction creation
+        console.log('[Vote] Transaction created:', {
             transactionId,
             candidateId,
             amount: totalAmount,
             operator: mesombService,
             reference: paymentResult.reference,
-            flow: 'Two-Phase Commit (Transaction → Payment)',
         });
 
         return NextResponse.json({
@@ -267,40 +133,14 @@ export async function POST(request: NextRequest) {
             transactionId,
             reference: paymentResult.reference,
             amount: totalAmount,
-            message: 'Paiement initié. Veuillez compléter le paiement sur votre téléphone.',
+            message: 'Payment initiated. Please complete payment on your phone.',
         });
     } catch (error: any) {
-        console.error('[Submit] Unexpected error:', error);
-
-        // If we have a transaction, mark it as failed
-        if (transactionRef && transactionId) {
-            try {
-                await update(transactionRef, {
-                    status: 'failed',
-                    failedAt: serverTimestamp(),
-                    errorDetails: error.message,
-                    reconciliationStatus: 'needs_review',
-                    errorType: 'unexpected_error',
-                });
-            } catch (updateError) {
-                console.error('[Submit] Could not update transaction with error:', updateError);
-            }
-        }
-
-        const isNetworkError = error.message?.includes('network') ||
-            error.message?.includes('fetch') ||
-            error.code === 'unavailable';
-
+        console.error('Submit vote error:', error);
         return NextResponse.json(
             {
                 success: false,
-                error: isNetworkError
-                    ? 'Erreur de connexion: Vérifiez votre connexion internet et réessayez'
-                    : 'Une erreur inattendue s\'est produite. Veuillez réessayer.',
-                errorType: 'unexpected_error',
-                isNetworkError,
-                transactionId: transactionId || undefined,
-                details: error.message,
+                error: error.message || 'An error occurred while submitting vote',
             },
             { status: 500 }
         );

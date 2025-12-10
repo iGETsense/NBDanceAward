@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 
-// Polling interval in milliseconds (optimized for real-time updates)
-const POLLING_INTERVAL = 5000; // 5 seconds (previously 30s - too slow)
+// Polling interval in milliseconds (e.g., 30 seconds)
+const POLLING_INTERVAL = 30000;
 
 export function useCategories() {
   const [categories, setCategories] = useState<any[]>([])

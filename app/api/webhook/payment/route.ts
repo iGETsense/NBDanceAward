@@ -6,8 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
-import { ref, onValue, off, get, query, orderByChild, equalTo, update, set, serverTimestamp } from 'firebase/database';
-import { updateVotesAfterPayment } from '../../lib/vote-utils';
+import { ref, query, orderByChild, equalTo, get, update, runTransaction, set, serverTimestamp } from 'firebase/database';
 
 export async function GET() {
     return NextResponse.json({
@@ -17,288 +16,91 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-    const webhookId = `webhook_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
     try {
         const body = await request.json();
 
         // Mesomb sends: pk, status, type, amount, fees, b_party, message, service, reference, ts, direction, country, currency, customer
-        // We use PK (primary key) or reference to find the transaction
-        const pk = body.pk;
-        const bodyReference = body.reference;
-
-        // CRITICAL: Use PK as primary lookup if available, otherwise reference
-        // In the user log, both are identical: "c20170da-c933-413e-8972-f5925d7af991"
-        const lookupReference = pk || bodyReference;
-
-        const { status, amount, service, b_party } = body;
+        // We need 'reference' to find our transaction and 'status' to determine outcome
+        const { reference, status, pk, amount, service, b_party } = body;
 
         console.log('[Webhook] Received payload:', JSON.stringify(body, null, 2));
 
-        // ========================================================================
-        // STEP 1: LOG ALL WEBHOOKS FOR AUDIT TRAIL
-        // Even if processing fails, we have a record of receiving this webhook
-        // ========================================================================
-        const webhookLogRef = ref(database, `webhookLogs/${webhookId}`);
-        await set(webhookLogRef, {
-            id: webhookId,
-            receivedAt: serverTimestamp(),
-            reference: lookupReference,
-            status,
-            pk,
-            amount,
-            service,
-            b_party,
-            fullPayload: body,
-            processed: false,
-        });
-
-        console.log(`[Webhook] Logged webhook ${webhookId} for reference: ${lookupReference}`);
-
-        if (!lookupReference) {
+        if (!reference) {
             console.error('[Webhook] Missing reference in payload');
-            await update(webhookLogRef, {
-                processed: true,
-                error: 'Missing reference',
-                processedAt: serverTimestamp(),
-            });
             return NextResponse.json(
                 { error: 'Missing reference' },
                 { status: 400 }
             );
         }
 
-        console.log(`[Webhook] Looking for transaction with mesombReference: ${lookupReference}`);
+        console.log(`[Webhook] Looking for transaction with mesombReference: ${reference}`);
 
-        // ========================================================================
-        // STEP 2: FIND TRANSACTION WITH RETRY MECHANISM
-        // Race condition: webhook might arrive before transaction is fully created
-        // Solution: Retry with exponential backoff
-        // ========================================================================
+        // Find transaction by Mesomb reference
+        // NOTE: This query requires .indexOn for mesombReference in Firebase rules
+        const transactionsRef = ref(database, 'transactions');
+        const transactionsQuery = query(transactionsRef, orderByChild('mesombReference'), equalTo(reference));
+        const transactionsSnapshot = await get(transactionsQuery);
 
-        let transactionsSnapshot;
-        let transactionFound = false;
-        const maxRetries = 3;
-        const retryDelays = [500, 1000, 2000]; // milliseconds
-
-        for (let attempt = 0; attempt < maxRetries; attempt++) {
-            const transactionsRef = ref(database, 'transactions');
-            const transactionsQuery = query(transactionsRef, orderByChild('mesombReference'), equalTo(lookupReference));
-            transactionsSnapshot = await get(transactionsQuery);
-
-            if (transactionsSnapshot.exists()) {
-                transactionFound = true;
-                console.log(`[Webhook] Transaction found on attempt ${attempt + 1}`);
-                break;
-            }
-
-            if (attempt < maxRetries - 1) {
-                const delay = retryDelays[attempt];
-                console.log(`[Webhook] Transaction not found, retrying in ${delay}ms (attempt ${attempt + 1}/${maxRetries})...`);
-                await new Promise(resolve => setTimeout(resolve, delay));
-            }
-        }
-
-        if (!transactionFound) {
-            console.error(`[Webhook] Transaction NOT FOUND after ${maxRetries} retries for reference: ${lookupReference}`);
+        if (!transactionsSnapshot.exists()) {
+            console.error(`[Webhook] Transaction NOT FOUND for reference: ${reference}`);
             console.log('[Webhook] This may indicate:');
-            console.log('  1. Transaction creation failed in /api/vote/submit');
+            console.log('  1. The transaction was never created in our system');
             console.log('  2. Firebase .indexOn rule is missing for mesombReference');
             console.log('  3. The reference format does not match');
-
-            await update(webhookLogRef, {
-                processed: false, // Mark as unprocessed for manual review
-                error: 'Transaction not found after retries',
-                retries: maxRetries,
-                processedAt: serverTimestamp(),
-            });
-
             return NextResponse.json(
-                { error: 'Transaction not found', reference: lookupReference },
+                { error: 'Transaction not found', reference },
                 { status: 404 }
             );
         }
 
-        const transactions = transactionsSnapshot!.val();
+        const transactions = transactionsSnapshot.val();
         const transactionId = Object.keys(transactions)[0];
         const transaction = transactions[transactionId];
 
         console.log(`[Webhook] Found transaction: ${transactionId}, current status: ${transaction.status}`);
 
-        // ========================================================================
-        // STEP 3: PREVENT DUPLICATE PROCESSING
-        // If Mesomb sends the webhook multiple times, process it only once
-        // ========================================================================
-
-        if (transaction.webhookReceived === true) {
-            console.log(`[Webhook] Webhook already processed for transaction ${transactionId}, skipping (idempotency)`);
-
-            await update(webhookLogRef, {
-                processed: true,
-                duplicate: true,
-                transactionId,
-                message: 'Webhook already processed (duplicate prevented)',
-                processedAt: serverTimestamp(),
-            });
-
-            return NextResponse.json({
-                message: 'Webhook already processed (duplicate)',
-                transactionId
-            });
-        }
-
-        // ========================================================================
-        // STEP 4: PROCESS WEBHOOK BASED ON STATUS
-        // ========================================================================
-
-        const transactionRef = ref(database, `transactions/${transactionId}`);
-
         // Handle SUCCESS
-        if (status === 'SUCCESS') {
-            console.log(`[Webhook] Processing SUCCESS for transaction ${transactionId}`);
+        if (status === 'SUCCESS' && transaction.status === 'pending') {
+            console.log(`[Webhook] Updating transaction ${transactionId} to completed`);
 
-            try {
-                // Update votes FIRST to ensure they're always applied
-                await updateVotesAfterPayment(transaction);
-                console.log(`[Webhook] ✓ Votes updated for candidate ${transaction.candidateId}`);
+            // Update votes
+            await updateVotesAfterPayment(transaction);
 
-                // Then update transaction status
-                await update(transactionRef, {
-                    status: 'completed',
-                    completedAt: serverTimestamp(),
-                    mesombStatus: status,
-                    webhookReceived: true,
-                    webhookReceivedAt: serverTimestamp(),
-                    webhookId,
-                });
+            // Update transaction status
+            const transactionRef = ref(database, `transactions/${transactionId}`);
+            await update(transactionRef, {
+                status: 'completed',
+                completedAt: serverTimestamp(),
+                mesombStatus: status,
+                webhookReceived: true,
+                webhookReceivedAt: serverTimestamp()
+            });
 
-                // Mark webhook as processed
-                await update(webhookLogRef, {
-                    processed: true,
-                    transactionId,
-                    result: 'SUCCESS - Votes applied',
-                    processedAt: serverTimestamp(),
-                });
-
-                console.log(`[Webhook] ✓ SUCCESS: Transaction ${transactionId} completed, votes added`);
-                return NextResponse.json({
-                    message: 'Payment confirmed successfully',
-                    transactionId,
-                    votesApplied: true,
-                });
-            } catch (voteError: any) {
-                // CRITICAL: If vote update fails, don't mark transaction as complete
-                console.error(`[Webhook] ✗ ERROR updating votes:`, voteError);
-
-                await update(transactionRef, {
-                    reconciliationStatus: 'votes_update_failed',
-                    voteUpdateError: voteError.message,
-                    webhookReceived: true,
-                    webhookReceivedAt: serverTimestamp(),
-                    webhookId,
-                });
-
-                await update(webhookLogRef, {
-                    processed: false,
-                    transactionId,
-                    error: 'Vote update failed - needs manual review',
-                    errorDetails: voteError.message,
-                    processedAt: serverTimestamp(),
-                });
-
-                return NextResponse.json({
-                    message: 'Payment received but vote update failed - manual review needed',
-                    transactionId,
-                    needsReview: true,
-                }, { status: 500 });
-            }
+            console.log(`[Webhook] SUCCESS: Transaction ${transactionId} marked as completed, votes added`);
+            return NextResponse.json({ message: 'Payment confirmed successfully', transactionId });
         }
-        // Handle FAILED
-        else if (status === 'FAILED') {
-            console.log(`[Webhook] Processing FAILED for transaction ${transactionId}`);
+        // Handle FAILED or CANCELED
+        else if ((status === 'FAILED' || status === 'CANCELED') && transaction.status === 'pending') {
+            console.log(`[Webhook] Marking transaction ${transactionId} as failed`);
 
+            const transactionRef = ref(database, `transactions/${transactionId}`);
             await update(transactionRef, {
                 status: 'failed',
                 failedAt: serverTimestamp(),
-                mesombStatus: 'FAILED',
+                mesombStatus: status,
                 webhookReceived: true,
-                webhookReceivedAt: serverTimestamp(),
-                webhookId,
-                reconciliationStatus: 'confirmed_failed',
+                webhookReceivedAt: serverTimestamp()
             });
 
-            await update(webhookLogRef, {
-                processed: true,
-                transactionId,
-                result: 'FAILED - Payment rejected',
-                processedAt: serverTimestamp(),
-            });
-
-            console.log(`[Webhook] Transaction ${transactionId} marked as FAILED`);
-            return NextResponse.json({
-                message: 'Payment marked as failed',
-                transactionId
-            });
-        }
-        // Handle CANCELED (user explicitly canceled)
-        else if (status === 'CANCELED') {
-            console.log(`[Webhook] Processing CANCELED for transaction ${transactionId}`);
-
-            await update(transactionRef, {
-                status: 'failed',
-                failedAt: serverTimestamp(),
-                mesombStatus: 'CANCELED', // Keep distinction from FAILED
-                webhookReceived: true,
-                webhookReceivedAt: serverTimestamp(),
-                webhookId,
-                reconciliationStatus: 'user_canceled',
-            });
-
-            await update(webhookLogRef, {
-                processed: true,
-                transactionId,
-                result: 'CANCELED - User canceled payment',
-                processedAt: serverTimestamp(),
-            });
-
-            console.log(`[Webhook] Transaction ${transactionId} marked as CANCELED`);
-            return NextResponse.json({
-                message: 'Payment marked as canceled',
-                transactionId
-            });
+            console.log(`[Webhook] Transaction ${transactionId} marked as failed`);
+            return NextResponse.json({ message: 'Payment marked as failed', transactionId });
         }
         else {
-            // Unknown status
-            console.log(`[Webhook] Unknown status: ${status} for transaction ${transactionId}`);
-
-            await update(webhookLogRef, {
-                processed: false,
-                transactionId,
-                result: `Unknown status: ${status}`,
-                processedAt: serverTimestamp(),
-            });
-
-            return NextResponse.json({
-                message: `Webhook received: ${status} (Unknown status)`,
-                transactionId
-            });
+            console.log(`[Webhook] No action taken for status: ${status}, transaction status: ${transaction.status}`);
+            return NextResponse.json({ message: `Webhook received: ${status} (No action taken)` });
         }
     } catch (error: any) {
         console.error('[Webhook] Error processing webhook:', error);
-
-        // Try to log the error
-        try {
-            const webhookLogRef = ref(database, `webhookLogs/${webhookId}`);
-            await update(webhookLogRef, {
-                processed: false,
-                error: error.message,
-                errorStack: error.stack,
-                processedAt: serverTimestamp(),
-            });
-        } catch (logError) {
-            console.error('[Webhook] Could not log error:', logError);
-        }
-
         return NextResponse.json(
             { error: 'Internal server error', details: error.message },
             { status: 500 }
@@ -309,3 +111,95 @@ export async function POST(request: NextRequest) {
 /**
  * Helper function to update votes after successful payment
  */
+async function updateVotesAfterPayment(transaction: any) {
+    const { candidateId, voteCount } = transaction;
+
+    // Increment candidate votes atomically
+    const candidateVotesRef = ref(database, `candidates/${candidateId}/votes`);
+    await runTransaction(candidateVotesRef, (currentVotes) => {
+        return (currentVotes || 0) + voteCount;
+    });
+
+    // Recalculate percentages for the category
+    await recalculateCategoryPercentages(candidateId);
+
+    // Store vote record
+    const voteId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const voteRef = ref(database, `votes/${voteId}`);
+    await set(voteRef, {
+        id: voteId,
+        candidateId,
+        voteCount,
+        transactionId: transaction.id,
+        createdAt: serverTimestamp(),
+    });
+}
+
+/**
+ * Recalculate percentages for all candidates in a category
+ */
+async function recalculateCategoryPercentages(candidateId: string) {
+    try {
+        // Get candidate's category
+        const candidateRef = ref(database, `candidates/${candidateId}`);
+        const candidateSnapshot = await get(candidateRef);
+        const candidate = candidateSnapshot.val();
+
+        if (!candidate) return;
+
+        // Get candidate's category ID from candidateCategories
+        const linksRef = ref(database, 'candidateCategories');
+        const linksSnapshot = await get(linksRef);
+        const links = linksSnapshot.val();
+
+        if (!links) return;
+
+        // Find category for this candidate
+        let categoryId: string | null = null;
+        const linksArray = Array.isArray(links) ? links : Object.values(links);
+
+        for (const link of linksArray as any[]) {
+            if (link.candidateId === candidateId) {
+                categoryId = link.categoryId;
+                break;
+            }
+        }
+
+        if (!categoryId) return;
+
+        // Get all candidates in this category
+        const categoryCandidateIds: string[] = [];
+        for (const link of linksArray as any[]) {
+            if (link.categoryId === categoryId) {
+                categoryCandidateIds.push(link.candidateId);
+            }
+        }
+
+        // Get all candidates data
+        const candidatesRef = ref(database, 'candidates');
+        const candidatesSnapshot = await get(candidatesRef);
+        const allCandidates = candidatesSnapshot.val();
+
+        // Calculate total votes in category
+        let totalVotes = 0;
+        for (const cId of categoryCandidateIds) {
+            if (allCandidates[cId]) {
+                totalVotes += allCandidates[cId].votes || 0;
+            }
+        }
+
+        // Update percentages
+        if (totalVotes > 0) {
+            for (const cId of categoryCandidateIds) {
+                if (allCandidates[cId]) {
+                    const votes = allCandidates[cId].votes || 0;
+                    const percentage = Math.round((votes / totalVotes) * 100);
+                    const percentageRef = ref(database, `candidates/${cId}/percentage`);
+                    await set(percentageRef, percentage);
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error recalculating percentages:', error);
+    }
+}

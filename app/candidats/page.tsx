@@ -878,7 +878,7 @@ const customImagePositioning: { [key: string]: string } = {
 export default function CandidatsPage() {
   // Firebase hook
   const { candidates: allCandidates, loading: candidatesLoading } = useCandidates()
-  const { submitVote, monitorPaymentWithListener, isSubmitting, isVerifying, error: voteError, success: voteSuccess, paymentStatus, resetState } = useVoting()
+  const { submitVote, pollPaymentStatus, isSubmitting, isVerifying, error: voteError, success: voteSuccess, paymentStatus, resetState } = useVoting()
   const [transactionId, setTransactionId] = useState<string | null>(null)
   const searchParams = useSearchParams()
 
@@ -1343,7 +1343,7 @@ export default function CandidatsPage() {
 
                         if (result.success && result.transactionId) {
                           setTransactionId(result.transactionId)
-                          const paymentResult = await monitorPaymentWithListener(result.transactionId)
+                          const paymentResult = await pollPaymentStatus(result.transactionId)
 
                           if (paymentResult.success && paymentResult.status === 'completed') {
                             setTimeout(() => {
@@ -1359,7 +1359,7 @@ export default function CandidatsPage() {
                         console.error('Voting error:', error)
                       }
                     }}
-                    disabled={isSubmitting || isVerifying || !phoneNumber}
+                    disabled={isSubmitting || isVerifying || !phoneNumber || phoneNumber.length < 9}
                     className="w-full bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 md:py-5 text-sm md:text-base rounded-full uppercase">
                     {isSubmitting ? 'Submitting Vote...' : isVerifying ? 'Verifying Payment...' : 'Proceed to Payment'}
                   </Button>
