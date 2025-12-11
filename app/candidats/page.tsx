@@ -15,6 +15,7 @@ import { useCandidates } from "@/hooks/useFirebaseData"
 import { useScrollAnimation } from "@/hooks/useScrollAnimation"
 import { decodeVoteLinkClient, encodeVoteLinkClient } from "@/lib/voteLinks"
 import { useVoting } from "@/hooks/useVoting"
+import { VOTE_PRICE } from "@/lib/config"
 
 // Keep old data for reference (commented out)
 const oldStaticCandidates = [
@@ -1303,7 +1304,7 @@ export default function CandidatsPage() {
                     </div>
 
                     <div className="text-center space-y-0.5">
-                      <p className="text-xs md:text-sm font-semibold text-white">1 Vote = 105 XAF.</p>
+                      <p className="text-xs md:text-sm font-semibold text-white">1 Vote = {VOTE_PRICE} XAF.</p>
                       <p className="text-xs md:text-sm text-white">Minimum 1 vote.</p>
                     </div>
                   </div>
@@ -1400,10 +1401,14 @@ export default function CandidatsPage() {
                   : "Orange Money"}
               </div>
 
+
+
+
+
               {/* Total Price */}
               <div className="mb-4 md:mb-6">
                 <div className="rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 px-3 py-2 md:px-4 md:py-3 text-center text-sm md:text-base font-bold text-black">
-                  Prix Total: {(voteCount * 105).toLocaleString()} XAF
+                  Prix Total: {(voteCount * VOTE_PRICE).toLocaleString()} XAF
                 </div>
               </div>
 

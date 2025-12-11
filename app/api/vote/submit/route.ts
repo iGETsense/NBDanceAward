@@ -12,6 +12,7 @@ import { database } from '@/lib/firebase';
 import { ref, set, update, serverTimestamp } from 'firebase/database';
 import { collectPayment } from '../../lib/mesomb';
 import { paymentQueue } from '@/lib/paymentQueue';
+import { VOTE_PRICE } from '@/lib/config';
 import {
     validatePhoneNumber,
     validateVoteCount,
@@ -50,8 +51,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Calculate payment amount
-        const votePrice = parseInt(process.env.NEXT_PUBLIC_VOTE_PRICE || '105');
-        const totalAmount = voteCount * votePrice;
+        const totalAmount = voteCount * VOTE_PRICE;
 
         // Detect operator and map to Mesomb service
         // We prioritize the detected operator over the user's selection to avoid mismatch errors

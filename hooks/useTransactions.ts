@@ -74,8 +74,15 @@ export function useTransactions(limit: number = 100) {
                     headers['Authorization'] = `Bearer ${token}`;
                 }
 
-                const response = await fetch('/api/admin-7f8a9b/transactions', {
-                    headers
+                // Add cache-busting and headers
+                const response = await fetch(`/api/admin-7f8a9b/transactions?t=${Date.now()}`, {
+                    headers: {
+                        ...headers,
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0',
+                    },
+                    cache: 'no-store'
                 });
 
                 if (!response.ok) {
@@ -89,34 +96,35 @@ export function useTransactions(limit: number = 100) {
                 if (isMounted && result.success) {
                     const txArray = result.transactions || [];
 
-                    // Calculate statistics
-                    const completed = txArray.filter((tx: Transaction) => tx.status === 'completed');
-                    const pending = txArray.filter((tx: Transaction) => tx.status === 'pending' || tx.status === 'creating');
-                    const failed = txArray.filter((tx: Transaction) => tx.status === 'failed' || tx.status === 'init_failed');
-
-                    // Calculate total votes first
-                    const totalVotes = completed.reduce((sum: number, tx: Transaction) => sum + tx.voteCount, 0);
-
-                    // Calculate gross revenue based on Total Votes * 105 XAF (as per user request)
-                    const PRICE_PER_VOTE = 105;
-                    const grossRevenue = totalVotes * PRICE_PER_VOTE;
-
-                    // Deduct 5% platform fee to get net revenue
-                    const netRevenue = grossRevenue * 0.95;
-
                     setTransactions(txArray);
-                    setStats({
-                        totalTransactions: txArray.length,
-                        completedTransactions: completed.length,
-                        pendingTransactions: pending.length,
-                        failedTransactions: failed.length,
-                        totalRevenue: Math.round(grossRevenue), // Store as Gross (Votes * 105)
-                        netRevenue: Math.round(netRevenue),     // Store as Net (Gross * 0.95)
-                        totalVotes,
-                        averageTransactionValue: completed.length > 0
-                            ? Math.round(grossRevenue / completed.length)
-                            : 0,
-                    });
+
+                    // Use server-provided stats if available, otherwise fallback to local calc (for backward compatibility)
+                    if (result.stats) {
+                        setStats(result.stats);
+                    } else {
+                        // Fallback logic for old API response (should rarely happen now)
+                        const completed = txArray.filter((tx: Transaction) => tx.status === 'completed');
+                        const pending = txArray.filter((tx: Transaction) => tx.status === 'pending' || tx.status === 'creating');
+                        const failed = txArray.filter((tx: Transaction) => tx.status === 'failed' || tx.status === 'init_failed');
+
+                        const totalVotes = completed.reduce((sum: number, tx: Transaction) => sum + tx.voteCount, 0);
+                        const PRICE_PER_VOTE = 105;
+                        const grossRevenue = totalVotes * PRICE_PER_VOTE;
+                        const netRevenue = grossRevenue * 0.95;
+
+                        setStats({
+                            totalTransactions: txArray.length,
+                            completedTransactions: completed.length,
+                            pendingTransactions: pending.length,
+                            failedTransactions: failed.length,
+                            totalRevenue: Math.round(grossRevenue),
+                            netRevenue: Math.round(netRevenue),
+                            totalVotes,
+                            averageTransactionValue: completed.length > 0
+                                ? Math.round(grossRevenue / completed.length)
+                                : 0,
+                        });
+                    }
                     setLoading(false);
                 }
             } catch (err: any) {

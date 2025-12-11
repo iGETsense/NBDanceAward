@@ -31,18 +31,45 @@ export async function GET(request: NextRequest) {
         }
 
         // Use REST API for reliability in serverless environment
-        const response = await fetch(url);
+        let data: any = null;
+        let isFallback = false;
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`[API] Firebase REST error: ${response.status} ${response.statusText}`, errorText);
-            return NextResponse.json(
-                { success: false, error: `Firebase error: ${response.status}`, details: errorText },
-                { status: response.status }
-            );
+        try {
+            console.log('[API] Attempting to fetch ALL transactions...');
+            const response = await fetch(url, {
+                cache: 'no-store',
+                headers: { 'Cache-Control': 'no-cache' }
+            });
+
+            if (!response.ok) {
+                console.warn(`[API] Full fetch failed (${response.status}), switching to fallback.`);
+                throw new Error(`Fetch failed: ${response.status}`);
+            }
+            data = await response.json();
+
+        } catch (fetchError) {
+            console.error('[API] Full fetch error:', fetchError);
+            console.log('[API] Switching to FALLBACK: Fetching last 100 transactions...');
+
+            // Fallback: Fetch only the last 100 items using the new index
+            let fallbackUrl = `${FIREBASE_DB_URL}/transactions.json?orderBy="createdAt"&limitToLast=100`;
+            if (token) {
+                fallbackUrl += `&auth=${token}`;
+            }
+
+            const fallbackResponse = await fetch(fallbackUrl, {
+                cache: 'no-store',
+                headers: { 'Cache-Control': 'no-cache' }
+            });
+
+            if (!fallbackResponse.ok) {
+                const errorText = await fallbackResponse.text();
+                throw new Error(`Fallback failed: ${fallbackResponse.status} ${errorText}`);
+            }
+
+            data = await fallbackResponse.json();
+            isFallback = true;
         }
-
-        const data = await response.json();
 
         if (!data) {
             return NextResponse.json({
@@ -51,20 +78,72 @@ export async function GET(request: NextRequest) {
             });
         }
 
-        const transactions = Object.entries(data).map(([id, tx]: [string, any]) => ({
+        const allTransactions = Object.entries(data).map(([id, tx]: [string, any]) => ({
             id,
             ...tx,
-        })).sort((a: any, b: any) => b.createdAt - a.createdAt).slice(0, 100);
+        }));
+
+        // Calculate stats on the dataset we have (Full or Partial)
+        const totalTransactions = allTransactions.length;
+        const completed = allTransactions.filter(tx => tx.status === 'completed');
+        const pending = allTransactions.filter(tx => tx.status === 'pending' || tx.status === 'creating');
+        const failed = allTransactions.filter(tx => tx.status === 'failed' || tx.status === 'init_failed');
+
+        let totalVotes = completed.reduce((sum, tx) => sum + (Number(tx.voteCount) || 0), 0);
+
+        // FEATURE: If we are in fallback mode (partial data), the 'totalVotes' from transactions 
+        // will be incomplete. We should fetch the REAL total from the candidates node.
+        if (isFallback) {
+            try {
+                const candidatesSnapshot = await get(ref(database, 'candidates'));
+                if (candidatesSnapshot.exists()) {
+                    const candidatesData = candidatesSnapshot.val();
+                    const realTotalVotes = Object.values(candidatesData).reduce((sum: number, c: any) => sum + (c.votes || 0), 0);
+                    console.log(`[API] Fallback mode: Replaced partial votes (${totalVotes}) with real total (${realTotalVotes})`);
+                    totalVotes = realTotalVotes;
+                }
+            } catch (fallbackStatError) {
+                console.error('[API] Failed to fetch candidates for stats correction:', fallbackStatError);
+            }
+        }
+
+        // Revenue Calculation
+        const PRICE_PER_VOTE = 105;
+        const grossRevenue = totalVotes * PRICE_PER_VOTE;
+        const netRevenue = grossRevenue * 0.95;
+
+        const stats = {
+            totalTransactions,
+            completedTransactions: completed.length,
+            pendingTransactions: pending.length,
+            failedTransactions: failed.length,
+            totalRevenue: Math.round(grossRevenue),
+            netRevenue: Math.round(netRevenue),
+            totalVotes,
+            averageTransactionValue: completed.length > 0
+                ? Math.round(grossRevenue / completed.length)
+                : 0,
+            isPartial: isFallback, // Flag to indicate stats are estimated
+        };
+
+        // Sort and slice for the list view
+        const transactions = allTransactions
+            .sort((a: any, b: any) => b.createdAt - a.createdAt)
+            .slice(0, 100); // Already limited if fallback, but safe to slice again
 
         return NextResponse.json({
             success: true,
-            transactions
+            transactions,
+            stats
         });
 
     } catch (error: any) {
         console.error('Error fetching transactions:', error);
+        // Log detailed cause if available (e.g., fetch network error)
+        if (error.cause) console.error('Error cause:', error.cause);
+
         return NextResponse.json(
-            { success: false, error: error.message },
+            { success: false, error: error.message, cause: error.cause ? String(error.cause) : undefined },
             { status: 500 }
         );
     }

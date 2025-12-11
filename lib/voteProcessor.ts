@@ -5,83 +5,7 @@
  */
 
 import { database } from '@/lib/firebase';
-import { ref, get, set, update, runTransaction, serverTimestamp } from 'firebase/database';
-
-/**
- * Atomically increment candidate votes
- * Uses Firebase transactions to prevent race conditions
- */
-export async function incrementCandidateVotes(candidateId: string, voteCount: number): Promise<void> {
-    const candidateVotesRef = ref(database, `candidates/${candidateId}/votes`);
-    await runTransaction(candidateVotesRef, (currentVotes) => {
-        return (currentVotes || 0) + voteCount;
-    });
-
-    console.log(`[VoteProcessor] Incremented ${candidateId} votes by ${voteCount}`);
-}
-
-/**
- * Create a vote record in the database
- */
-export async function createVoteRecord(transaction: {
-    id: string;
-    candidateId: string;
-    voteCount: number;
-}): Promise<string> {
-    const voteId = `vote_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const voteRef = ref(database, `votes/${voteId}`);
-
-    await set(voteRef, {
-        id: voteId,
-        candidateId: transaction.candidateId,
-        voteCount: transaction.voteCount,
-        transactionId: transaction.id,
-        createdAt: serverTimestamp(),
-    });
-
-    console.log(`[VoteProcessor] Created vote record: ${voteId}`);
-    return voteId;
-}
-
-/**
- * Mark a transaction as completed
- * This should be called FIRST before any other processing
- */
-export async function markTransactionCompleted(transactionId: string, mesombStatus?: string): Promise<void> {
-    const transactionRef = ref(database, `transactions/${transactionId}`);
-
-    await update(transactionRef, {
-        status: 'completed',
-        completedAt: Date.now(), // Use Date.now() for reliable comparison
-        mesombStatus: mesombStatus || 'SUCCESS',
-        webhookReceived: true,
-        webhookReceivedAt: Date.now(),
-    });
-
-    console.log(`[VoteProcessor] Transaction ${transactionId} marked as completed`);
-}
-
-/**
- * Mark a transaction as failed
- */
-export async function markTransactionFailed(
-    transactionId: string,
-    reason: string,
-    mesombStatus?: string
-): Promise<void> {
-    const transactionRef = ref(database, `transactions/${transactionId}`);
-
-    await update(transactionRef, {
-        status: 'failed',
-        failedAt: Date.now(),
-        failureReason: reason,
-        mesombStatus: mesombStatus || 'FAILED',
-        webhookReceived: true,
-        webhookReceivedAt: Date.now(),
-    });
-
-    console.log(`[VoteProcessor] Transaction ${transactionId} marked as failed: ${reason}`);
-}
+import { ref, get, set, update, runTransaction, serverTimestamp, increment } from 'firebase/database';
 
 /**
  * Recalculate percentages for all candidates in a category
@@ -174,12 +98,30 @@ export async function recalculateCategoryPercentages(candidateId: string): Promi
 }
 
 /**
+ * Mark a transaction as failed
+ */
+export async function markTransactionFailed(
+    transactionId: string,
+    reason: string,
+    mesombStatus?: string
+): Promise<void> {
+    const transactionRef = ref(database, `transactions/${transactionId}`);
+
+    await update(transactionRef, {
+        status: 'failed',
+        failedAt: Date.now(),
+        failureReason: reason,
+        mesombStatus: mesombStatus || 'FAILED',
+        webhookReceived: true,
+        webhookReceivedAt: Date.now(),
+    });
+
+    console.log(`[VoteProcessor] Transaction ${transactionId} marked as failed: ${reason}`);
+}
+
+/**
  * Process a successful payment - main entry point
- * Order of operations:
- * 1. Mark transaction completed (CRITICAL - must succeed)
- * 2. Increment votes (CRITICAL - must succeed)
- * 3. Create vote record (IMPORTANT)
- * 4. Recalculate percentages (NON-CRITICAL - can fail)
+ * Uses ATOMIC multi-path updates to ensure consistency
  */
 export async function processSuccessfulPayment(transaction: {
     id: string;
@@ -197,16 +139,35 @@ export async function processSuccessfulPayment(transaction: {
             return { success: true, alreadyProcessed: true };
         }
 
-        // Step 1: Mark completed FIRST (most critical)
-        await markTransactionCompleted(transaction.id, mesombStatus);
+        // Prepare atomic updates
+        const updates: Record<string, any> = {};
+        const timestamp = Date.now();
+        const voteId = `vote_${timestamp}_${Math.random().toString(36).substr(2, 9)}`;
 
-        // Step 2: Increment votes atomically
-        await incrementCandidateVotes(transaction.candidateId, transaction.voteCount);
+        // 1. Update Transaction Status
+        updates[`transactions/${transaction.id}/status`] = 'completed';
+        updates[`transactions/${transaction.id}/completedAt`] = timestamp;
+        updates[`transactions/${transaction.id}/mesombStatus`] = mesombStatus || 'SUCCESS';
+        updates[`transactions/${transaction.id}/webhookReceived`] = true;
+        updates[`transactions/${transaction.id}/webhookReceivedAt`] = timestamp;
 
-        // Step 3: Create vote record
-        await createVoteRecord(transaction);
+        // 2. Increment Candidate Votes (using atomic increment)
+        updates[`candidates/${transaction.candidateId}/votes`] = increment(transaction.voteCount);
 
-        // Step 4: Recalculate percentages (non-blocking)
+        // 3. Create Vote Record
+        updates[`votes/${voteId}`] = {
+            id: voteId,
+            candidateId: transaction.candidateId,
+            voteCount: transaction.voteCount,
+            transactionId: transaction.id,
+            createdAt: serverTimestamp(), // Use server timestamp for vote record
+        };
+
+        // Execute all updates atomically
+        await update(ref(database), updates);
+        console.log(`[VoteProcessor] Atomically processed transaction ${transaction.id}, added ${transaction.voteCount} votes`);
+
+        // 4. Recalculate percentages (non-blocking, separate operation)
         // Wrap in try-catch so it doesn't fail the whole operation
         try {
             await recalculateCategoryPercentages(transaction.candidateId);
@@ -215,7 +176,6 @@ export async function processSuccessfulPayment(transaction: {
             // Don't throw - payment was still successful
         }
 
-        console.log(`[VoteProcessor] Successfully processed payment for transaction ${transaction.id}`);
         return { success: true };
 
     } catch (error: any) {

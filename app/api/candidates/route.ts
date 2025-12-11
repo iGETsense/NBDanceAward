@@ -72,6 +72,12 @@ export async function GET() {
       success: true,
       candidates: withPercentages,
       source: 'secure-api'
+    }, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
     });
   } catch (error) {
     console.error('❌ Error in candidates API:', error);

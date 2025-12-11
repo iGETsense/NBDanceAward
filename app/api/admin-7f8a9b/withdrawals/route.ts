@@ -31,7 +31,10 @@ export async function GET(request: NextRequest) {
         }
 
         // Use REST API for reliability
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache' }
+        });
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -63,8 +66,9 @@ export async function GET(request: NextRequest) {
 
     } catch (error: any) {
         console.error('Error fetching withdrawals:', error);
+        if (error.cause) console.error('Error cause:', error.cause);
         return NextResponse.json(
-            { success: false, error: error.message },
+            { success: false, error: error.message, cause: error.cause ? String(error.cause) : undefined },
             { status: 500 }
         );
     }
