@@ -139,8 +139,33 @@ export function AdminStats() {
 }
 
 export function TransactionsList() {
-    const { transactions, loading } = useTransactions(50);
+    const { transactions, loading } = useTransactions();
     const [filter, setFilter] = useState<'all' | 'completed' | 'pending' | 'failed'>('all');
+    const [verifying, setVerifying] = useState<string | null>(null);
+
+    const verifyTransaction = async (txId: string) => {
+        setVerifying(txId);
+        try {
+            const response = await fetch('/api/admin-7f8a9b/transactions/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ transactionId: txId })
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                alert(`✅ ${result.message}`);
+                window.location.reload();
+            } else {
+                alert(`❌ ${result.message || result.error || 'Erreur inconnue'}`);
+            }
+        } catch (error) {
+            console.error('Verify failed:', error);
+            alert('Erreur lors de la vérification');
+        } finally {
+            setVerifying(null);
+        }
+    };
 
     const filteredTransactions = transactions.filter(tx => {
         if (filter === 'all') return true;
@@ -268,10 +293,18 @@ export function TransactionsList() {
                                                     </>
                                                 )}
                                                 {(tx.status === 'pending' || tx.status === 'creating') && (
-                                                    <>
-                                                        <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 flex-shrink-0" />
-                                                        <span className="text-yellow-400 text-xs sm:text-sm whitespace-nowrap hidden sm:inline">En attente</span>
-                                                    </>
+                                                    <button
+                                                        onClick={() => verifyTransaction(tx.id)}
+                                                        disabled={verifying === tx.id}
+                                                        className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] sm:text-xs transition-colors border ${verifying === tx.id
+                                                                ? 'bg-zinc-700 text-zinc-400 border-zinc-600 cursor-wait'
+                                                                : 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 border-yellow-500/30'
+                                                            }`}
+                                                        title="Vérifier le statut avec MeSomb"
+                                                    >
+                                                        <Clock className="h-3 w-3" />
+                                                        <span>{verifying === tx.id ? 'Vérif...' : 'Vérifier'}</span>
+                                                    </button>
                                                 )}
                                                 {(tx.status === 'failed' || tx.status === 'init_failed') && (
                                                     <div className="flex flex-col items-end cursor-help group relative">

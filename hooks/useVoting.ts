@@ -170,6 +170,8 @@ export function useVoting() {
 
   /**
    * Poll payment status until confirmed or timeout
+   * NOTE: For real-time updates, use useTransactionStatus hook instead
+   * This is kept as a fallback for edge cases
    */
   const pollPaymentStatus = useCallback(async (
     transactionId: string,
@@ -194,7 +196,7 @@ export function useVoting() {
       // Handle explicit failure (not timeout)
       if (result.status === 'failed') {
         setPaymentStatus('failed');
-        setError(result.error || result.message || 'Payment failed');
+        setError(result.error || result.message || 'Paiement échoué. Veuillez réessayer.');
         clearPendingTransaction();
         return result;
       }
@@ -206,7 +208,10 @@ export function useVoting() {
     // IMPROVED: Don't mark as failed on timeout - mark as timeout
     // The payment might still succeed via webhook
     setPaymentStatus('timeout');
-    const timeoutMessage = 'La vérification a pris trop de temps. Votre paiement est peut-être encore en cours. Vous pouvez vérifier le statut plus tard avec ce numéro: ' + transactionId;
+    const timeoutMessage = `⏱️ La vérification prend plus de temps que prévu. 
+Si vous avez été débité, ne vous inquiétez pas ! 
+Votre vote sera comptabilisé automatiquement. 
+Référence: ${transactionId}`;
     setError(timeoutMessage);
 
     // Keep the transaction in localStorage for recovery
