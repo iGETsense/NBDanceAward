@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
 import { ref, get, update, serverTimestamp } from 'firebase/database';
-import { checkPaymentStatus } from '@/lib/mesomb';
+import { checkPaymentStatus } from '@/app/api/lib/mesomb';
 import { processSuccessfulPayment, markTransactionFailed } from '@/lib/voteProcessor';
 
 export async function POST(request: NextRequest) {
