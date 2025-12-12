@@ -126,10 +126,9 @@ export async function GET(request: NextRequest) {
             isPartial: isFallback, // Flag to indicate stats are estimated
         };
 
-        // Sort and slice for the list view
+        // Sort by createdAt descending (newest first) - return ALL transactions
         const transactions = allTransactions
-            .sort((a: any, b: any) => b.createdAt - a.createdAt)
-            .slice(0, 100); // Already limited if fallback, but safe to slice again
+            .sort((a: any, b: any) => (b.createdAt || 0) - (a.createdAt || 0));
 
         return NextResponse.json({
             success: true,

@@ -1,31 +1,13 @@
 import { database } from './firebase'
 import { ref, set, update, get, onValue, increment } from 'firebase/database'
-import { calculatePercentages, updateCandidatePercentage } from './percentageCalculator'
+import { calculatePercentages } from './percentageCalculator'
 import { getCandidateImage } from './candidateImages'
-import { hybridRead, hybridWrite, withFailover, FAILOVER_TIMEOUT_MS, clearCache } from './hybridDatabase'
+import { hybridRead, hybridWrite, FAILOVER_TIMEOUT_MS } from './hybridDatabase'
 import {
   getCandidatesRest,
   getCategoriesRest,
-  getVotesRest,
-  getUserVotesRest,
   submitVoteRest,
-  getUserRest,
-  createUserRest,
-  updateUserRest,
-  getLeaderboardRest,
 } from './firebaseRestApi'
-import {
-  getAppwriteCandidates,
-  getAppwriteCategories,
-  getAppwriteCandidatesByCategory,
-  getAppwriteUserVotes,
-  getAppwriteUser,
-  getAppwriteLeaderboard,
-  submitAppwriteVote,
-  createAppwriteUser,
-  updateAppwriteUser,
-  isAppwriteConfigured
-} from './appwrite'
 
 // ============ CATEGORIES ============
 
@@ -44,7 +26,7 @@ export async function getCategories() {
     // Try SDK first
     const categories = await hybridRead(
       getFirebaseCategories,
-      () => Promise.reject(new Error('Appwrite disabled')),
+      null,
       'getCategories',
       { useCache: true }
     )
@@ -64,42 +46,18 @@ export async function getCategories() {
 
 export function subscribeToCategories(callback: (data: any) => void) {
   const categoriesRef = ref(database, 'categories')
-  let fallbackTriggered = false
-
-  // Set up timeout to trigger Appwrite fallback
-  const timeoutId = setTimeout(async () => {
-    if (!fallbackTriggered) {
-      fallbackTriggered = true
-      console.log('📦 [subscribeToCategories] Firebase timeout, switching to Appwrite')
-      try {
-        const appwriteData = await getAppwriteCategories()
-        callback(appwriteData)
-      } catch (error) {
-        console.error('❌ Appwrite fallback failed:', error)
-      }
-    }
-  }, FAILOVER_TIMEOUT_MS)
 
   const unsubscribe = onValue(categoriesRef, (snapshot) => {
-    clearTimeout(timeoutId)
-    fallbackTriggered = true
     if (snapshot.exists()) {
       const categoriesObj = snapshot.val()
       const sorted = Object.values(categoriesObj).sort((a: any, b: any) => a.order - b.order)
       callback(sorted)
     }
   }, (error) => {
-    clearTimeout(timeoutId)
     console.error('🔥 Firebase subscription error:', error)
-    // Fallback to Appwrite on error
-    if (!fallbackTriggered) {
-      fallbackTriggered = true
-      getAppwriteCategories().then(callback).catch(console.error)
-    }
   })
 
   return () => {
-    clearTimeout(timeoutId)
     unsubscribe()
   }
 }
@@ -120,7 +78,7 @@ export async function getCandidates() {
     // Try SDK first
     const candidates = await hybridRead(
       getFirebaseCandidates,
-      () => Promise.reject(new Error('Appwrite disabled')),
+      null,
       'getCandidates',
       { useCache: true }
     )
@@ -163,7 +121,7 @@ async function getFirebaseCandidatesByCategory(categoryId: string) {
 export async function getCandidatesByCategory(categoryId: string) {
   return hybridRead(
     () => getFirebaseCandidatesByCategory(categoryId),
-    () => getAppwriteCandidatesByCategory(categoryId),
+    null,
     'getCandidatesByCategory'
   )
 }
@@ -187,19 +145,12 @@ export function subscribeToCandidates(callback: (data: any) => void) {
         const categoriesObj = categoriesSnapshot.exists() ? categoriesSnapshot.val() : {}
         const links = linksSnapshot.exists() ? linksSnapshot.val() : []
 
-        console.log('📂 [DEBUG] Categories loaded:', Object.keys(categoriesObj).length)
-        console.log('🔗 [DEBUG] Links loaded:', Array.isArray(links) ? links.length : Object.keys(links).length)
-        console.log('🔗 [DEBUG] Links structure:', links)
-
         // Create a map of candidateId -> categoryId
         const candidateCategoryMap = new Map<string, string>()
         const linksArray = Array.isArray(links) ? links : Object.values(links)
         linksArray.forEach((link: any) => {
           candidateCategoryMap.set(link.candidateId, link.categoryId)
         })
-
-        console.log('🗺️ [DEBUG] Category map size:', candidateCategoryMap.size)
-        console.log('🗺️ [DEBUG] First 3 mappings:', Array.from(candidateCategoryMap.entries()).slice(0, 3))
 
         // Enrich candidates with category information AND images from frontend
         const enrichedCandidates = candidatesArray.map((candidate: any) => {
@@ -213,9 +164,6 @@ export function subscribeToCandidates(callback: (data: any) => void) {
             image: getCandidateImage(candidate.id, candidate.baseId)
           }
         })
-
-        console.log('✨ [DEBUG] First enriched candidate:', enrichedCandidates[0])
-        console.log('✨ [DEBUG] Enriched candidates with categories:', enrichedCandidates.filter(c => c.category !== 'Unknown Category').length)
 
         const withPercentages = calculatePercentages(enrichedCandidates)
         callback(withPercentages)
@@ -337,7 +285,7 @@ async function getFirebaseUserVotes(userId: string) {
 export async function getUserVotes(userId: string) {
   return hybridRead(
     () => getFirebaseUserVotes(userId),
-    () => getAppwriteUserVotes(userId),
+    null,
     `getUserVotes_${userId}`,
     { useCache: true }
   )
@@ -345,25 +293,14 @@ export async function getUserVotes(userId: string) {
 
 export function subscribeToVotes(callback: (data: any) => void) {
   const votesRef = ref(database, 'votes')
-  let fallbackTriggered = false
-
-  const timeoutId = setTimeout(async () => {
-    if (!fallbackTriggered) {
-      fallbackTriggered = true
-      console.log('📦 [subscribeToVotes] Firebase timeout')
-    }
-  }, FAILOVER_TIMEOUT_MS)
 
   const unsubscribe = onValue(votesRef, (snapshot) => {
-    clearTimeout(timeoutId)
-    fallbackTriggered = true
     if (snapshot.exists()) {
       callback(snapshot.val())
     }
   })
 
   return () => {
-    clearTimeout(timeoutId)
     unsubscribe()
   }
 }
@@ -382,10 +319,9 @@ async function firebaseCreateUser(userId: string, userData: any) {
 
 export async function createUser(userId: string, userData: any) {
   try {
-    // Use hybrid failover for Orange network compatibility
     const result = await hybridWrite(
       () => firebaseCreateUser(userId, userData),
-      () => createAppwriteUser(userId, userData),
+      null,
       'createUser'
     )
     console.log(`✅ User created via ${result.source}`)
@@ -408,7 +344,7 @@ async function getFirebaseUser(userId: string) {
 export async function getUser(userId: string) {
   return hybridRead(
     () => getFirebaseUser(userId),
-    () => getAppwriteUser(userId),
+    null,
     'getUser'
   )
 }
@@ -421,10 +357,9 @@ async function firebaseUpdateUser(userId: string, userData: any) {
 
 export async function updateUser(userId: string, userData: any) {
   try {
-    // Use hybrid failover for Orange network compatibility
     const result = await hybridWrite(
       () => firebaseUpdateUser(userId, userData),
-      () => updateAppwriteUser(userId, userData),
+      null,
       'updateUser'
     )
     console.log(`✅ User updated via ${result.source}`)
@@ -452,7 +387,7 @@ async function getFirebaseLeaderboard(limit: number) {
 export async function getLeaderboard(limit: number = 10) {
   return hybridRead(
     () => getFirebaseLeaderboard(limit),
-    () => getAppwriteLeaderboard(limit),
+    null,
     `getLeaderboard_${limit}`,
     { useCache: true }
   )

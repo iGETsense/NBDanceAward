@@ -21,18 +21,21 @@ import { useBackendCandidates } from '@/hooks/useBackendCandidates';
 
 
 import { useWithdrawalStats } from '@/hooks/useWithdrawals';
+import { useMeSombBalance } from '@/hooks/useMeSombBalance';
 
 export function AdminStats() {
     const { stats, loading: txLoading } = useTransactions();
     const { candidates, loading: candidatesLoading } = useBackendCandidates();
     const { totalWithdrawn, loading: withdrawalLoading } = useWithdrawalStats();
+    const { balanceData, loading: balanceLoading } = useMeSombBalance();
 
     // Calculate total votes from candidates
     const totalVotes = candidates.reduce((sum, c) => sum + (c.votes || 0), 0);
 
-    // Calculate revenue based on Total Votes (User requirement: 459 votes * 105 XAF)
+    // Calculate revenue based on Paid Votes (User requirement: multiply a vote with total of paid votes)
     const PRICE_PER_VOTE = 105;
-    const grossRevenue = totalVotes * PRICE_PER_VOTE;
+    // Use stats.totalVotes (paid votes) instead of totalVotes (candidate counters)
+    const grossRevenue = (stats.totalVotes || 0) * PRICE_PER_VOTE;
     const netRevenue = grossRevenue * 0.95;
 
     // Available balance is Net Revenue - Withdrawn
@@ -63,6 +66,38 @@ export function AdminStats() {
                 </div>
             </div>
 
+            {/* MeSomb Real Balance */}
+            <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 border border-blue-700/50 rounded-lg p-4 sm:p-6 min-h-[140px] hover:border-blue-500/50 transition-colors">
+                <div className="flex items-start justify-between mb-3 sm:mb-4">
+                    <div className="flex-1 min-w-0">
+                        <p className="text-zinc-400 text-xs sm:text-sm mb-1">Solde Réel MeSomb</p>
+                        {balanceLoading ? (
+                            <div className="h-8 w-24 bg-zinc-800 animate-pulse rounded"></div>
+                        ) : (
+                            <h3 className="text-2xl sm:text-3xl font-bold text-white break-words">
+                                {balanceData?.balance?.toLocaleString() ?? 0} <span className="text-sm sm:text-lg text-zinc-400">XAF</span>
+                            </h3>
+                        )}
+                    </div>
+                    <div className="bg-blue-500/20 p-2 sm:p-3 rounded-lg flex-shrink-0 ml-2">
+                        <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
+                    </div>
+                </div>
+                {balanceData?.balances && (
+                    <div className="flex flex-col gap-1 text-xs text-zinc-400">
+                        {balanceData.balances.map((b, idx) => (
+                            <div key={idx} className="flex justify-between">
+                                <span>{b.service}:</span>
+                                <span>{b.value.toLocaleString()} XAF</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
+                {!balanceData && !balanceLoading && (
+                    <p className="text-xs text-red-400">Erreur de chargement</p>
+                )}
+            </div>
+
             {/* Total Votes */}
             <div className="bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 border border-yellow-700/50 rounded-lg p-4 sm:p-6 min-h-[140px] hover:border-yellow-500/50 transition-colors">
                 <div className="flex items-start justify-between mb-3 sm:mb-4">
@@ -82,7 +117,7 @@ export function AdminStats() {
             </div>
 
             {/* Active Transactions */}
-            <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 border border-blue-700/50 rounded-lg p-4 sm:p-6 min-h-[140px] hover:border-blue-500/50 transition-colors">
+            <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 border border-purple-700/50 rounded-lg p-4 sm:p-6 min-h-[140px] hover:border-purple-500/50 transition-colors">
                 <div className="flex items-start justify-between mb-3 sm:mb-4">
                     <div className="flex-1 min-w-0">
                         <p className="text-zinc-400 text-xs sm:text-sm mb-1">Transactions</p>
@@ -90,32 +125,14 @@ export function AdminStats() {
                             {stats.totalTransactions}
                         </h3>
                     </div>
-                    <div className="bg-blue-500/20 p-2 sm:p-3 rounded-lg flex-shrink-0 ml-2">
-                        <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
+                    <div className="bg-purple-500/20 p-2 sm:p-3 rounded-lg flex-shrink-0 ml-2">
+                        <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-purple-500" />
                     </div>
                 </div>
                 <div className="flex flex-wrap gap-1 sm:gap-2 text-xs">
                     <span className="text-green-400">{stats.completedTransactions} OK</span>
                     <span className="text-yellow-400">{stats.pendingTransactions} attente</span>
                 </div>
-            </div>
-
-            {/* Average Transaction */}
-            <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 border border-purple-700/50 rounded-lg p-4 sm:p-6 min-h-[140px] hover:border-purple-500/50 transition-colors">
-                <div className="flex items-start justify-between mb-3 sm:mb-4">
-                    <div className="flex-1 min-w-0">
-                        <p className="text-zinc-400 text-xs sm:text-sm mb-1">Montant Moyen</p>
-                        <h3 className="text-2xl sm:text-3xl font-bold text-white break-words">
-                            {Math.round(stats.averageTransactionValue).toLocaleString()} <span className="text-sm sm:text-lg text-zinc-400">XAF</span>
-                        </h3>
-                    </div>
-                    <div className="bg-purple-500/20 p-2 sm:p-3 rounded-lg flex-shrink-0 ml-2">
-                        <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-purple-500" />
-                    </div>
-                </div>
-                <p className="text-xs sm:text-sm text-zinc-400 truncate">
-                    Par transaction
-                </p>
             </div>
         </div>
     );
@@ -127,7 +144,10 @@ export function TransactionsList() {
 
     const filteredTransactions = transactions.filter(tx => {
         if (filter === 'all') return true;
-        return tx.status === filter;
+        if (filter === 'completed') return tx.status === 'completed';
+        if (filter === 'pending') return tx.status === 'pending' || tx.status === 'creating';
+        if (filter === 'failed') return tx.status === 'failed' || tx.status === 'init_failed';
+        return true;
     });
 
     if (loading) {
@@ -175,6 +195,15 @@ export function TransactionsList() {
                             }`}
                     >
                         En attente
+                    </button>
+                    <button
+                        onClick={() => setFilter('failed')}
+                        className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${filter === 'failed'
+                            ? 'bg-red-500 text-white'
+                            : 'bg-zinc-800 text-zinc-400 hover:text-white'
+                            }`}
+                    >
+                        Échouées
                     </button>
                 </div>
             </div>
@@ -228,7 +257,7 @@ export function TransactionsList() {
                                             <span className="text-yellow-500 font-bold text-xs sm:text-sm whitespace-nowrap">{tx.voteCount}</span>
                                         </td>
                                         <td className="py-3 sm:py-4 px-3 sm:px-4 text-right">
-                                            <span className="text-green-400 font-semibold text-xs sm:text-sm whitespace-nowrap">{tx.amount.toLocaleString()} XAF</span>
+                                            <span className="text-green-400 font-semibold text-xs sm:text-sm whitespace-nowrap">{(tx.amount || 0).toLocaleString()} XAF</span>
                                         </td>
                                         <td className="py-3 sm:py-4 px-3 sm:px-4">
                                             <div className="flex items-center justify-center gap-1 sm:gap-2">
@@ -238,22 +267,28 @@ export function TransactionsList() {
                                                         <span className="text-green-400 text-xs sm:text-sm whitespace-nowrap hidden sm:inline">Complété</span>
                                                     </>
                                                 )}
-                                                {tx.status === 'pending' && (
+                                                {(tx.status === 'pending' || tx.status === 'creating') && (
                                                     <>
                                                         <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-500 flex-shrink-0" />
                                                         <span className="text-yellow-400 text-xs sm:text-sm whitespace-nowrap hidden sm:inline">En attente</span>
                                                     </>
                                                 )}
-                                                {tx.status === 'failed' && (
-                                                    <div className="flex flex-col items-end">
+                                                {(tx.status === 'failed' || tx.status === 'init_failed') && (
+                                                    <div className="flex flex-col items-end cursor-help group relative">
                                                         <div className="flex items-center gap-1 sm:gap-2">
                                                             <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-500 flex-shrink-0" />
                                                             <span className="text-red-400 text-xs sm:text-sm whitespace-nowrap hidden sm:inline">Échoué</span>
                                                         </div>
-                                                        {tx.failureReason && (
-                                                            <span className="text-[10px] text-red-400/70 max-w-[100px] truncate" title={tx.failureReason}>
-                                                                {tx.failureReason}
-                                                            </span>
+                                                        {(tx.failureReason || tx.errorDetails || tx.mesombResponse?.message) && (
+                                                            <>
+                                                                <span className="text-[10px] text-red-400/70 max-w-[100px] truncate">
+                                                                    {tx.failureReason || tx.errorDetails || tx.mesombResponse?.message}
+                                                                </span>
+                                                                {/* Tooltip for full error message */}
+                                                                <div className="absolute bottom-full right-0 mb-2 w-64 p-2 bg-red-900/90 border border-red-500 rounded shadow-lg text-xs text-white invisible group-hover:visible z-50">
+                                                                    {tx.failureReason || tx.errorDetails || tx.mesombResponse?.message}
+                                                                </div>
+                                                            </>
                                                         )}
                                                     </div>
                                                 )}

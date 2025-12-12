@@ -43,7 +43,7 @@ export interface TransactionStats {
     averageTransactionValue: number;
 }
 
-export function useTransactions(limit: number = 100) {
+export function useTransactions(limit: number = 10000) {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [stats, setStats] = useState<TransactionStats>({
         totalTransactions: 0,

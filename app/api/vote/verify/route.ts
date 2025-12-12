@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
 import { ref, get, update, serverTimestamp } from 'firebase/database';
-import { checkPaymentStatus } from '../../lib/mesomb';
+import { checkPaymentStatus } from '@/lib/mesomb';
 import { processSuccessfulPayment, markTransactionFailed } from '@/lib/voteProcessor';
 
 export async function POST(request: NextRequest) {
@@ -121,10 +121,16 @@ export async function POST(request: NextRequest) {
         }
 
         // Still pending - check timeout
-        // FIX: Use createdAt properly - it's stored as Date.now() (number) in new transactions
-        const createdAt = typeof transaction.createdAt === 'number'
-            ? transaction.createdAt
-            : (transaction.createdAt?._seconds ? transaction.createdAt._seconds * 1000 : null);
+        // Helper to safely extract timestamp
+        const getTimestamp = (val: any): number | null => {
+            if (typeof val === 'number') return val;
+            if (val && typeof val === 'object' && val._seconds) return val._seconds * 1000; // Firestore style
+            // If it's a RTDB server timestamp placeholder that hasn't been transformed yet, it might be an empty object or special marker
+            // But usually after 'get', it's a number.
+            return null;
+        };
+
+        const createdAt = getTimestamp(transaction.createdAt);
 
         const now = Date.now();
         const tenMinutes = 10 * 60 * 1000;

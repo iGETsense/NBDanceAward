@@ -331,3 +331,69 @@ export async function makeWithdrawal(params: WithdrawalParams): Promise<PaymentR
         };
     }
 }
+export async function getAccountBalance(): Promise<{ success: boolean; balance?: number; balances?: any[]; error?: string }> {
+    try {
+        const payment = getMesombClient();
+
+        // getStatus returns the Application model which contains balances
+        const application = await payment.getStatus();
+
+        try {
+            const fs = await import('fs');
+            const debugPath = process.cwd() + '/debug_mesomb_verify.log';
+            const debugData = `
+----------------------------------------
+Timestamp: ${new Date().toISOString()}
+Raw Application: ${JSON.stringify(application, null, 2)}
+Raw Balances: ${JSON.stringify((application as any).balances, null, 2)}
+----------------------------------------
+`;
+            fs.appendFileSync(debugPath, debugData);
+        } catch (err) {
+            console.error('Failed to write debug log:', err);
+        }
+
+        const rawBalances = (application as any).balances || [];
+
+        // Helper to find balance by provider
+        const findBalance = (provider: string) => {
+            const found = rawBalances.find((b: any) => b.provider === provider && b.country === 'CM');
+            return found ? found.value : 0;
+        };
+
+        // Explicitly get the balances using 'provider' field (as seen in debug logs)
+        const mtnBalance = findBalance('MTN');
+        const orangeBalance = findBalance('ORANGE');
+
+        // Calculate total from these specific values
+        const totalBalance = mtnBalance + orangeBalance;
+
+        console.log('[Mesomb] Balance check:', {
+            mtn: mtnBalance,
+            orange: orangeBalance,
+            total: totalBalance
+        });
+
+        // Always return this consistent structure
+        return {
+            success: true,
+            balance: totalBalance,
+            balances: [
+                { service: 'MTN', value: mtnBalance, country: 'CM' },
+                { service: 'ORANGE', value: orangeBalance, country: 'CM' }
+            ]
+        };
+    } catch (error: any) {
+        console.error('[Mesomb] Get balance error:', error);
+        return {
+            success: false,
+            error: error.message || 'Failed to fetch balance',
+            // Return 0s on error so UI can still show structure
+            balance: 0,
+            balances: [
+                { service: 'MTN', value: 0, country: 'CM' },
+                { service: 'ORANGE', value: 0, country: 'CM' }
+            ]
+        };
+    }
+}
