@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
-import { ref, set, update, serverTimestamp } from 'firebase/database';
+import { ref, set, update, serverTimestamp, runTransaction } from 'firebase/database';
 import { collectPayment } from '../../lib/mesomb';
 import { paymentQueue } from '@/lib/paymentQueue';
 import { VOTE_PRICE } from '@/lib/config';
@@ -88,6 +88,13 @@ export async function POST(request: NextRequest) {
         // Step 1: Create record FIRST
         await set(transactionRef, initialTransactionData);
         console.log('[Submit] Transaction record created with status: creating');
+
+        // Increment pending stats counter (for scalability)
+        try {
+            await runTransaction(ref(database, 'stats/transactions/pending'), (current) => (current || 0) + 1);
+        } catch (statsError) {
+            console.warn('[Submit] Failed to update pending stats (non-critical)');
+        }
 
         // Step 2: Initiate payment with Mesomb via queue
         let paymentResult;

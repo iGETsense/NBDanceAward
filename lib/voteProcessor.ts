@@ -117,6 +117,18 @@ export async function processSuccessfulPayment(
             votesAfterUpdate,
         });
 
+        // STEP 6: Update aggregated stats (for scalability)
+        try {
+            await runTransaction(ref(database, 'stats/transactions/completed'), (current) => (current || 0) + 1);
+            // Decrement pending if it was pending before
+            if (previousStatus === 'pending' || previousStatus === 'creating') {
+                await runTransaction(ref(database, 'stats/transactions/pending'), (current) => Math.max((current || 0) - 1, 0));
+            }
+            await runTransaction(ref(database, 'stats/transactions/total'), (current) => (current || 0) + 1);
+        } catch (statsError) {
+            console.warn(`${logPrefix} Failed to update stats (non-critical):`, statsError);
+        }
+
         console.log(`${logPrefix} SUCCESS: ${voteCount} votes added to ${candidateId}`);
 
         return {
