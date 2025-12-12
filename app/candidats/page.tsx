@@ -415,6 +415,15 @@ export default function CandidatsPage() {
           <div className="grid md:grid-cols-2 gap-0">
             {/* Left Side - Your Vote */}
             <div className="p-4 md:p-6 border-r border-zinc-800">
+              {/* Important Warning */}
+              <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg flex items-start gap-2">
+                <AlertCircle className="h-5 w-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+                <div className="text-xs text-yellow-200">
+                  <p className="font-semibold text-yellow-400 mb-1">⚠️ Important !</p>
+                  <p>Restez sur cette page jusqu&apos;à la fin de la transaction. Ne fermez pas votre navigateur pendant le paiement.</p>
+                </div>
+              </div>
+
               <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-white">Votre Vote</h2>
 
               {selectedCandidate && (
