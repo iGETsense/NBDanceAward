@@ -257,6 +257,13 @@ export default function NBDanceAwardPage() {
                 >
                   Classement
                 </Link>
+                <Link
+                  href="/report-issue"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-3 text-base font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+                >
+                  Signaler un problème
+                </Link>
 
               </nav>
             </SheetContent>
@@ -274,6 +281,9 @@ export default function NBDanceAwardPage() {
             </Link>
             <Link href="/classement" className="text-zinc-400 hover:text-purple-400 transition-colors">
               Classement
+            </Link>
+            <Link href="/report-issue" className="text-zinc-400 hover:text-purple-400 transition-colors">
+              Signaler un problème
             </Link>
 
           </nav>

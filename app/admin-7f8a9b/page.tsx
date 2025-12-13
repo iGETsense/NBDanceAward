@@ -13,6 +13,7 @@ import { AdminStats, TransactionsList } from "@/components/AdminDashboard"
 import { AdminWithdrawal } from "@/components/AdminWithdrawal"
 import { FailedTransactions } from "@/components/FailedTransactions"
 import { AdminTutorial } from "@/components/AdminTutorial"
+import { AdminIssues } from "@/components/AdminIssues"
 import { auth } from "@/lib/firebase"
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut, User } from "firebase/auth"
 
@@ -360,6 +361,11 @@ export default function AdminPage() {
           <div className="mb-8">
             {/* Withdrawal Section */}
             <AdminWithdrawal />
+          </div>
+
+          {/* Support / Issues Section */}
+          <div className="mb-8">
+            <AdminIssues />
           </div>
 
           {/* Candidates Monitoring */}
