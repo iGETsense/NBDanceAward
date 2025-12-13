@@ -75,7 +75,6 @@ export function getPendingTransaction(): { transactionId: string; candidateId: s
 // Dispatch event to trigger immediate data refresh
 function triggerDataRefresh() {
   if (typeof window !== 'undefined') {
-    console.log('🎉 [useVoting] Dispatching vote success event');
     window.dispatchEvent(new CustomEvent(VOTE_SUCCESS_EVENT));
   }
 }

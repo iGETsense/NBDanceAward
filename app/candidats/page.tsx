@@ -475,14 +475,12 @@ export default function CandidatsPage() {
                           } else if (paymentResult.status === 'timeout') {
                             // Timeout - payment may still be processing
                             // Keep modal open, user can see the message from useVoting hook
-                            console.log('Payment verification timed out, transaction:', result.transactionId)
                           } else if (paymentResult.status === 'failed') {
                             // Failed - user can see error and retry
-                            console.log('Payment failed:', paymentResult.message)
                           }
                         }
                       } catch (error) {
-                        console.error('Voting error:', error)
+                        // Silent failure in production - user will see UI error via state
                       }
                     }}
                     disabled={isSubmitting || isVerifying || !phoneNumber || phoneNumber.length < 9}
