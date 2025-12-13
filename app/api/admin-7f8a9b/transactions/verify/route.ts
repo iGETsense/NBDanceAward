@@ -48,6 +48,16 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        // Prevent double-counting: Check if already completed
+        if (transaction.status === 'completed') {
+            return NextResponse.json({
+                success: true,
+                message: 'Transaction déjà vérifiée et confirmée.',
+                status: 'completed',
+                votesAdded: 0
+            });
+        }
+
         // Check with MeSomb
         const mesombResult = await checkPaymentStatus(mesombReference);
 
@@ -66,13 +76,33 @@ export async function POST(request: NextRequest) {
                 const currentVotes = candidateSnapshot.val().votes || 0;
 
                 // Update both transaction and candidate atomically-ish
-                await update(ref(database), {
+                const updates: any = {
                     [`transactions/${transactionId}/status`]: 'completed',
                     [`transactions/${transactionId}/completedAt`]: Date.now(),
                     [`transactions/${transactionId}/verifiedAt`]: Date.now(),
                     [`transactions/${transactionId}/verifiedBy`]: 'admin_manual',
                     [`candidates/${candidateId}/votes`]: currentVotes + voteCount,
-                });
+                };
+
+                // Add stats updates if possible (best effort, race conditions possible but rare for manual verify)
+                // We increment completed and technically should decrement pending
+                // Since this is admin manual action, precision matters less than flow
+
+                await update(ref(database), updates);
+
+                // Update stats separately to keep main flow clean
+                try {
+                    await runTransaction(ref(database, 'stats/transactions'), (currentStats) => {
+                        if (!currentStats) return { completed: 1, pending: 0 };
+                        return {
+                            ...currentStats,
+                            completed: (currentStats.completed || 0) + 1,
+                            pending: Math.max(0, (currentStats.pending || 0) - 1)
+                        };
+                    });
+                } catch (e) {
+                    console.warn('Failed to update stats on verify', e);
+                }
 
                 console.log(`[Verify] Transaction ${transactionId} verified and votes updated (+${voteCount})`);
 

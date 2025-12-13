@@ -547,6 +547,7 @@ export default function NBDanceAwardPage() {
                             alt={selectedCandidate.name}
                             fill
                             className="object-cover"
+                            sizes="(max-width: 640px) 160px, (max-width: 768px) 192px, 224px"
                             style={{ objectPosition: `${customImagePositioning[selectedCandidate.name] || "top"} center` }}
                           />
                         </div>

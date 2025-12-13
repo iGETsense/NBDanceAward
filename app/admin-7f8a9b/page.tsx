@@ -166,7 +166,7 @@ export default function AdminPage() {
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8">
             <div className="flex justify-center mb-6">
               <div className="relative h-16 w-16">
-                <Image src="/logo.png" alt="NB Dance Awards" fill className="object-contain" />
+                <Image src="/logo.png" alt="NB Dance Awards" fill className="object-contain" sizes="64px" priority loading="eager" />
               </div>
             </div>
 
@@ -254,7 +254,7 @@ export default function AdminPage() {
         <div className="container mx-auto flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
           <Link href="/" className="flex items-center gap-2 md:gap-3">
             <div className="relative h-10 w-10 md:h-12 md:w-12">
-              <Image src="/logo.png" alt="NB Dance Awards" fill className="object-contain" />
+              <Image src="/logo.png" alt="NB Dance Awards" fill className="object-contain" sizes="(max-width: 768px) 40px, 48px" />
             </div>
             <div className="flex flex-col md:flex-row md:items-center md:gap-1">
               <span className="text-xs font-bold leading-tight text-white md:hidden">
@@ -279,7 +279,7 @@ export default function AdminPage() {
               <SheetHeader className="mb-8">
                 <div className="flex items-center gap-3">
                   <div className="relative h-12 w-12">
-                    <Image src="/logo.png" alt="NB Dance Awards" fill className="object-contain" />
+                    <Image src="/logo.png" alt="NB Dance Awards" fill className="object-contain" sizes="48px" />
                   </div>
                   <SheetTitle className="text-left">
                     <div className="flex flex-col">

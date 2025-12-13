@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
-import { ref, get, query, orderByChild, limitToLast } from 'firebase/database';
+import { ref, get, query, orderByChild, limitToLast, orderByKey } from 'firebase/database';
 
 const FIREBASE_DB_URL = "https://project-5583295336911612869-default-rtdb.europe-west1.firebasedatabase.app";
 
@@ -19,45 +19,28 @@ export async function GET(request: NextRequest) {
         const authHeader = request.headers.get('Authorization');
         const token = authHeader?.startsWith('Bearer ') ? authHeader.split('Bearer ')[1] : null;
 
-        console.log(`[API] Fetching withdrawals. Token present: ${!!token}`);
+        console.log(`[API] Fetching withdrawals.`);
 
-        // Construct URL with auth token if present
-        // Note: We fetch all and sort in JS to avoid requiring .indexOn in Firebase rules
-        let url = `${FIREBASE_DB_URL}/withdrawals.json`;
-        if (token) {
-            url += `?auth=${token}`;
-        } else {
-            console.warn('[API] No auth token provided for withdrawals fetch');
+        // FETCH WITHDRAWALS using Firebase SDK
+        let withdrawals: any[] = [];
+        try {
+            const withdrawalsRef = ref(database, 'withdrawals');
+            // Fetch last 100 withdrawals using Key (Push IDs are chronological) to avoid missing index on createdAt
+            const recentWithdrawalsQuery = query(withdrawalsRef, orderByKey(), limitToLast(100));
+
+            const snapshot = await get(recentWithdrawalsQuery);
+
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                withdrawals = Object.entries(data).map(([id, w]: [string, any]) => ({
+                    id,
+                    ...w,
+                })).sort((a: any, b: any) => (b.createdAt || 0) - (a.createdAt || 0));
+            }
+        } catch (dbError: any) {
+            console.error('[API] Firebase SDK fetch failed for withdrawals:', dbError);
+            throw new Error(`Firebase SDK fetch failed: ${dbError.message}`);
         }
-
-        // Use REST API for reliability
-        const response = await fetch(url, {
-            cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache' }
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`[API] Firebase REST error: ${response.status} ${response.statusText}`, errorText);
-            return NextResponse.json(
-                { success: false, error: `Firebase error: ${response.status}`, details: errorText },
-                { status: response.status }
-            );
-        }
-
-        const data = await response.json();
-
-        if (!data) {
-            return NextResponse.json({
-                success: true,
-                withdrawals: []
-            });
-        }
-
-        const withdrawals = Object.entries(data).map(([id, w]: [string, any]) => ({
-            id,
-            ...w,
-        })).sort((a: any, b: any) => b.createdAt - a.createdAt).slice(0, 100);
 
         return NextResponse.json({
             success: true,
@@ -66,9 +49,8 @@ export async function GET(request: NextRequest) {
 
     } catch (error: any) {
         console.error('Error fetching withdrawals:', error);
-        if (error.cause) console.error('Error cause:', error.cause);
         return NextResponse.json(
-            { success: false, error: error.message, cause: error.cause ? String(error.cause) : undefined },
+            { success: false, error: error.message },
             { status: 500 }
         );
     }

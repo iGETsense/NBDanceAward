@@ -89,11 +89,18 @@ export async function POST(request: NextRequest) {
         await set(transactionRef, initialTransactionData);
         console.log('[Submit] Transaction record created with status: creating');
 
-        // Increment pending stats counter (for scalability)
+        // Increment pending and total stats counters
         try {
-            await runTransaction(ref(database, 'stats/transactions/pending'), (current) => (current || 0) + 1);
+            await runTransaction(ref(database, 'stats/transactions'), (currentStats) => {
+                if (!currentStats) return { pending: 1, total: 1 };
+                return {
+                    ...currentStats,
+                    pending: (currentStats.pending || 0) + 1,
+                    total: (currentStats.total || 0) + 1
+                };
+            });
         } catch (statsError) {
-            console.warn('[Submit] Failed to update pending stats (non-critical)');
+            console.warn('[Submit] Failed to update stats (non-critical)');
         }
 
         // Step 2: Initiate payment with Mesomb via queue

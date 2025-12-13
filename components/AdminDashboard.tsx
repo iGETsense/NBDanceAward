@@ -104,7 +104,7 @@ export function AdminStats() {
                     <div className="flex-1 min-w-0">
                         <p className="text-zinc-400 text-xs sm:text-sm mb-1">Total Votes</p>
                         <h3 className="text-2xl sm:text-3xl font-bold text-white">
-                            {totalVotes.toLocaleString()}
+                            {((stats as any).dbTotalVotes || totalVotes || 0).toLocaleString()}
                         </h3>
                     </div>
                     <div className="bg-yellow-500/20 p-2 sm:p-3 rounded-lg flex-shrink-0 ml-2">
@@ -112,7 +112,7 @@ export function AdminStats() {
                     </div>
                 </div>
                 <p className="text-xs sm:text-sm text-zinc-400 truncate">
-                    {stats.totalVotes} votes payés
+                    {(stats as any).paidVotes || stats.totalVotes || 0} votes payés
                 </p>
             </div>
 
@@ -297,8 +297,8 @@ export function TransactionsList() {
                                                         onClick={() => verifyTransaction(tx.id)}
                                                         disabled={verifying === tx.id}
                                                         className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] sm:text-xs transition-colors border ${verifying === tx.id
-                                                                ? 'bg-zinc-700 text-zinc-400 border-zinc-600 cursor-wait'
-                                                                : 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 border-yellow-500/30'
+                                                            ? 'bg-zinc-700 text-zinc-400 border-zinc-600 cursor-wait'
+                                                            : 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 border-yellow-500/30'
                                                             }`}
                                                         title="Vérifier le statut avec MeSomb"
                                                     >
