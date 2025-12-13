@@ -118,11 +118,14 @@ export async function GET(request: NextRequest) {
                 ? Math.round(stats.totalRevenue / stats.completedTransactions)
                 : 0;
 
-            // Try to get aggregated stats
+            // Try to get aggregated stats (only use if we have more transactions than fetched)
             const statsSnapshot = await get(ref(database, 'stats/transactions'));
             let usedDbStats = false;
+            const isFullList = !hasMore;
 
-            if (statsSnapshot.exists()) {
+            // If we have the full list (isFullList), we MUST calculate from the authentic data
+            // If we have partial list, we might want to use DB stats for "Total" counts
+            if (statsSnapshot.exists() && !isFullList) {
                 const savedStats = statsSnapshot.val();
                 if ((savedStats.total || 0) > 0) {
                     stats.totalTransactions = savedStats.total || 0;
@@ -135,11 +138,17 @@ export async function GET(request: NextRequest) {
             }
 
             if (!usedDbStats) {
-                // Fallback estimation
+                // Calculation from the actual data (Exact real values)
                 stats.totalTransactions = transactions.length;
                 stats.completedTransactions = transactions.filter(tx => tx.status === 'completed').length;
                 stats.pendingTransactions = transactions.filter(tx => tx.status === 'pending' || tx.status === 'creating').length;
                 stats.failedTransactions = transactions.filter(tx => tx.status === 'failed' || tx.status === 'init_failed').length;
+                stats.isEstimated = false;
+
+                // Update average transaction value now that we have the real completed count
+                stats.averageTransactionValue = stats.completedTransactions > 0
+                    ? Math.round(stats.totalRevenue / stats.completedTransactions)
+                    : 0;
             }
 
         } catch (statsError) {

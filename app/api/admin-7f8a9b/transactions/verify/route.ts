@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
-import { ref, get, update } from 'firebase/database';
+import { ref, get, update, runTransaction } from 'firebase/database';
 import { checkPaymentStatus } from '@/app/api/lib/mesomb';
 
 export async function POST(request: NextRequest) {

@@ -110,7 +110,8 @@ export async function POST(request: NextRequest) {
                 collectPayment({
                     amount: totalAmount,
                     service: mesombService,
-                    payer: phoneNumber.replace(/\s/g, '').replace(/^\+237/, ''),
+                    // Ensure number has 237 prefix for Mesomb
+                    payer: '237' + phoneNumber.replace(/\D/g, '').replace(/^237/, ''),
                     nonce: transactionId,
                 })
             );

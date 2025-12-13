@@ -1,6 +1,6 @@
 /**
  * Mesomb Payment Service for Vercel
- * Direct SDK integration without fetch wrapper
+ * Using official SDK
  */
 
 export const runtime = 'nodejs';
@@ -15,7 +15,7 @@ export function getMesombClient() {
     const accessKey = 'f6c26b42-24de-4ec6-8b1b-7a808052e335';
     const secretKey = 'e45b1545-1b5a-49c4-aadf-ba4cf700a8dc';
 
-    // Create PaymentOperation instance with object parameter
+    // Create PaymentOperation instance
     return new PaymentOperation({
         applicationKey,
         accessKey,
@@ -50,6 +50,14 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
     try {
         const payment = getMesombClient();
 
+        console.log('[Mesomb] Initiating collection:', {
+            amount: params.amount,
+            service: params.service,
+            payer: params.payer,
+            nonce: params.nonce
+        });
+
+        // Use asynchronous mode to avoid gateway timeouts and strict validation
         const response = await payment.makeCollect({
             amount: params.amount,
             service: params.service,
@@ -57,16 +65,12 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
             nonce: params.nonce,
             country: 'CM',
             currency: 'XAF',
+            fees: true,
+            mode: 'asynchronous',
             customer: {
                 email: 'vote@nbdanceaward.com',
-                firstName: 'Voter',
-                lastName: 'NBDance',
-                town: 'Douala',
-                region: 'Littoral',
-                country: 'CM',
-                address: 'Cameroon',
-            },
-            location: {
+                first_name: 'Voter',
+                last_name: 'NBDance',
                 town: 'Douala',
                 region: 'Littoral',
                 country: 'CM',
@@ -75,28 +79,22 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
                 {
                     name: 'Vote NBDance Award',
                     category: 'Voting',
-                    quantity: Math.floor(params.amount / 105),
+                    quantity: 1,
                     amount: params.amount,
                 },
             ],
         });
 
         // CRITICAL: Log full Mesomb response for debugging
-        console.log('[Mesomb] Payment collection response:', {
-            nonce: params.nonce,
-            amount: params.amount,
-            service: params.service,
-            payer: params.payer,
-            success: response.success,
-            status: response.status,
-            message: response.message,
-            reference: response.reference,
-            transactionPk: response.transaction?.pk,
-            transactionStatus: response.transaction?.status,
-        });
+        console.log('[Mesomb] Payment collection response:', JSON.stringify(response, null, 2));
 
         // Check if operation failed at API level
-        if (typeof response.isOperationSuccess === 'function' && !response.isOperationSuccess()) {
+        // The SDK might return an object with isOperationSuccess method OR just plain object
+        const isOpSuccess = typeof response.isOperationSuccess === 'function'
+            ? response.isOperationSuccess()
+            : (response as any).success;
+
+        if (!isOpSuccess) {
             console.error('[Mesomb] Operation failed:', {
                 message: response.message,
                 status: response.status,
@@ -106,49 +104,30 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
                 success: false,
                 status: 'FAILED',
                 error: response.message || 'Payment operation failed. Please try again.',
+                message: response.message
             };
         }
 
         // Check transaction success status
-        if (typeof response.isTransactionSuccess === 'function') {
-            const transactionSuccess = response.isTransactionSuccess();
+        const isTxSuccess = typeof response.isTransactionSuccess === 'function'
+            ? response.isTransactionSuccess()
+            : (response as any).status === 'SUCCESS' || (response as any).status === 'PENDING';
 
-            if (!transactionSuccess) {
-                // Transaction explicitly failed
-                console.error('[Mesomb] Transaction failed:', {
-                    message: response.message,
-                    status: response.status,
-                    transactionStatus: response.transaction?.status,
-                    nonce: params.nonce,
-                });
-                return {
-                    success: false,
-                    status: 'FAILED',
-                    error: response.message || 'Payment was rejected. Please check your balance and try again.',
-                };
-            }
-        }
-
-        // Check for explicit success indicators
-        const reference = response.reference || response.transaction?.pk;
-        if (!reference) {
-            console.error('[Mesomb] No reference returned:', {
-                response: response,
+        if (!isTxSuccess) {
+            console.error('[Mesomb] Transaction failed:', {
+                message: response.message,
+                status: response.status,
                 nonce: params.nonce,
             });
             return {
                 success: false,
                 status: 'FAILED',
-                error: 'Payment initiation failed - no transaction reference received.',
+                error: response.message || 'Payment was rejected.',
             };
         }
 
-        // Payment successfully initiated
-        console.log('[Mesomb] Payment initiated successfully:', {
-            reference: reference,
-            nonce: params.nonce,
-            amount: params.amount,
-        });
+        // Success or Pending
+        const reference = response.reference || response.transaction?.pk;
 
         return {
             success: true,
@@ -159,41 +138,22 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
     } catch (error: any) {
         console.error('[Mesomb] Payment error:', {
             error: error.message,
-            stack: error.stack,
-            nonce: params.nonce,
-            amount: params.amount,
-            service: params.service,
+            fullError: JSON.stringify(error, Object.getOwnPropertyNames(error)),
         });
 
-        if (error.message?.includes('credentials are not configured')) {
-            return {
-                success: false,
-                status: 'FAILED',
-                error: 'Payment system is not configured. Please contact support.',
-            };
-        }
-
-        // Check for common Mesomb errors
+        // Parse generic Mesomb errors
         if (error.message?.includes('insufficient')) {
             return {
                 success: false,
                 status: 'FAILED',
-                error: 'Insufficient balance. Please top up your mobile money account and try again.',
-            };
-        }
-
-        if (error.message?.includes('invalid')) {
-            return {
-                success: false,
-                status: 'FAILED',
-                error: 'Invalid phone number or payment details. Please check and try again.',
+                error: 'Insufficient balance.',
             };
         }
 
         return {
             success: false,
             status: 'FAILED',
-            error: error.message || 'Payment initiation failed. Please try again.',
+            error: error.message || 'Payment initiation failed.',
         };
     }
 }
@@ -203,13 +163,7 @@ export async function checkPaymentStatus(reference: string): Promise<PaymentResu
         const payment = getMesombClient();
         const transactions = await payment.getTransactions([reference], 'MESOMB');
 
-        console.log('[Mesomb] Check payment status:', {
-            reference,
-            transactionsFound: transactions?.length || 0,
-        });
-
         if (!transactions || transactions.length === 0) {
-            console.warn('[Mesomb] No transaction found for reference:', reference);
             return {
                 success: false,
                 status: 'PENDING',
@@ -221,45 +175,19 @@ export async function checkPaymentStatus(reference: string): Promise<PaymentResu
         const isSuccess = transaction.status === 'SUCCESS';
         const isFailed = transaction.status === 'FAILED';
 
-        console.log('[Mesomb] Transaction status:', {
-            reference,
-            status: transaction.status,
-            isSuccess,
-        });
-
-        if (isSuccess) {
-            return {
-                success: true,
-                status: 'SUCCESS',
-                reference: reference,
-                message: 'Payment confirmed',
-                transactionId: transaction.pk
-            };
-        } else if (isFailed) {
-            return {
-                success: false,
-                status: 'FAILED',
-                reference: reference,
-                message: 'Payment failed',
-                error: transaction.message || 'Payment failed'
-            };
-        } else {
-            return {
-                success: false,
-                status: 'PENDING',
-                reference: reference,
-                message: `Payment status: ${transaction.status}`,
-            };
-        }
+        return {
+            success: isSuccess,
+            status: isSuccess ? 'SUCCESS' : (isFailed ? 'FAILED' : 'PENDING'),
+            reference: reference,
+            message: isSuccess ? 'Payment confirmed' : `Payment status: ${transaction.status}`,
+            transactionId: transaction.pk
+        };
     } catch (error: any) {
-        console.error('[Mesomb] Status check error:', {
-            reference,
-            error: error.message,
-        });
+        console.error('[Mesomb] Status check error:', error);
         return {
             success: false,
             status: 'PENDING',
-            error: 'Payment is still processing. Please wait...',
+            error: 'Payment is still processing',
         };
     }
 }
@@ -275,28 +203,11 @@ export async function makeWithdrawal(params: WithdrawalParams): Promise<PaymentR
             nonce: params.nonce,
             country: 'CM',
             currency: 'XAF',
-            customer: {
-                email: 'admin@nbdanceaward.com',
-                firstName: 'Admin',
-                lastName: 'NBDance',
-                town: 'Douala',
-                region: 'Littoral',
-                country: 'CM',
-                address: 'Cameroon',
-            },
             location: {
                 town: 'Douala',
                 region: 'Littoral',
                 country: 'CM',
-            },
-            products: [
-                {
-                    name: 'Withdrawal NBDance Award',
-                    category: 'Withdrawal',
-                    quantity: 1,
-                    amount: params.amount,
-                },
-            ],
+            }
         });
 
         if (typeof response.isOperationSuccess === 'function' && !response.isOperationSuccess()) {
@@ -307,20 +218,11 @@ export async function makeWithdrawal(params: WithdrawalParams): Promise<PaymentR
             };
         }
 
-        if (typeof response.isTransactionSuccess === 'function' && !response.isTransactionSuccess()) {
-            return {
-                success: true,
-                status: 'PENDING',
-                reference: response.reference || response.transaction?.pk,
-                message: 'Withdrawal initiated. Processing...',
-            };
-        }
-
         return {
             success: true,
             status: 'SUCCESS',
             reference: response.reference || response.transaction?.pk,
-            message: 'Withdrawal completed successfully',
+            message: 'Withdrawal initiated',
         };
     } catch (error: any) {
         console.error('Mesomb withdrawal error:', error);
@@ -331,69 +233,35 @@ export async function makeWithdrawal(params: WithdrawalParams): Promise<PaymentR
         };
     }
 }
+
 export async function getAccountBalance(): Promise<{ success: boolean; balance?: number; balances?: any[]; error?: string }> {
     try {
         const payment = getMesombClient();
-
-        // getStatus returns the Application model which contains balances
         const application = await payment.getStatus();
-
-        try {
-            const fs = await import('fs');
-            const debugPath = process.cwd() + '/debug_mesomb_verify.log';
-            const debugData = `
-----------------------------------------
-Timestamp: ${new Date().toISOString()}
-Raw Application: ${JSON.stringify(application, null, 2)}
-Raw Balances: ${JSON.stringify((application as any).balances, null, 2)}
-----------------------------------------
-`;
-            fs.appendFileSync(debugPath, debugData);
-        } catch (err) {
-            console.error('Failed to write debug log:', err);
-        }
-
         const rawBalances = (application as any).balances || [];
 
-        // Helper to find balance by provider
         const findBalance = (provider: string) => {
             const found = rawBalances.find((b: any) => b.provider === provider && b.country === 'CM');
             return found ? found.value : 0;
         };
 
-        // Explicitly get the balances using 'provider' field (as seen in debug logs)
         const mtnBalance = findBalance('MTN');
         const orangeBalance = findBalance('ORANGE');
 
-        // Calculate total from these specific values
-        const totalBalance = mtnBalance + orangeBalance;
-
-        console.log('[Mesomb] Balance check:', {
-            mtn: mtnBalance,
-            orange: orangeBalance,
-            total: totalBalance
-        });
-
-        // Always return this consistent structure
         return {
             success: true,
-            balance: totalBalance,
+            balance: mtnBalance + orangeBalance,
             balances: [
                 { service: 'MTN', value: mtnBalance, country: 'CM' },
                 { service: 'ORANGE', value: orangeBalance, country: 'CM' }
             ]
         };
     } catch (error: any) {
-        console.error('[Mesomb] Get balance error:', error);
         return {
             success: false,
-            error: error.message || 'Failed to fetch balance',
-            // Return 0s on error so UI can still show structure
+            error: error.message,
             balance: 0,
-            balances: [
-                { service: 'MTN', value: 0, country: 'CM' },
-                { service: 'ORANGE', value: 0, country: 'CM' }
-            ]
+            balances: []
         };
     }
 }
