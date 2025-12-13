@@ -12,6 +12,7 @@ import { sanitizeInput, validateNumeric, validateWithdrawalData, RateLimiter } f
 import { AdminStats, TransactionsList } from "@/components/AdminDashboard"
 import { AdminWithdrawal } from "@/components/AdminWithdrawal"
 import { FailedTransactions } from "@/components/FailedTransactions"
+import { AdminTutorial } from "@/components/AdminTutorial"
 import { auth } from "@/lib/firebase"
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut, User } from "firebase/auth"
 
@@ -30,11 +31,20 @@ export default function AdminPage() {
   const [lockTime, setLockTime] = useState(0)
   const [securityError, setSecurityError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [showTutorial, setShowTutorial] = useState(false)
 
   // Authorized admin UID
   const ADMIN_UID = "He7g6275fIV459UbdKySfa5v5zJ3"
 
   const { candidates } = useCandidates()
+
+  // Tutorial check
+  useEffect(() => {
+    const hasSeen = localStorage.getItem('nb_admin_tutorial_seen')
+    if (!hasSeen) {
+      setTimeout(() => setShowTutorial(true), 1500)
+    }
+  }, [])
 
   // Security: Rate limiter for login attempts
   const loginLimiter = new RateLimiter(5, 300000) // 5 attempts per 5 minutes
@@ -292,6 +302,16 @@ export default function AdminPage() {
 
               <nav className="flex flex-col gap-1">
                 <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false)
+                    setShowTutorial(true)
+                  }}
+                  className="px-4 py-3 text-base font-medium text-yellow-500 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors flex items-center gap-2"
+                >
+                  <AlertCircle className="h-5 w-5" />
+                  Guide Admin
+                </button>
+                <button
                   onClick={handleLogout}
                   className="px-4 py-3 text-base font-medium text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors flex items-center gap-2"
                 >
@@ -301,6 +321,14 @@ export default function AdminPage() {
               </nav>
             </SheetContent>
           </Sheet>
+
+          <button
+            onClick={() => setShowTutorial(true)}
+            className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium text-yellow-500 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors border border-yellow-500/20"
+          >
+            <AlertCircle className="h-4 w-4" />
+            Guide
+          </button>
 
           <button
             onClick={handleLogout}
@@ -420,6 +448,8 @@ export default function AdminPage() {
       </main>
 
 
+
+      <AdminTutorial open={showTutorial} onOpenChange={setShowTutorial} />
     </div>
   )
 }
