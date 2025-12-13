@@ -384,6 +384,7 @@ export default function NBDanceAwardPage() {
                                 objectFit="cover"
                                 objectPosition={`${customImagePositioning[candidate.name] || "top"} center`}
                                 placeholder="blur"
+                                sizes="(max-width: 768px) 96px, 112px"
                               />
                             </div>
                             {candidate.badge && (

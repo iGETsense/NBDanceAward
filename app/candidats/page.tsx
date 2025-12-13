@@ -347,6 +347,7 @@ export default function CandidatsPage() {
                         objectFit="cover"
                         objectPosition={`${customImagePositioning[candidate.name] || "top"} center`}
                         placeholder="blur"
+                        sizes="(max-width: 768px) 96px, 112px"
                       />
                     </div>
                     {candidate.badge && (
@@ -437,6 +438,7 @@ export default function CandidatsPage() {
                             alt={selectedCandidate.name}
                             fill
                             className="object-cover"
+                            sizes="(max-width: 640px) 160px, (max-width: 768px) 192px, 224px"
                             style={{ objectPosition: `${customImagePositioning[selectedCandidate.name] || "top"} center` }}
                           />
                         </div>

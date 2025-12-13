@@ -69,5 +69,5 @@ export const candidateImages: Record<string, string> = {
 export function getCandidateImage(candidateId: string, baseId?: string): string {
   // Use baseId if provided (for denormalized structure), otherwise use candidateId
   const lookupId = baseId || candidateId;
-  return candidateImages[lookupId] || "/dancers/placeholder.svg";
+  return candidateImages[lookupId] || "/placeholder.svg";
 }

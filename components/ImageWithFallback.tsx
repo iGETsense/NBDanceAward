@@ -15,6 +15,7 @@ interface ImageWithFallbackProps {
   objectPosition?: string
   placeholder?: "blur" | "empty"
   blurDataURL?: string
+  sizes?: string
   onLoad?: () => void
   onError?: () => void
 }
@@ -31,6 +32,7 @@ export default function ImageWithFallback({
   objectPosition = "center",
   placeholder = "blur",
   blurDataURL = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Crect fill='%23333' width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' fill='%23999'%3ELoading...%3C/text%3E%3C/svg%3E",
+  sizes,
   onLoad,
   onError,
 }: ImageWithFallbackProps) {
@@ -75,7 +77,7 @@ export default function ImageWithFallback({
         <Image
           src={imageSrc}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          sizes={sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
           style={{
             objectFit,
             objectPosition,
