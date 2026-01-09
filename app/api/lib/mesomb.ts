@@ -28,10 +28,7 @@ export interface PaymentResult {
 const MESOMB_API_BASE = 'https://mesomb.hachther.com/api/v1.1';
 const ALGORITHM = 'HMAC-SHA1';
 
-// Fallback Keys (Used ONLY if environment variables are missing)
-const FALLBACK_APP_KEY = 'cca4687beac8cea4bb124a6573531b4145a53251';
-const FALLBACK_ACCESS_KEY = '509a85ce-4abc-4380-9490-02840169e5f3';
-const FALLBACK_SECRET_KEY = '558f9ad4-0a16-4900-bdbd-16a8d7c6cda9';
+// Credentials MUST be defined in .env
 
 // Helper: SHA1 Hash
 function sha1(content: string): string {
@@ -131,9 +128,9 @@ async function mesombRequest(
     body: any = null,
     service: string = 'payment'
 ): Promise<any> {
-    const applicationKey = (process.env.MESOMB_APPLICATION_KEY || FALLBACK_APP_KEY).trim();
-    const accessKey = (process.env.MESOMB_ACCESS_KEY || FALLBACK_ACCESS_KEY).trim();
-    const secretKey = (process.env.MESOMB_SECRET_KEY || FALLBACK_SECRET_KEY).trim();
+    const applicationKey = (process.env.MESOMB_APPLICATION_KEY || '').trim();
+    const accessKey = (process.env.MESOMB_ACCESS_KEY || '').trim();
+    const secretKey = (process.env.MESOMB_SECRET_KEY || '').trim();
 
     const date = new Date();
     const nonce = crypto.randomBytes(16).toString('hex');
