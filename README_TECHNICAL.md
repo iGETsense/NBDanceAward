@@ -10,8 +10,6 @@
 
 ---
 
-## 1. Vue d'ensemble du Projet {#vue-densemble}
-
 ### Description
 
 Application de vote en ligne pour le NB Dance Award permettant aux utilisateurs de voter pour leurs candidats préférés via paiement mobile (MTN Mobile Money et Orange Money Cameroun).
