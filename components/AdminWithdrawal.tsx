@@ -11,7 +11,8 @@ import { auth } from '@/lib/firebase';
 
 
 import { useWithdrawals } from '@/hooks/useWithdrawals';
-import { CheckCircle, Clock, XCircle } from 'lucide-react';
+import { useMeSombBalance } from '@/hooks/useMeSombBalance';
+import { CheckCircle, Clock, XCircle, RefreshCw } from 'lucide-react';
 
 export function AdminWithdrawal() {
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -19,6 +20,7 @@ export function AdminWithdrawal() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const { withdrawals: firebaseWithdrawals, loading: historyLoading } = useWithdrawals();
+    const { balanceData, loading: balanceLoading, error: balanceError } = useMeSombBalance();
     const [optimisticWithdrawals, setOptimisticWithdrawals] = useState<any[]>([]);
 
     // Merge optimistic withdrawals with Firebase withdrawals, avoiding duplicates
@@ -111,6 +113,38 @@ export function AdminWithdrawal() {
                         <h2 className="text-2xl font-bold text-white">Retrait de Fonds</h2>
                         <p className="text-zinc-400 text-sm">Transférer des fonds vers Mobile Money</p>
                     </div>
+                </div>
+
+                {/* Real Balance Display */}
+                <div className="mb-8 p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-zinc-400 text-sm">Solde MeSomb Disponible</span>
+                        {balanceLoading && <RefreshCw className="h-3 w-3 text-blue-500 animate-spin" />}
+                    </div>
+
+                    {balanceLoading ? (
+                        <div className="h-8 w-32 bg-zinc-800 animate-pulse rounded"></div>
+                    ) : balanceError ? (
+                        <div className="text-red-400 text-sm">{balanceError}</div>
+                    ) : (
+                        <div>
+                            <div className="text-3xl font-bold text-white mb-3">
+                                {balanceData?.balance?.toLocaleString() ?? 0} <span className="text-sm font-normal text-zinc-500 uppercase tracking-wider">XAF</span>
+                            </div>
+
+                            {balanceData?.balances && (
+                                <div className="flex flex-wrap gap-4 pt-3 border-t border-white/5">
+                                    {balanceData.balances.map((b: any, idx) => (
+                                        <div key={idx} className="flex items-center gap-2">
+                                            <div className={`w-2 h-2 rounded-full ${b.provider === 'MTN' ? 'bg-yellow-400' : 'bg-orange-500'}`} />
+                                            <span className="text-xs text-zinc-400">{b.service}:</span>
+                                            <span className="text-xs font-semibold text-zinc-200">{b.value.toLocaleString()} XAF</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 <form onSubmit={handleWithdraw} className="space-y-4">

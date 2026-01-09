@@ -74,9 +74,11 @@ export function AdminStats() {
                         {balanceLoading ? (
                             <div className="h-8 w-24 bg-zinc-800 animate-pulse rounded"></div>
                         ) : (
-                            <h3 className="text-2xl sm:text-3xl font-bold text-white break-words">
-                                {balanceData?.balance?.toLocaleString() ?? 0} <span className="text-sm sm:text-lg text-zinc-400">XAF</span>
-                            </h3>
+                            <div className="flex flex-col">
+                                <h3 className="text-2xl sm:text-3xl font-bold text-white break-words">
+                                    {balanceData?.balance?.toLocaleString() ?? 0} <span className="text-sm sm:text-lg text-zinc-400">XAF</span>
+                                </h3>
+                            </div>
                         )}
                     </div>
                     <div className="bg-blue-500/20 p-2 sm:p-3 rounded-lg flex-shrink-0 ml-2">
@@ -84,17 +86,20 @@ export function AdminStats() {
                     </div>
                 </div>
                 {balanceData?.balances && (
-                    <div className="flex flex-col gap-1 text-xs text-zinc-400">
-                        {balanceData.balances.map((b, idx) => (
-                            <div key={idx} className="flex justify-between">
-                                <span>{b.service}:</span>
-                                <span>{b.value.toLocaleString()} XAF</span>
+                    <div className="flex flex-col gap-2 pt-2 border-t border-white/5">
+                        {balanceData.balances.map((b: any, idx) => (
+                            <div key={idx} className="flex justify-between items-center text-[10px] sm:text-xs">
+                                <div className="flex items-center gap-1.5">
+                                    <div className={`w-1.5 h-1.5 rounded-full ${b.provider === 'MTN' ? 'bg-yellow-400' : 'bg-orange-500'}`} />
+                                    <span className="text-zinc-400 truncate max-w-[80px] sm:max-w-none">{b.service}</span>
+                                </div>
+                                <span className="font-mono text-white/80">{b.value.toLocaleString()} XAF</span>
                             </div>
                         ))}
                     </div>
                 )}
                 {!balanceData && !balanceLoading && (
-                    <p className="text-xs text-red-400">Erreur de chargement</p>
+                    <p className="text-xs text-red-400 mt-2">Indisponible (Vérifiez les clés API)</p>
                 )}
             </div>
 

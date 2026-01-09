@@ -294,7 +294,11 @@ export async function getAccountBalance(): Promise<any> {
         return {
             success: true,
             balance: (response.balances || []).reduce((acc: number, b: any) => acc + (b.value || 0), 0),
-            balances: response.balances
+            balances: (response.balances || []).map((b: any) => ({
+                service: b.service_name || b.provider,
+                value: b.value,
+                provider: b.provider
+            }))
         };
     } catch (error: any) {
         return { success: false, error: error.message };
