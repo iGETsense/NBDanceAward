@@ -1,245 +1,116 @@
 /**
- * Mesomb Payment Service - Direct API Implementation
- * Bypasses SDK to avoid header issues in Vercel serverless
+ * Mesomb Direct Implementation
+ * Updated to use standard https module and SDK-compatible signatures
  */
 
 import crypto from 'crypto';
+import https from 'https';
 
-export interface CollectPaymentParams {
-    amount: number;
-    service: 'MTN' | 'ORANGE';
-    payer: string;
-    nonce: string;
-}
+const MESOMB_HOST = 'mesomb.hachther.com';
+const MESOMB_API_VERSION = 'v1.1.1';
+const MESOMB_ALGORITHM = 'HMAC-SHA1';
 
-export interface WithdrawalParams {
-    amount: number;
-    service: 'MTN' | 'ORANGE';
-    receiver: string;
-    nonce: string;
-}
-
-export interface PaymentResult {
-    success: boolean;
-    reference?: string;
-    message?: string;
-    error?: string;
-}
-
-const MESOMB_API_BASE = 'https://mesomb.hachther.com/api/v1.1';
+const applicationKey = (process.env.MESOMB_APPLICATION_KEY || 'a4120748a7093365013b04a8f42bdd24f299936b').trim();
+const accessKey = (process.env.MESOMB_ACCESS_KEY || 'fe3efd4c-cb89-45ef-a18b-d831cf25d1ea').trim();
+const secretKey = (process.env.MESOMB_SECRET_KEY || '1bb8c37c-1b92-4428-b060-8716cafcedca').trim();
 
 function generateSignature(
+    service: string,
     method: string,
-    endpoint: string,
-    date: string,
+    url: string,
+    date: Date,
     nonce: string,
-    body: string,
-    secretKey: string,
-    accessKey: string
+    body: any = null
 ): string {
+    const parsedUrl = new URL(url);
+    const path = encodeURI(parsedUrl.pathname);
+    const canonicalQuery = parsedUrl.search ? parsedUrl.search.substring(1) : '';
+    const timestamp = date.getTime().toString();
+
+    const headers: Record<string, string> = {
+        'host': `${parsedUrl.protocol}//${parsedUrl.host}`,
+        'x-mesomb-date': timestamp,
+        'x-mesomb-nonce': nonce
+    };
+
+    const sortedHeaderKeys = Object.keys(headers).sort();
+    const canonicalHeaders = sortedHeaderKeys.map(key => `${key}:${headers[key]}`).join('\n');
+    const signedHeaders = sortedHeaderKeys.join(';');
+
+    const payloadHash = crypto.createHash('sha1').update(body ? JSON.stringify(body) : '{}').digest('hex');
+
     const canonicalRequest = [
         method,
-        endpoint,
-        date,
-        nonce,
-        body
+        path,
+        canonicalQuery,
+        canonicalHeaders,
+        signedHeaders,
+        payloadHash
     ].join('\n');
 
-    const signature = crypto
-        .createHmac('sha1', secretKey)
-        .update(canonicalRequest)
-        .digest('hex');
+    const scope = `${date.getFullYear()}${date.getMonth()}${date.getDate()}/${service}/mesomb_request`;
 
-    return `HMAC-SHA1 Credential=${accessKey}, SignedHeaders=content-type;host;x-mesomb-date;x-mesomb-nonce, Signature=${signature}`;
+    const stringToSign = [
+        MESOMB_ALGORITHM,
+        timestamp,
+        scope,
+        crypto.createHash('sha1').update(canonicalRequest).digest('hex')
+    ].join('\n');
+
+    const signature = crypto.createHmac('sha1', secretKey).update(stringToSign).digest('hex');
+
+    return `${MESOMB_ALGORITHM} Credential=${accessKey}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
 }
 
-async function mesombRequest(
+export async function mesombRequestDirect(
     endpoint: string,
     method: string,
-    body: any
+    body: any = null
 ): Promise<any> {
-    const applicationKey = process.env.MESOMB_APPLICATION_KEY;
-    const accessKey = process.env.MESOMB_ACCESS_KEY;
-    const secretKey = process.env.MESOMB_SECRET_KEY;
+    return new Promise((resolve, reject) => {
+        const date = new Date();
+        const nonce = crypto.randomBytes(16).toString('hex');
+        const url = `https://${MESOMB_HOST}/api/${MESOMB_API_VERSION}/${endpoint.replace(/^\//, '')}`;
+        const bodyString = body ? JSON.stringify(body) : '';
 
-    if (!applicationKey || !accessKey || !secretKey) {
-        throw new Error('Mesomb credentials not configured');
-    }
-
-    const date = new Date().toISOString();
-    const nonce = crypto.randomBytes(16).toString('hex');
-    const bodyString = JSON.stringify(body);
-
-    const signature = generateSignature(
-        method,
-        endpoint,
-        date,
-        nonce,
-        bodyString,
-        secretKey,
-        accessKey
-    );
-
-    const url = `${MESOMB_API_BASE}${endpoint}`;
-
-    const response = await fetch(url, {
-        method,
-        headers: {
-            'Content-Type': 'application/json',
-            'X-MeSomb-Application': applicationKey,
-            'X-MeSomb-Date': date,
-            'X-MeSomb-Nonce': nonce,
-            'Authorization': signature,
-        },
-        body: bodyString,
-    });
-
-    if (!response.ok) {
-        const error = await response.text();
-        throw new Error(`Mesomb API error: ${error}`);
-    }
-
-    return response.json();
-}
-
-export async function collectPayment(params: CollectPaymentParams): Promise<PaymentResult> {
-    try {
-        const body = {
-            amount: params.amount,
-            service: params.service,
-            payer: params.payer,
-            nonce: params.nonce,
-            country: 'CM',
-            currency: 'XAF',
-            customer: {
-                email: 'vote@nbdanceaward.com',
-                first_name: 'Voter',
-                last_name: 'NBDance',
-                town: 'Douala',
-                region: 'Littoral',
-                country: 'CM',
-            },
-            location: {
-                town: 'Douala',
-                region: 'Littoral',
-                country: 'CM',
-            },
-            products: [
-                {
-                    name: 'Vote NBDance Award',
-                    category: 'Voting',
-                    quantity: Math.floor(params.amount / 105),
-                    amount: params.amount,
-                },
-            ],
-        };
-
-        const result = await mesombRequest('/payment/collect/', 'POST', body);
-
-        if (result.success) {
-            return {
-                success: true,
-                reference: result.reference || result.transaction?.pk,
-                message: 'Payment initiated successfully',
-            };
-        }
-
-        return {
-            success: false,
-            error: result.message || 'Payment failed',
-        };
-    } catch (error: any) {
-        console.error('Mesomb payment error:', error);
-        return {
-            success: false,
-            error: error.message || 'Payment initiation failed',
-        };
-    }
-}
-
-export async function checkPaymentStatus(reference: string): Promise<PaymentResult> {
-    try {
-        const result = await mesombRequest(
-            `/payment/transactions/?ids=${reference}&source=MESOMB`,
-            'GET',
-            {}
+        const signature = generateSignature(
+            'payment',
+            method,
+            url,
+            date,
+            nonce,
+            body
         );
 
-        if (result.transactions && result.transactions.length > 0) {
-            const transaction = result.transactions[0];
-            const isSuccess = transaction.status === 'SUCCESS';
-
-            return {
-                success: isSuccess,
-                reference: reference,
-                message: isSuccess ? 'Payment confirmed' : `Payment status: ${transaction.status}`,
-            };
-        }
-
-        return {
-            success: false,
-            error: 'Transaction not found',
-        };
-    } catch (error: any) {
-        console.error('Mesomb status check error:', error);
-        return {
-            success: false,
-            error: 'Payment is still processing',
-        };
-    }
-}
-
-export async function makeWithdrawal(params: WithdrawalParams): Promise<PaymentResult> {
-    try {
-        const body = {
-            amount: params.amount,
-            service: params.service,
-            receiver: params.receiver,
-            nonce: params.nonce,
-            country: 'CM',
-            currency: 'XAF',
-            customer: {
-                email: 'admin@nbdanceaward.com',
-                first_name: 'Admin',
-                last_name: 'NBDance',
-                town: 'Douala',
-                region: 'Littoral',
-                country: 'CM',
-            },
-            location: {
-                town: 'Douala',
-                region: 'Littoral',
-                country: 'CM',
-            },
-            products: [
-                {
-                    name: 'Withdrawal NBDance Award',
-                    category: 'Withdrawal',
-                    quantity: 1,
-                    amount: params.amount,
-                },
-            ],
+        const options = {
+            hostname: MESOMB_HOST,
+            port: 443,
+            path: `/api/${MESOMB_API_VERSION}/${endpoint.replace(/^\//, '')}`,
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-MeSomb-Application': applicationKey,
+                'X-MeSomb-Date': date.getTime().toString(),
+                'X-MeSomb-Nonce': nonce,
+                'Authorization': signature,
+                'Content-Length': Buffer.byteLength(bodyString)
+            }
         };
 
-        const result = await mesombRequest('/payment/deposit/', 'POST', body);
+        const req = https.request(options, (res) => {
+            let data = '';
+            res.on('data', (chunk) => data += chunk);
+            res.on('end', () => {
+                try {
+                    resolve(JSON.parse(data));
+                } catch (e) {
+                    reject(new Error(`Failed to parse MeSomb response: ${data}`));
+                }
+            });
+        });
 
-        if (result.success) {
-            return {
-                success: true,
-                reference: result.reference || result.transaction?.pk,
-                message: 'Withdrawal completed successfully',
-            };
-        }
-
-        return {
-            success: false,
-            error: result.message || 'Withdrawal failed',
-        };
-    } catch (error: any) {
-        console.error('Mesomb withdrawal error:', error);
-        return {
-            success: false,
-            error: error.message || 'Withdrawal failed',
-        };
-    }
+        req.on('error', reject);
+        if (bodyString) req.write(bodyString);
+        req.end();
+    });
 }
