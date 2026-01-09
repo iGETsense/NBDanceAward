@@ -15,6 +15,7 @@ export function getMesombClient() {
     const accessKey = 'fe3efd4c-cb89-45ef-a18b-d831cf25d1ea';
     const secretKey = '1bb8c37c-1b92-4428-b060-8716cafcedca';
 
+    
     // Create PaymentOperation instance
     return new PaymentOperation({
         applicationKey,
