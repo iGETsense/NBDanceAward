@@ -12,8 +12,8 @@ import { PaymentOperation } from '@hachther/mesomb';
 export function getMesombClient() {
     // Hardcoded Mesomb API credentials
     const applicationKey = 'a4120748a7093365013b04a8f42bdd24f299936b';
-    const accessKey = 'f6c26b42-24de-4ec6-8b1b-7a808052e335';
-    const secretKey = 'e45b1545-1b5a-49c4-aadf-ba4cf700a8dc';
+    const accessKey = 'fe3efd4c-cb89-45ef-a18b-d831cf25d1ea';
+    const secretKey = '1bb8c37c-1b92-4428-b060-8716cafcedca';
 
     // Create PaymentOperation instance
     return new PaymentOperation({
