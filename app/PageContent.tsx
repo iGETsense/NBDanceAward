@@ -549,8 +549,8 @@ export default function NBDanceAwardPage() {
                     </div>
 
                     <div className="text-center space-y-0.5">
-                      <p className="text-xs md:text-sm font-semibold text-white">1 Vote = 105 XAF.</p>
-                      /*<p className="text-xs md:text-sm text-white">Minimum 1 vote.</p>*/ pas necessaire
+                      <p className="text-xs md:text-sm font-semibold text-white">1 Vote = {VOTE_PRICE} XAF.</p>
+                      {/*<p className="text-xs md:text-sm text-white">Minimum 1 vote.</p>*/} pas necessaire
                     </div>
                   </div>
 

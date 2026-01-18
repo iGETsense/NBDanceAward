@@ -56,6 +56,7 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
             nonce: params.nonce,
             country: 'CM', // Cameroon
             currency: 'XAF', // Central African Franc
+            fees: false,
         });
 
         return {

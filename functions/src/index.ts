@@ -48,7 +48,7 @@ export const submitVote = functions.https.onCall(async (data, context) => {
 
         // Calculate payment amount
         const config = functions.config();
-        const votePrice = parseInt(config.vote?.price || '100');
+        const votePrice = parseInt(config.vote?.price || '105');
         const totalAmount = voteCount * votePrice;
 
         // Detect operator and map to Mesomb service
