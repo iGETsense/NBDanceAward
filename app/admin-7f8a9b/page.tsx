@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { Input } from "@/components/ui/input"
 import { useCandidates } from "@/hooks/useFirebaseData"
 import { sanitizeInput, validateNumeric, validateWithdrawalData, RateLimiter } from "@/lib/security"
+import { VOTE_PRICE } from '@/lib/config'
 import { AdminStats, TransactionsList } from "@/components/AdminDashboard"
 import { AdminWithdrawal } from "@/components/AdminWithdrawal"
 import { FailedTransactions } from "@/components/FailedTransactions"
@@ -157,7 +158,7 @@ export default function AdminPage() {
 
 
   const totalVotes = candidates.reduce((sum, c) => sum + (c.votes || 0), 0)
-  const totalRevenue = totalVotes * 5 // 5 per vote
+  const totalRevenue = totalVotes * VOTE_PRICE
   const topCandidate = candidates.sort((a, b) => (b.votes || 0) - (a.votes || 0))[0]
 
   const filteredCandidates = candidates

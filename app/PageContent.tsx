@@ -16,6 +16,7 @@ import { useCandidates, useLeaderboard } from "@/hooks/useFirebaseData"
 import { useVoting } from "@/hooks/useVoting"
 import { CountdownPopup } from "@/components/CountdownPopup"
 import { decodeVoteLinkClient, encodeVoteLinkClient } from "@/lib/voteLinks"
+import { VOTE_PRICE } from "@/lib/config"
 import CategoryList from "@/components/CategoryList"
 
 
@@ -643,7 +644,7 @@ export default function NBDanceAwardPage() {
               {/* Total Price */}
               <div className="mb-4 md:mb-6">
                 <div className="rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 px-3 py-2 md:px-4 md:py-3 text-center text-sm md:text-base font-bold text-black">
-                  Prix Total: {(voteCount * 105).toLocaleString()} XAF
+                  Prix Total: {(voteCount * VOTE_PRICE).toLocaleString()} XAF
                 </div>
               </div>
 

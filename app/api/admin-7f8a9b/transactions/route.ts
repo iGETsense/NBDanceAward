@@ -14,6 +14,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { database } from '@/lib/firebase';
 import { ref, get, query, orderByChild, limitToLast } from 'firebase/database';
+import { VOTE_PRICE } from '@/lib/config';
 
 const DEFAULT_LIMIT = 2000;
 const MAX_LIMIT = 2000;
@@ -111,8 +112,7 @@ export async function GET(request: NextRequest) {
             stats.totalVotes = paidVotesFromTransactions;
 
             // Re-calculate revenue based on strict paid votes
-            const PRICE_PER_VOTE = 105;
-            stats.totalRevenue = paidVotesFromTransactions * PRICE_PER_VOTE;
+            stats.totalRevenue = paidVotesFromTransactions * VOTE_PRICE;
             stats.netRevenue = Math.round(stats.totalRevenue * 0.95);
             stats.averageTransactionValue = stats.completedTransactions > 0
                 ? Math.round(stats.totalRevenue / stats.completedTransactions)

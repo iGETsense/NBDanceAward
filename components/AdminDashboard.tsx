@@ -22,6 +22,7 @@ import { useBackendCandidates } from '@/hooks/useBackendCandidates';
 
 import { useWithdrawalStats } from '@/hooks/useWithdrawals';
 import { useMeSombBalance } from '@/hooks/useMeSombBalance';
+import { VOTE_PRICE } from '@/lib/config';
 
 export function AdminStats() {
     const { stats, loading: txLoading } = useTransactions();
@@ -33,9 +34,8 @@ export function AdminStats() {
     const totalVotes = candidates.reduce((sum, c) => sum + (c.votes || 0), 0);
 
     // Calculate revenue based on Paid Votes (User requirement: multiply a vote with total of paid votes)
-    const PRICE_PER_VOTE = 105;
     // Use stats.totalVotes (paid votes) instead of totalVotes (candidate counters)
-    const grossRevenue = (stats.totalVotes || 0) * PRICE_PER_VOTE;
+    const grossRevenue = (stats.totalVotes || 0) * VOTE_PRICE;
     const netRevenue = grossRevenue * 0.95;
 
     // Available balance is Net Revenue - Withdrawn

@@ -9,6 +9,7 @@ import Image from "next/image"
 import { useState, useEffect } from "react"
 import { useVoting } from "@/hooks/useVoting"
 import { encodeVoteLinkClient } from "@/lib/voteLinks"
+import { VOTE_PRICE } from "@/lib/config"
 
 interface VotingModalProps {
     isOpen: boolean
@@ -136,7 +137,7 @@ export default function VotingModal({
                                     </div>
 
                                     <div className="text-center space-y-0.5">
-                                        <p className="text-xs md:text-sm font-semibold text-white">1 Vote = 105 XAF.</p>
+                                        <p className="text-xs md:text-sm font-semibold text-white">1 Vote = {VOTE_PRICE} XAF.</p>
                                     </div>
                                 </div>
 
@@ -230,7 +231,7 @@ export default function VotingModal({
                         {/* Total Price */}
                         <div className="mb-4 md:mb-6">
                             <div className="rounded-lg bg-gradient-to-r from-yellow-600 to-yellow-500 px-3 py-2 md:px-4 md:py-3 text-center text-sm md:text-base font-bold text-black">
-                                Prix Total: {(voteCount * 105).toLocaleString()} XAF
+                                Prix Total: {(voteCount * VOTE_PRICE).toLocaleString()} XAF
                             </div>
                         </div>
 
