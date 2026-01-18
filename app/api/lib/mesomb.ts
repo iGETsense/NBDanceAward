@@ -198,7 +198,7 @@ export async function collectPayment(params: CollectPaymentParams): Promise<Paym
             nonce: params.nonce,
             country: 'CM',
             currency: 'XAF',
-            fees: false,
+            fees: true,
             mode: 'asynchronous',
             customer: {
                 email: 'vote@nbdanceaward.com',
