@@ -8,7 +8,7 @@ export default function Page() {
         <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center">
             <div className="text-white">chargement ...</div>
         </div>}>
-            <NBDanceAwardPage />
+            //<NBDanceAwardPage />
         </Suspense>
     )
 }
